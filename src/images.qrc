@@ -1,0 +1,72 @@
+<RCC>
+    <qresource prefix="/toolbar">
+        <file>qml/Toolbar/pics/back.png</file>
+        <file>qml/Toolbar/pics/Folder-Blue-Documents-icon.png</file>
+        <file>qml/Toolbar/pics/goto-page-icon.png</file>
+        <file>qml/Toolbar/pics/toolbaritem.png</file>
+        <file>qml/Toolbar/pics/toolbaritem_p.png</file>
+        <file>qml/Toolbar/pics/window-full-screen-icon.png</file>
+        <file>qml/Toolbar/pics/zoom-icon.png</file>
+        <file>qml/Toolbar/pics/help-icon.png</file>
+        <file>qml/Toolbar/pics/About-icon.png</file>
+        <file>qml/Toolbar/pics/Button-Close-icon.png</file>
+        <file>qml/Toolbar/pics/properties-icon.png</file>
+    </qresource>
+    <qresource prefix="/filebrowser">
+        <file>icons/Adobe-PDF-Document-icon.png</file>
+        <file>icons/Button-Upload-icon.png</file>
+        <file>icons/My-Ebooks-icon.png</file>
+        <file>icons/Apps-session-quit-icon.png</file>
+        <file>icons/Djvu-document-icon.png</file>
+        <file>icons/Chm-document-icon.png</file>
+    </qresource>
+    <qresource prefix="/qml">
+        <file>qml/gotopage.qml</file>
+        <file>qml/Core/Button.qml</file>
+        <file>qml/Core/calculator.js</file>
+        <file>qml/Core/Display.qml</file>
+        <file>qml/Core/images/button-.png</file>
+        <file>qml/Core/images/button-blue.png</file>
+        <file>qml/Core/images/button-green.png</file>
+        <file>qml/Core/images/button-purple.png</file>
+        <file>qml/Core/images/display.png</file>
+        <file>qml/popupmenu.qml</file>
+        <file>qml/PopupMenu/ListItem.qml</file>
+        <file>qml/PopupMenu/PopupList.qml</file>
+        <file>qml/PopupMenu/PopupListModel.qml</file>
+        <file>qml/PopupMenu/gfx/list_item.png</file>
+        <file>qml/PopupMenu/gfx/list_item_active.png</file>
+        <file>qml/PopupMenu/gfx/list_item_pressed.png</file>
+        <file>qml/PopupMenu/gfx/list_item_selected.png</file>
+        <file>qml/filebrowser.qml</file>
+        <file>qml/maintoolbar.qml</file>
+        <file>qml/Toolbar/toolbar.js</file>
+        <file>qml/Toolbar/Toolbar.qml</file>
+        <file>qml/Toolbar/ToolbarItem.qml</file>
+        <file>qml/Toolbar/ToolbarView.qml</file>
+        <file>qml/zoompage.qml</file>
+        <file>qml/zoompage/gfx/button.png</file>
+        <file>qml/zoompage/gfx/button_pressed.png</file>
+        <file>qml/zoompage/Button.qml</file>
+        <file>qml/zoompage/Reel.qml</file>
+        <file>qml/zoompage/ZoomReel.qml</file>
+        <file>qml/aboutdialog.qml</file>
+        <file>qml/ModalDialog/Button.qml</file>
+        <file>qml/ModalDialog/Fader.qml</file>
+        <file>qml/ModalDialog/ModalDialog.qml</file>
+        <file>qml/ModalDialog/Visual.qml</file>
+        <file>qml/ModalDialog/gfx/button.png</file>
+        <file>qml/ModalDialog/gfx/button_active.png</file>
+        <file>qml/ModalDialog/gfx/button_pressed.png</file>
+        <file>qml/WaitDialog/WaitIndicator.qml</file>
+        <file>qml/WaitDialog/gfx/rotation_icon.png</file>
+        <file>qml/waitdialog.qml</file>
+    </qresource>
+    <qresource prefix="/help">
+        <file>help/tabletReader.pdf</file>
+    </qresource>
+    <qresource prefix="/translations">
+        <file>tabletReader_fr.qm</file>
+        <file>tabletReader_ro.qm</file>
+    </qresource>
+</RCC>

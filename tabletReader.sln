@@ -1,0 +1,24 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "tabletReader", "tabletReader.vcxproj", "{5F5D500D-D18A-3C62-908F-1B95BE063130}"
+EndProject
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "tabletReaderInstaller", "..\tabletReaderInstaller\tabletReaderInstaller.vdproj", "{DF01F935-F4C9-46F9-868F-B86A732EDBF7}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{5F5D500D-D18A-3C62-908F-1B95BE063130}.Debug|Win32.ActiveCfg = Debug|Win32
+		{5F5D500D-D18A-3C62-908F-1B95BE063130}.Debug|Win32.Build.0 = Debug|Win32
+		{5F5D500D-D18A-3C62-908F-1B95BE063130}.Release|Win32.ActiveCfg = Release|Win32
+		{5F5D500D-D18A-3C62-908F-1B95BE063130}.Release|Win32.Build.0 = Release|Win32
+		{DF01F935-F4C9-46F9-868F-B86A732EDBF7}.Debug|Win32.ActiveCfg = Debug
+		{DF01F935-F4C9-46F9-868F-B86A732EDBF7}.Release|Win32.ActiveCfg = Release
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
