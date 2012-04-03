@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2011, Bogdan Cristea. All rights reserved.
+** Copyright (C) 2012, Bogdan Cristea. All rights reserved.
 **
 ** This program is free software; you can redistribute it and/or modify it under
 ** the terms of the GNU General Public License as published by the Free Software
@@ -867,7 +867,7 @@ void Window::showAboutDialog()
                 pAboutDlg->setProperty("text", tr("<H2>tabletReader v2.0</H2>"
                                                   "<H3>e-book reader for touch-enabled devices</H3>"
                                                   "<H4>Supported formats: PDF, DJVU and CHM.</H4><br>"
-                                                  "Copyright (C) 2011, Bogdan Cristea. All rights reserved.<br>"
+                                                  "Copyright (C) 2012, Bogdan Cristea. All rights reserved.<br>"
                                                   "<i>e-mail: cristeab@gmail.com</i><br><br>"
                                                   "This program is distributed in the hope that it will be useful, "
                                                   "but WITHOUT ANY WARRANTY; without even the implied warranty of "
