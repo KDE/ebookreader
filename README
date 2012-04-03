@@ -1,8 +1,7 @@
-tabletReader is an e-book reader for touch enabled devices
-It is written into C++ and QML using Qt framework. Initially it has been sought 
-as an e-book reader for Linux OSs, but Windows is also supported. Currently,
-an Windows installer for version 2.0 has been submitted to Intel AppUp
-(http://www.appup.com/app-details/tabletReader).
+TabletReader is an e-book reader for touch enabled devices.
+Written into C++ and QML using Qt framework, tabletReader 
+is targeted at Linux OSs, but Windows is also supported
+(see https://github.com/cristeab/tabletReader).
 
 Dependencies:
 - Qt >= 4.7
@@ -11,9 +10,8 @@ Dependencies:
 - chmlib
 - djvulibre
 
-Compilation and installation:
-- Windows: use the solution file provided for Visual Studio 2010
-- Linux: use qmake in the root folder, then make and make install
+Compilation and installation (Linux only):
+- use qmake in the root folder, then make and make install
 
 Notes:
 - by default the application is compiled in release mode, with 
