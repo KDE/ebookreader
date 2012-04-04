@@ -22,7 +22,8 @@ License:        GPLv2+
 Summary:        Document Viewer
 Url:            http://www.kde.org
 Group:          Productivity/Office/Other
-Source0:        %{name}-%{version}.tar.bz2
+Source0:        %{name}-%{version}.tar.gz
+BuildRequires:  qt-mobility-devel >= 1.2
 BuildRequires:  OpenEXR-devel
 BuildRequires:  chmlib-devel
 BuildRequires:  libdjvulibre-devel
@@ -60,14 +61,13 @@ E-book reader for touch enabled-devices; supports document in various formats
 
 %prep
 %setup -q
-%patch0 -p1
 
 %build
-  %qmake
-  %make
+  qmake DESTDIR=%{buildroot}
+  make
 
 %install
-  %make_install
+  make install
   %suse_update_desktop_file -r tabletReader   Office Viewer
   %fdupes -s %{buildroot}%{_datadir}
   %kde_post_install

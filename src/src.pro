@@ -45,7 +45,7 @@ TRANSLATIONS += tabletReader_fr.ts \
                 tabletReader_ro.ts
 
 #install
-target.path = /usr/bin
+target.path = $$DESTDIR
 icon.files = tabletReader.png
 icon.path = $$[install_prefix]/share/icons
 desktop.files = tabletReader.desktop
