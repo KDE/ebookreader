@@ -63,11 +63,11 @@ E-book reader for touch enabled-devices; supports document in various formats
 %setup -q
 
 %build
-  qmake DESTDIR=%{buildroot}
+  qmake
   make
 
 %install
-  make install
+  make install INSTALL_ROOT=%{buildroot}
   %suse_update_desktop_file -r tabletReader   Office Viewer
   %fdupes -s %{buildroot}%{_datadir}
   %kde_post_install
