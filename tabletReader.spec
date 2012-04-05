@@ -69,15 +69,14 @@ E-book reader for touch enabled-devices; supports document in various formats
 %install
   make install INSTALL_ROOT=%{buildroot}
   %suse_update_desktop_file -r tabletReader   Office Viewer
-  %fdupes -s %{buildroot}%{_datadir}
   %kde_post_install
 
 %clean
-  make clean
+  rm -rf %{buildroot}
 
 %files
 %defattr(-,root,root)
-%{_kde4_applicationsdir}/tabletReader.desktop
+%{_kde4_applicationsdir}/tabletReader*.desktop
 %{_kde4_appsdir}/tabletReader/
 %{_kde4_bindir}/tabletReader
 %config %{_kde4_configkcfgdir}/*.kcfg
