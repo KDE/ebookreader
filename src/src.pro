@@ -31,6 +31,7 @@ QT           +=     declarative xml webkit
 INCLUDEPATH  +=     /usr/include/poppler/qt4
 INCLUDEPATH  +=     ../3rdparty_linux/libchmfile
 INCLUDEPATH  +=     /usr/include/libdjvu
+LIBS	     +=     $$DESTDIR
 LIBS         +=     -L/usr/lib -lpoppler-qt4
 LIBS         +=     -L/usr/lib -ldjvulibre
 LIBS         +=     -L../3rdparty_linux/libchmfile -lchmfile -lchm
