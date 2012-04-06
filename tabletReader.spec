@@ -24,18 +24,10 @@ Url:            http://www.kde.org
 Group:          Productivity/Office/Other
 Source0:        %{name}-%{version}.tar.gz
 BuildRequires:  qt-mobility-devel >= 1.2
-BuildRequires:  OpenEXR-devel
 BuildRequires:  chmlib-devel
 BuildRequires:  libdjvulibre-devel
 BuildRequires:  libkde4-devel
 BuildRequires:  libpoppler-qt4-devel
-BuildRequires:  oxygen-icon-theme-large
-BuildRequires:  soprano-backend-redland
-%if 0%{?suse_version} > 1130
-BuildRequires:  sane-backends-devel
-%else
-BuildRequires:  sane-backends
-%endif
 Obsoletes:      kdegraphics4 < 4.7.0
 Provides:       kdegraphics4 = 4.7.0
 BuildRoot:      %{_tmppath}/%{name}-%{version}-build
@@ -45,19 +37,6 @@ BuildRoot:      %{_tmppath}/%{name}-%{version}-build
 %description
 E-book reader for touch-enabled devices; supports documents in PDF, DJVU and
 CHM.
-
-%package devel
-License:        GPLv2+
-Summary:        E-Book Reader - Development Files
-Group:          Development/Libraries/KDE
-Requires:       libkde4-devel
-Requires:       %{name} = %{version}
-Provides:       kde4-%{name}-devel = 4.3.0
-Obsoletes:      kde4-%{name}-devel < 4.3.0
-%kde4_runtime_requires
-
-%description devel
-E-book reader for touch enabled-devices; supports document in various formats
 
 %prep
 %setup -q
