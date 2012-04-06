@@ -72,7 +72,14 @@ E-book reader for touch enabled-devices; supports document in various formats
   cp tabletReader.desktop %{buildroot}%{_kde4_applicationsdir}
   mkdir -p %{buildroot}%{_kde4_appsdir}/tabletReader/
   mkdir -p %{buildroot}%{_kde4_bindir}
-  cp %{buildroot}/tabletReader %{buildroot}%{_kde4_bindir}
+  mv %{buildroot}/tabletReader %{buildroot}%{_kde4_bindir}
+  mkdir -p %{buildroot}%{_kde4_iconsdir}/hicolor/{16x16,22x22,32x32,48x48,64x64,128x128}/apps
+  cp src/icons/128x128/tabletReader.png %{buildroot}%{_kde4_iconsdir}/hicolor/128x128/apps/
+  cp src/icons/64x64/tabletReader.png %{buildroot}%{_kde4_iconsdir}/hicolor/64x64/apps/
+  cp src/icons/48x48/tabletReader.png %{buildroot}%{_kde4_iconsdir}/hicolor/48x48/apps/
+  cp src/icons/32x32/tabletReader.png %{buildroot}%{_kde4_iconsdir}/hicolor/32x32/apps/
+  cp src/icons/22x22/tabletReader.png %{buildroot}%{_kde4_iconsdir}/hicolor/22x22/apps/
+  cp src/icons/16x16/tabletReader.png %{buildroot}%{_kde4_iconsdir}/hicolor/16x16/apps/
   %suse_update_desktop_file -r tabletReader   Office Viewer
   %kde_post_install
 
@@ -84,13 +91,6 @@ E-book reader for touch enabled-devices; supports document in various formats
 %{_kde4_applicationsdir}/tabletReader*.desktop
 %{_kde4_appsdir}/tabletReader/
 %{_kde4_bindir}/tabletReader
-%config %{_kde4_configkcfgdir}/*.kcfg
-%{_kde4_htmldir}/en/tabletReader/
-%{_kde4_iconsdir}/hicolor/*/apps/graphics-viewer-document.*
 %{_kde4_iconsdir}/hicolor/*/apps/tabletReader.*
-
-%files devel
-%defattr(-,root,root)
-%{_kde4_includedir}/tabletReader/
 
 %changelog
