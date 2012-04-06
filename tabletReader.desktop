@@ -1,5 +1,6 @@
 [Desktop Entry]
-Icon=tabletReader
+X-SuSE-translate=true
+Terminal=false
 Name=tabletReader
 Name[ast]=tabletReader
 Name[bg]=tabletReader
@@ -51,6 +52,9 @@ Name[ug]=tabletReader
 Name[uk]=tabletReader
 Name[x-test]=xxtabletReaderxx
 Name[zh_CN]=tabletReader
-X-KDE-ServiceTypes=KParts/ReadOnlyPart
+Exec=tabletReader
+Icon=tabletReader
 Type=Application
+InitialPreference=7
+Categories=Office;Viewer;
 MimeType=application/vnd.kde.tabletReader-archive;
