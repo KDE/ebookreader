@@ -52,5 +52,5 @@ Name[uk]=tabletReader
 Name[x-test]=xxtabletReaderxx
 Name[zh_CN]=tabletReader
 X-KDE-ServiceTypes=KParts/ReadOnlyPart
-Type=Service
+Type=Application
 MimeType=application/vnd.kde.tabletReader-archive;
