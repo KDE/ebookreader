@@ -1,4 +1,4 @@
-cmake_minimum_required( VERSION 2.6 )
+cmake_minimum_required ( VERSION 2.6 )
 set ( CMAKE_BUILD_TYPE Release )
 set ( CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake/Modules/ ${CMAKE_MODULE_PATH} )
 add_definitions ( -Wall )
@@ -10,5 +10,6 @@ include_directories (
 	${CMAKE_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR}
 	${QT_QTCORE_INCLUDE_DIR} ${QT_QTGUI_INCLUDE_DIR}
 	)
-add_subdirectory( 3rdparty_linux/libchmfile )
-add_subdirectory( src )
+add_subdirectory ( 3rdparty_linux/libchmfile )
+add_subdirectory ( src )
+

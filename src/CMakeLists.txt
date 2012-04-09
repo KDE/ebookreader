@@ -1,4 +1,4 @@
-project( tabletReader )
+project ( tabletReader )
 cmake_minimum_required( VERSION 2.6 )
 set ( CMAKE_BUILD_TYPE Release )
 add_definitions ( -Wall )
@@ -9,7 +9,9 @@ include_directories (
 	${QT_QTCORE_INCLUDE_DIR} ${QT_QTGUI_INCLUDE_DIR} ${QT_QTDECLARATIVE_INCLUDE_DIR} ${QT_QTXML_INCLUDE_DIR} ${QT_QTWEBKIT_INCLUDE_DIR}
 	/usr/include/poppler/qt4
 	../3rdparty_linux/libchmfile
-	${DJVU_INCLUDE})
+	${Djvu_INCLUDE_DIRS})
+set ( LIBS ${LIBS} ${Djvu_LIBRARIES} )
+
 set ( tabletReader_HDRS
 	logger.h
 	pdfdocument.h
@@ -58,4 +60,4 @@ set ( tabletReader_MOCS
 QT4_WRAP_CPP(MOCS ${tabletReader_MOCS})
 
 add_executable ( tabletReader ${tabletReader_SRCS} ${UIS} ${RSCS} ${TRS} ${MOCS} )
-target_link_libraries ( tabletReader  ${QT_QTCORE_LIBRARY} ${QT_QTGUI_LIBRARY} ${QT_QTDECLARATIVE_LIBRARY} ${QT_QTXML_LIBRARY} ${QT_QTWEBKIT_LIBRARY} ${DJVU_LIBRARY} )
+target_link_libraries ( tabletReader  ${QT_QTCORE_LIBRARY} ${QT_QTGUI_LIBRARY} ${QT_QTDECLARATIVE_LIBRARY} ${QT_QTXML_LIBRARY} ${QT_QTWEBKIT_LIBRARY} ${LIBS} )

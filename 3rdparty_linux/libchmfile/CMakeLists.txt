@@ -35,5 +35,5 @@ set ( chmfile_MOCS
 	)
 QT4_WRAP_CPP(MOCS ${chmfile_MOCS})
 
-add_library ( chmfile SHARED ${chmfile_SRCS} ${UIS} ${RSCS} ${TRS} ${MOCS} )
+add_library ( chmfile STATIC ${chmfile_SRCS} ${UIS} ${RSCS} ${TRS} ${MOCS} )
 target_link_libraries ( chmfile  ${QT_QTCORE_LIBRARY} ${QT_QTGUI_LIBRARY} )
