@@ -4,6 +4,9 @@ set ( CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake/Modules/ ${CMAKE_MODULE_PATH} 
 add_definitions ( -Wall )
 find_package ( Qt4 4.7.0 REQUIRED )
 find_package ( QtMobility 1.2.0 REQUIRED )
+find_package ( LibPoppler REQUIRED )
+find_package ( LibPopplerQt4 REQUIRED )
+find_package ( LibChm REQUIRED )
 find_package ( LibDjvu REQUIRED )
 include ( ${QT_USE_FILE} )
 include_directories (
