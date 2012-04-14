@@ -27,11 +27,6 @@
 #include "documentwidget.h"
 #include "worker.h"
 
-//Header for Intel AppUp(TM) software
-#ifndef NO_APPUP_AUTH_CODE
-#include "adpcppf.h"
-#endif
-
 class QScrollArea;
 class QSpinBox;
 class QComboBox;
@@ -169,9 +164,6 @@ private:
     QElapsedTimer eTime_;    
     bool isSingleThreaded_;
     QQueue<int> pageToLoadNo_;
-#ifndef NO_APPUP_AUTH_CODE
-	Application *appupApp_;
-#endif
 };
 
 #endif

@@ -39,7 +39,6 @@ signals:
 
 public slots:
     void onUpdateCache(int page);
-    void onCheckAppUpAuthCode();
     void onBatteryStatusChanged(QSystemBatteryInfo::BatteryStatus status);
 
 private:

@@ -4,13 +4,23 @@ set ( CMAKE_BUILD_TYPE Release )
 add_definitions ( -Wall )
 find_package ( Qt4 REQUIRED )
 include ( ${QT_USE_FILE} )
+
 include_directories (
 	${CMAKE_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR}
 	${QT_QTCORE_INCLUDE_DIR} ${QT_QTGUI_INCLUDE_DIR} ${QT_QTDECLARATIVE_INCLUDE_DIR} ${QT_QTXML_INCLUDE_DIR} ${QT_QTWEBKIT_INCLUDE_DIR}
-	/usr/include/poppler/qt4
-	../3rdparty_linux/libchmfile
-	${Djvu_INCLUDE_DIRS})
-set ( LIBS ${LIBS} ${Djvu_LIBRARIES} )
+	${QT_MOBILITY_INCLUDE_DIR}/QtMobility
+	${QT_MOBILITY_SYSTEMINFO_INCLUDE_DIR}
+	${POPPLER_INCLUDE_DIR}
+	${POPPLER_QT4_INCLUDE_DIR}/poppler/qt4
+	${CHM_INCLUDE_DIR}
+	${PROJECT_SOURCE_DIR}/../3rdparty_linux/libchmfile
+	${DJVU_INCLUDE_DIR}/libdjvu )
+set ( LIBS ${LIBS} 
+	${QT_MOBILITY_SYSTEMINFO_LIBRARY}
+	${POPPLER_LIBRARY}
+	${POPPLER_QT4_LIBRARY}
+	${CHM_LIBRARY}
+	${DJVU_LIBRARY} )
 
 set ( tabletReader_HDRS
 	logger.h

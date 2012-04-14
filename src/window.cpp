@@ -189,13 +189,6 @@ Window::Window(QWidget *parent)
     connect(batteryInfo_, SIGNAL(batteryStatusChanged(QSystemBatteryInfo::BatteryStatus)),
             worker_, SLOT(onBatteryStatusChanged(QSystemBatteryInfo::BatteryStatus)));
 
-#ifndef NO_APPUP_AUTH_CODE
-    showWaitDialog();//prepare to check appup code
-    appupApp_ = NULL;
-    connect(worker_, SIGNAL(appUpAuthCheckError()), this,
-            SLOT(onAppUpAuthCheckError()));
-    QTimer::singleShot(0, worker_, SLOT(onCheckAppUpAuthCode()));
-#endif
 #ifndef DESKTOP_APP
     setWindowFlags(Qt::X11BypassWindowManagerHint);
 #endif
@@ -205,12 +198,6 @@ Window::~Window()
 {
     delete fileBrowserModel_;
     fileBrowserModel_ = NULL;
-
-    //Cleanup code for Intel AppUp(TM) software
-#ifndef NO_APPUP_AUTH_CODE
-    delete appupApp_;
-    appupApp_ = NULL;
-#endif
 }
 
 void Window::onSendCommand(const QString &cmd)

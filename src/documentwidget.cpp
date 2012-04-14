@@ -17,7 +17,7 @@
 ****************************************************************************/
 
 #include <QtGui>
-#include <poppler-qt4.h>
+#include "poppler-qt4.h"
 #include "documentwidget.h"
 #include "SlidingStackedWidget.h"
 #include "pdfdocument.h"

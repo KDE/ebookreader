@@ -42,35 +42,6 @@ void Worker::onUpdateCache(int page)
     qDebug() << "Worker::onUpdateCache end";
 }
 
-void Worker::onCheckAppUpAuthCode()
-{
-    qDebug() << "Window::checkAppUpAuthCode";
-#ifndef NO_APPUP_AUTH_CODE
-    if (NULL != win_)
-    {
-        //Authorization code for Intel AppUp(TM) software
-        try {
-#ifdef _DEBUG
-            win_->appupApp_ = new Application(ApplicationId(ADP_DEBUG_APPLICATIONID));
-#else
-            win_->appupApp_ = new Application(ApplicationId(0xF95A11A9,0xF079468E,0xABAF2D5C,0x7C56C5F7));
-#endif
-        } catch (AdpException&) {
-            //Display an appropriate error message here
-            win_->closeWaitDialog();
-            emit appUpAuthCheckError();
-            if (win_->appupApp_ != NULL)
-            {
-                delete win_->appupApp_;
-                win_->appupApp_ = NULL;
-            }
-            return;
-        }
-        win_->closeWaitDialog();
-    }
-#endif
-}
-
 void Worker::onBatteryStatusChanged(QSystemBatteryInfo::BatteryStatus status)
 {
     if ((QSystemBatteryInfo::BatteryEmpty == status) ||
