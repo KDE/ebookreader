@@ -1,7 +1,9 @@
 cmake_minimum_required ( VERSION 2.6 )
 
 #available build types: Release, DesktopRelease, Debug, DesktopDebug, RelWithDebInfo, MinSizeRel, None
-#set ( CMAKE_BUILD_TYPE Release )
+IF ( NOT CMAKE_BUILD_TYPE )
+	set ( CMAKE_BUILD_TYPE Release )
+ENDIF()
 
 message ("-- Build type: " ${CMAKE_BUILD_TYPE})
 

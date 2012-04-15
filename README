@@ -13,11 +13,11 @@ Dependencies:
 Compilation and installation (Linux only):
 - create a folder below the root folder (mkdir build)
 - change current directory to that folder (cd build)
-- generate make files by specifying the build type (cmake .. -DCMAKE_BUILD_TYPE=Release)
+- generate make files using the default release build type (cmake ..)
 - compile application (make)
 - the application binary can be found in src folder
 
-Available build types:
+Available build types (use 'cmake .. -DCMAKE_BUILD_TYPE=Release'):
  * Release: application is compiled in release mode with support
    for touch-enabled devices running Plasma notebook (KDE) on Linux 
    (tested on openSUSE 12.1)
