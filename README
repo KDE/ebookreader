@@ -11,11 +11,20 @@ Dependencies:
 - djvulibre
 
 Compilation and installation (Linux only):
-- use qmake in the root folder, then make and make install
+- create a folder below the root folder (mkdir build)
+- change current directory to that folder (cd build)
+- generate make files by specifying the build type (cmake .. -DCMAKE_BUILD_TYPE=Release)
+- compile application (make)
+- the application binary can be found in src folder
 
-Notes:
-- by default the application is compiled in release mode, with 
-support for touch-enabled devices running Plasma notebook (KDE) on Linux 
-(tested on openSUSE 12.1)
-- for Plasma desktop (KDE) you might need to define DESKTOP_APP
-in src/src.pro
+Available build types:
+ * Release: application is compiled in release mode with support
+   for touch-enabled devices running Plasma notebook (KDE) on Linux 
+   (tested on openSUSE 12.1)
+ * DesktopRelease: same as above, but the support for Plasma desktop
+   is enabled (tested on openSUSE 12.1)
+ * Debug: application is compiled in debug mode with support for
+   Plasma notebook. A log file (tabletReader.log) is created in the 
+   home folder of the current user
+ * DesktopDebug: same as Debug build type, but the support for
+   Plasma desktop is enabled
