@@ -63,3 +63,4 @@ QT4_WRAP_CPP(MOCS ${tabletReader_MOCS})
 
 add_executable ( tabletReader ${tabletReader_SRCS} ${UIS} ${RSCS} ${TRS} ${MOCS} )
 target_link_libraries ( tabletReader  ${QT_QTCORE_LIBRARY} ${QT_QTGUI_LIBRARY} ${QT_QTDECLARATIVE_LIBRARY} ${QT_QTXML_LIBRARY} ${QT_QTWEBKIT_LIBRARY} ${LIBS} )
+install ( TARGETS tabletReader RUNTIME DESTINATION bin )
