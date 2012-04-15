@@ -3,6 +3,8 @@ cmake_minimum_required ( VERSION 2.6 )
 #available build types: Release, DesktopRelease, Debug, DesktopDebug, RelWithDebInfo, MinSizeRel, None
 set ( CMAKE_BUILD_TYPE Release )
 
+message ("-- Build type: " ${CMAKE_BUILD_TYPE})
+
 set ( CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake/Modules/ ${CMAKE_MODULE_PATH} )
 
 set ( CMAKE_CXX_FLAGS_RELEASE "-O3 -DNDEBUG -DQT_NO_DEBUG -DQT_NO_DEBUG_OUTPUT" )
