@@ -2,6 +2,7 @@
 Terminal=false
 Name=tabletReader
 Name[es]=tabletReader
+Name[fr]=tabletReader
 Name[nl]=tabletReader
 Name[pt]=Leitor da Tablete
 Name[pt_BR]=tabletReader
