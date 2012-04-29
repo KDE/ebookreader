@@ -17,11 +17,10 @@
 ****************************************************************************/
 
 #include <QtGui>
-#include "poppler-qt4.h"
+#include <kmimetype.h>
 #include "documentwidget.h"
 #include "SlidingStackedWidget.h"
-#include "pdfdocument.h"
-#include "djvudocument.h"
+#include "okulardocument.h"
 #include "chmdocument.h"
 #include "window.h"
 
@@ -39,7 +38,7 @@ DocumentWidget::DocumentWidget(Window *parent)
 {
     for (int n = 0; n < CACHE_SIZE; ++n)
     {
-        pageCache_.append(new ImageCache);
+        pageCache_.append(new PageCache);
         pageCache_[n]->valid = false;
     }
 }
@@ -62,8 +61,8 @@ void DocumentWidget::loadImage(int page)
         return;
     }
 
-    pageCache_[page%CACHE_SIZE]->image = doc_->
-                      renderToImage(page, scaleFactor_*physicalDpiX_,
+    pageCache_[page%CACHE_SIZE]->pPixmap = doc_->
+                      render(page, scaleFactor_*physicalDpiX_,
                                       scaleFactor_*physicalDpiY_);
     pageCache_[page%CACHE_SIZE]->valid = true;
     qDebug() << "DocumentWidget::loadImage end";
@@ -102,7 +101,7 @@ void DocumentWidget::showPage(int page)
         qDebug() << "DocumentWidget::showPage: valid cache";
     }
     qDebug() << "DocumentWidget::showPage: begin setPixmap";
-    label->setPixmap(QPixmap::fromImage(pageCache_[currentPage_%CACHE_SIZE]->image));
+    label->setPixmap(*(pageCache_[currentPage_%CACHE_SIZE]->pPixmap));
     label->adjustSize();
     qDebug() << "DocumentWidget::showPage: end setPixmap";
     cacheMutex_.unlock();
@@ -113,48 +112,18 @@ bool DocumentWidget::setDocument(const QString &filePath)
 {
     Document *oldDoc = doc_;//keep old document
 
-    switch (fileType(filePath))
+    KMimeType::Ptr ptr = KMimeType::findByPath(filePath);
+    if (ptr->is("application/x-chm"))
     {
-    case ID_PDF:
-        doc_ = new PDFDocument();
-        parent_->setSingleThreaded(false);
-        break;
-    case ID_DJVU:
-        doc_ = new DJVUDocument();
-        parent_->setSingleThreaded(false);
-        break;
-    case ID_CHM:
-        doc_ = new CHMDocument();
-        parent_->setSingleThreaded(true);
-        break;
-    default:
-        qDebug() << "unknown file extension";
-        doc_ = NULL;
+	    doc_ = new CHMDocument();
+	    parent_->setSingleThreaded(true);
+    } else
+    {
+	    doc_ = new OkularDocument();
+	    parent_->setSingleThreaded(false);
     }
 
     if ((NULL != doc_) && (EXIT_SUCCESS == doc_->load(filePath)))
-    {
-        maxNumPages_ = doc_->numPages();
-        currentPage_ = -1;
-        delete oldDoc;//previous Document must be deleted
-        return true;
-    } else
-    {
-        //an error occured
-        delete doc_;
-        //restore old document
-        doc_ = oldDoc;
-    }
-    return false;
-}
-
-//this method is used to load only PDF files
-bool DocumentWidget::loadFromData(const QByteArray &fileContents)
-{
-    Document *oldDoc = doc_;//keep old document
-
-    doc_ = new PDFDocument();
-    if ((NULL != doc_) && (EXIT_SUCCESS == doc_->loadFromData(fileContents)))
     {
         maxNumPages_ = doc_->numPages();
         currentPage_ = -1;

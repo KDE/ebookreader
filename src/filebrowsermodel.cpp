@@ -19,6 +19,7 @@
 #include <QMainWindow>
 #include <QDir>
 #include <QDebug>
+#include <kmimetype.h>
 #include "filebrowsermodel.h"
 #include "documentwidget.h"
 
@@ -118,19 +119,19 @@ QVariant FileBrowserModel::data(const QModelIndex &index, int role) const
             } else
             {
                 QString iconFileName;
-                switch (DocumentWidget::fileType(_files[fileRow]))
+		KMimeType::Ptr ptr = KMimeType::findByPath(_files[fileRow]);
+                if (ptr->is("application/pdf") || ptr->is("application/x-pdf"))
                 {
-                case DocumentWidget::ID_PDF:
                     iconFileName = QString(":/filebrowser/icons/Adobe-PDF-Document-icon.png");
-                    break;
-                case DocumentWidget::ID_DJVU:
+                } else if (ptr->is("image/vnd.djvu"))
+		{
                     iconFileName = QString(":/filebrowser/icons/Djvu-document-icon.png");
-                    break;
-                case DocumentWidget::ID_CHM:
+                } else if (ptr->is("application/x-chm"))
+		{
                     iconFileName = QString(":/filebrowser/icons/Chm-document-icon.png");
-                    break;
-                default:
-                    qDebug() << "unknown file type";
+                } else
+		{ 
+                    iconFileName = QString(":/filebrowser/icons/unknown-document-icon.png");
                 }
                 return iconFileName;
             }

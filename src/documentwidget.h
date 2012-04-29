@@ -37,23 +37,6 @@ class DocumentWidget : public QObject
     friend class Worker;
 
 public:
-    enum ID_FILE_TYPE {ID_UNKNOWN = -1, ID_PDF, ID_DJVU, ID_CHM};
-    static ID_FILE_TYPE fileType(const QString &filePath)
-    {
-        ID_FILE_TYPE ret = ID_UNKNOWN;
-        QString ext = filePath.right(4);
-        if (".PDF" == ext.toUpper())
-        {
-            ret = ID_PDF;
-        } else if ("DJVU" == ext.toUpper())
-        {
-            ret = ID_DJVU;
-        } else if (".CHM" == ext.toUpper())
-        {
-            ret = ID_CHM;
-        }
-        return ret;
-    }
     DocumentWidget(Window *parent = 0);
     ~DocumentWidget();
     qreal scale() const
@@ -118,8 +101,6 @@ public:
 
     enum {CACHE_SIZE = 3};
 
-    bool loadFromData(const QByteArray &fileContents);
-
     void showPage(int page = -1);
 
 public slots:
@@ -137,12 +118,12 @@ private:
     int currentIndex_;
     int maxNumPages_;
     qreal scaleFactor_;
-    struct ImageCache {
-        QImage image;
+    struct PageCache {
+        const QPixmap *pPixmap;
         bool valid;
     };
-    QList<ImageCache*> pageCache_;
-    QMutex cacheMutex_;//used to protect the access to image list
+    QList<PageCache*> pageCache_;
+    QMutex cacheMutex_;//used to protect the access to page cache
     SlidingStackedWidget *stackedWidget_;
     QScrollArea *currentScrollArea_;
     int physicalDpiX_;

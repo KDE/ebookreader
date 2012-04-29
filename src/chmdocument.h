@@ -33,7 +33,8 @@ class CHMDocument : public Document
 public:
     CHMDocument();
     virtual int load(const QString &fileName);
-    virtual QImage renderToImage(int page, qreal xres, qreal yres);
+    virtual const QPixmap* render(int page, qreal xres, qreal yres);
+    virtual void deletePixmap(const QPixmap *pixmap);
     virtual ~CHMDocument();
 private:
     LCHMFile *doc_;
@@ -53,6 +54,7 @@ private:
     RequestHandler *req_;
     QEventLoop eventLoop_;
     friend class RequestHandler;
+    QVector<const QPixmap*> pages_;
 };
 
 #endif // CHMDOCUMENT_H

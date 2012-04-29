@@ -10,16 +10,14 @@ include_directories (
 set ( LIBS ${LIBS}
 	${QT_QTNETWORK_LIBRARY}
 	${QT_MOBILITY_SYSTEMINFO_LIBRARY}
-	${POPPLER_LIBRARY} ${POPPLER_QT4_LIBRARY}
 	${CHM_LIBRARY} ${PROJECT_BINARY_DIR}/../3rdparty_linux/libchmfile/libchmfile.a
-	${DJVU_LIBRARY} )
+	okularcore kdecore )
 
 set ( tabletReader_HDRS
 	logger.h
-	pdfdocument.h
 	document.h
-	djvudocument.h
 	chmdocument.h
+	okulardocument.h
 	)
 
 set ( tabletReader_SRCS
@@ -31,11 +29,9 @@ set ( tabletReader_SRCS
 	worker.cpp
 	logger.cpp
 	filebrowsermodel.cpp
-	pdfdocument.cpp
-	djvudocument.cpp
-	kdjvu.cpp
 	chmdocument.cpp
 	chmreply.cpp
+	okulardocument.cpp
 	)
 
 set ( tabletReader_RSCS
@@ -56,7 +52,6 @@ set ( tabletReader_MOCS
 	flickable.h
 	worker.h
 	filebrowsermodel.h
-	kdjvu.h
 	chmreply.h
 	)
 QT4_WRAP_CPP(MOCS ${tabletReader_MOCS})

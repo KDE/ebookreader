@@ -58,11 +58,11 @@ int CHMDocument::load(const QString &fileName)
     return EXIT_FAILURE;
 }
 
-QImage CHMDocument::renderToImage(int page, qreal xres, qreal)
+const QPixmap* CHMDocument::render(int page, qreal xres, qreal)
 {
     if ((NULL == doc_) || (NULL == req_) || (0 == numPages_))
     {
-        return QImage();
+        return NULL;
     }
 
     QWebView webView;//we need to recreate the view at each page
@@ -85,7 +85,22 @@ QImage CHMDocument::renderToImage(int page, qreal xres, qreal)
     webView.setGeometry(QRect(QPoint(0, 0), size));
     //the conversion QPixmap to QImage is made in order to keep unchaged the upper layer,
     //but is redundant since the QImage object is converted back to QPixmap before being shown
-    return QPixmap::grabWidget(&webView).toImage();
+    QPixmap *pixmap = new QPixmap(QPixmap::grabWidget(&webView));
+    pages_.push_back(pixmap);
+    return pixmap;
+}
+
+void CHMDocument::deletePixmap(const QPixmap *pixmap)
+{
+	if (NULL != pixmap)
+	{
+		int i = pages_.indexOf(pixmap);
+		if (-1 != i)
+		{
+			delete pages_[i];
+			pages_.remove(i);
+		}
+	}
 }
 
 //this method is used by QWebView to load an HTML page

@@ -808,22 +808,14 @@ void Window::setZoomFactor(int index)
 void Window::showHelp(bool slideNext)
 {
     qDebug() << "Window::showHelp";
-    QFile file(HELP_FILE);
-    if (true == file.open(QIODevice::ReadOnly))
+    if (document_->setDocument(HELP_FILE))
     {
-        if (document_->loadFromData(file.readAll()))
+        setupDocDisplay(1, HELP_FILE);
+        document_->showCurrentPageUpper();
+        if (true == slideNext)
         {
-            setupDocDisplay(1, HELP_FILE);
-            document_->showCurrentPageUpper();
-            if (true == slideNext)
-            {
-                slidingStacked_->slideInNext();
-            }            
-        } else
-        {
-            qDebug() << "cannot load from data";
-        }
-        file.close();
+            slidingStacked_->slideInNext();
+        }            
     } else
     {
         qDebug() << "cannot open help file";
