@@ -95,7 +95,7 @@ int OkularDocument::load(const QString &fileName)
 	return (true == doc_->openDocument(fileName, KUrl::fromPath(fileName), KMimeType::findByPath(fileName)))?EXIT_SUCCESS:EXIT_FAILURE;
 }
 
-const QPixmap* OkularDocument::getPixmap(int pageNb, qreal xres, qreal)
+const QPixmap* OkularDocument::getPixmap(int pageNb, qreal, qreal)
 {
 	if (NULL == doc_)
 	{
