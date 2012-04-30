@@ -14,104 +14,117 @@
 ** this program; if not, write to the Free Software Foundation, Inc., 51 Franklin
 ** Street - Fifth Floor, Boston, MA 02110-1301, USA.
 **
-** References: qindle project (http://code.google.com/p/qindle/)
-**             kchmviewer (http://sourceforge.net/projects/kchmviewer/)
-**
 ****************************************************************************/
 
-#include <QByteArray>
-#include <QStandardItemModel>
-#include <QtWebKit/QWebView>
-#include <QtWebKit/QWebFrame>
-#include <QTextCodec>
-#include <QThread>
-#include <QApplication>
 #include <QDebug>
-#include "chmdocument.h"
-#include "chmreply.h"
-#include "window.h"
+#include <document.h>
+#include <page.h>
+#include <generator.h>
+#include <kmimetype.h>
+#include "okulardocument.h"
 
-CHMDocument::CHMDocument() :
-    Document(),
-    doc_(new LCHMFile()),
-    req_(new RequestHandler(this))
+//helper class, not made public by okular core library
+namespace Okular
 {
+	class DocumentObserver
+	{
+		public:
+			DocumentObserver() {}
+			virtual ~DocumentObserver() {}
+			virtual uint observerId() const = 0;
+		 	virtual void notifySetup(const QVector< Okular::Page * > &, int) {}
+			virtual void notifyViewportChanged(bool) {}
+			virtual void notifyPageChanged(int, int) {}
+			virtual void notifyContentsCleared(int) {}
+			virtual void notifyVisibleRectsChanged() {}
+			virtual void notifyZoom(int) {}
+			virtual bool canUnloadPixmap(int) const {return true;}
+	};
+}
+#define OKULAR_OBSERVER_ID 6
+class OkularObserver
+{
+public:
+	virtual uint observerId() {return OKULAR_OBSERVER_ID;}
+};
+
+//main entry point into okular core libray
+class PagePainter
+{
+public:
+	explicit PagePainter(Okular::Document *doc):
+		doc_(doc)
+	{}
+	const QPixmap* getPagePixmap(const Page *page) const
+	{
+		if(false == page->hasPixmap(OKULAR_OBSERVER_ID, -1, -1))
+		{
+			PixmapRequest *pr = new PixmapRequest(MY_OBSERVER_ID, page->number(), page->width(), page->height(), 0, false);
+			QLinkedList<PixmapRequest*> req;
+			req.push_back(pr);
+			doc_->requestPixmaps(req);
+		}
+		return page->_o_nearestPixmap(OKULAR_OBSERVER_ID, -1, -1);
+	}
+private:
+	Okular::Document *doc_;
+};
+
+OkularDocument::OkularDocument() :
+    Document(),
+    doc_(new Okular::Document(NULL)),
+    obs_(new OkularObserver()),
+    painter_(new PagePainter(doc_))
+{
+	if (NULL != doc_)
+	{
+		doc_->addObserver(obs_);
+	}
 }
 
-CHMDocument::~CHMDocument()
+OkularDocument::~OkularDocument()
 {
     delete doc_;
-    delete req_;
+    delete obs_;
+    delete painter_;
+    
 }
 
-int CHMDocument::load(const QString &fileName)
+int OkularDocument::load(const QString &fileName)
 {
-    if ((NULL != doc_) && (true == doc_->loadFile(fileName)))
-    {
-        //get the table of contents
-        if (true == doc_->parseTableOfContents(&toc_))
-        {
-            numPages_ = toc_.size();
-            return EXIT_SUCCESS;
-        }
-    }
-    return EXIT_FAILURE;
+	return (true == doc_->openDocument(fileName, KUrl::fromPath(fileName), KMimeType::findByPath(fileName)))?EXIT_SUCCESS:EXIT_FAILURE;
 }
 
-const QPixmap* CHMDocument::getPixmap(int page, qreal xres, qreal)
+const QPixmap* OkularDocument::getPixmap(int pageNb, qreal xres, qreal)
 {
-    if ((NULL == doc_) || (NULL == req_) || (0 == numPages_))
-    {
-        return NULL;
-    }
-
-    QWebView webView;//we need to recreate the view at each page
-    QObject::connect(&webView, SIGNAL(loadFinished(bool)), &eventLoop_, SLOT(quit()));
-    webView.page()->setNetworkAccessManager(req_);
-    QStringList urls = toc_.at(page).urls;//there must be only one URL for the TOC
-    webView.load(QUrl::fromLocalFile(urls.at(0)));
-    eventLoop_.exec();//wait for load to complete
-    qreal zoomFactor = xres/webView.physicalDpiX();
-    webView.setZoomFactor(zoomFactor);
-    QWebFrame *webFrame = webView.page()->mainFrame();
-    webFrame->setScrollBarPolicy(Qt::Vertical, Qt::ScrollBarAlwaysOff);
-    webFrame->setScrollBarPolicy(Qt::Horizontal, Qt::ScrollBarAlwaysOff);
-    QSize size = webFrame->contentsSize();
-    int preferredWidth = int(Window::MIN_SCREEN_WIDTH*0.9);
-    if (size.width() < preferredWidth)
-    {
-        size = QSize(preferredWidth, size.height());//adjust page width
-    }
-    webView.setGeometry(QRect(QPoint(0, 0), size));
-    //the conversion QPixmap to QImage is made in order to keep unchaged the upper layer,
-    //but is redundant since the QImage object is converted back to QPixmap before being shown
-    QPixmap *pixmap = new QPixmap(QPixmap::grabWidget(&webView));
-    pages_.push_back(pixmap);
-    return pixmap;
+	if (NULL == doc_)
+	{
+		return NULL;
+	}
+	QPixmap *pixmap = NULL;
+	const Okular::Page *page = doc_->page(pageNb);
+	if (NULL != page && NULL != painter_)
+	{
+		pixmap = painter_->getPagePixmap(page);
+		if (NULL != pixmap)
+		{
+			pages_.insert(pixmap, page);
+		}
+	}
+	return pixmap;
 }
 
-void CHMDocument::deletePixmap(const QPixmap *pixmap)
+void OkularDocument::deletePixmap(const QPixmap *pixmap)
 {
 	if (NULL != pixmap)
 	{
+		QMap<const QPixmap*,const Okular::Page*>::iterator it = pages_.find(pixmap);
 		int i = pages_.indexOf(pixmap);
-		if (-1 != i)
+		if (pages_.end() != it)
 		{
-			delete pages_[i];
-			pages_.remove(i);
+			it.value()->deletePixmap(OKULAR_OBSERVER_ID);
+			pages_.remove(pixmap);
 		}
 	}
 }
 
-//this method is used by QWebView to load an HTML page
-QNetworkReply* CHMDocument::RequestHandler::createRequest(Operation op, const QNetworkRequest &req,
-                             QIODevice *outgoingData)
-{
-    if (req.url().scheme()=="file")
-    {
-        return new CHMReply(this, req, req.url(), chmDoc_->doc_);
-    } else
-    {
-        return QNetworkAccessManager::createRequest(op, req, outgoingData);
-    }
-}

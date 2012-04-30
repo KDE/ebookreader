@@ -14,47 +14,34 @@
 ** this program; if not, write to the Free Software Foundation, Inc., 51 Franklin
 ** Street - Fifth Floor, Boston, MA 02110-1301, USA.
 **
-** Reference: qindle project (http://code.google.com/p/qindle/)
-**            kchmviewer (http://sourceforge.net/projects/kchmviewer/)
-**
 ****************************************************************************/
 
 #ifndef OKULAR_DOCUMENT_H
 #define OKULAR_DOCUMENT_H
 
-#include <QtNetwork/QNetworkAccessManager>
-#include <QStringList>
-#include <QEventLoop>
 #include "document.h"
-#include "libchmfile.h"
 
-class CHMDocument : public Document
+namaspace Okular
+{
+	class Document;
+	class Page;
+}
+class OkularObserver;
+class PagePainter;
+
+class OkularDocument : public Document
 {
 public:
-    CHMDocument();
+    OkularDocument();
     virtual int load(const QString &fileName);
     virtual const QPixmap* getPixmap(int page, qreal xres, qreal yres);
     virtual void deletePixmap(const QPixmap *pixmap);
-    virtual ~CHMDocument();
+    virtual ~OkularDocument();
 private:
-    LCHMFile *doc_;
-    QVector<LCHMParsedEntry> toc_;
-    //internal class used to handle requests
-    class RequestHandler : public QNetworkAccessManager
-    {
-    public:
-        explicit RequestHandler(CHMDocument *chmDoc) :
-            chmDoc_(chmDoc)
-        {}
-    private:        
-        QNetworkReply* createRequest(Operation op, const QNetworkRequest &req,
-                                     QIODevice *outgoingData = NULL);
-        CHMDocument *chmDoc_;
-    };    
-    RequestHandler *req_;
-    QEventLoop eventLoop_;
-    friend class RequestHandler;
-    QVector<const QPixmap*> pages_;
+    Okular::Document *doc_;
+    OkularObserver *obs_;
+    PagePainter *painter_;
+    QMap<const QPixmap*, const Okular::Page*> pages_;
 };
 
 #endif // OKULAR_DOCUMENT_H
