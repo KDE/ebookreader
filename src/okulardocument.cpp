@@ -28,17 +28,17 @@ namespace Okular
 {
 	class DocumentObserver
 	{
-		public:
-			DocumentObserver() {}
-			virtual ~DocumentObserver() {}
-			virtual uint observerId() const = 0;
-		 	virtual void notifySetup(const QVector< Okular::Page * > &, int) {}
-			virtual void notifyViewportChanged(bool) {}
-			virtual void notifyPageChanged(int, int) {}
-			virtual void notifyContentsCleared(int) {}
-			virtual void notifyVisibleRectsChanged() {}
-			virtual void notifyZoom(int) {}
-			virtual bool canUnloadPixmap(int) const {return true;}
+	public:
+		DocumentObserver() {}
+		virtual ~DocumentObserver() {}
+		virtual uint observerId() const = 0;
+	 	virtual void notifySetup(const QVector< Okular::Page * > &, int) {}
+		virtual void notifyViewportChanged(bool) {}
+		virtual void notifyPageChanged(int, int) {}
+		virtual void notifyContentsCleared(int) {}
+		virtual void notifyVisibleRectsChanged() {}
+		virtual void notifyZoom(int) {}
+		virtual bool canUnloadPixmap(int) const {return true;}
 	};
 }
 #define OKULAR_OBSERVER_ID 6
@@ -92,18 +92,22 @@ OkularDocument::~OkularDocument()
 
 int OkularDocument::load(const QString &fileName)
 {
+	if (NULL == doc_)
+	{
+		return EXIT_FAILURE;
+	}
 	return (true == doc_->openDocument(fileName, KUrl::fromPath(fileName), KMimeType::findByPath(fileName)))?EXIT_SUCCESS:EXIT_FAILURE;
 }
 
 const QPixmap* OkularDocument::getPixmap(int pageNb, qreal, qreal)
 {
-	if (NULL == doc_)
+	if (NULL == doc_ || NULL == painter_)
 	{
 		return NULL;
 	}
 	const QPixmap *pixmap = NULL;
 	const Okular::Page *page = doc_->page(pageNb);
-	if (NULL != page && NULL != painter_)
+	if (NULL != page)
 	{
 		pixmap = painter_->getPagePixmap(page);
 		if (NULL != pixmap)
