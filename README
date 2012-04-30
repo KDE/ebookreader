@@ -6,9 +6,12 @@ is targeted at Linux OSs, but Windows is also supported
 Required dependencies:
 - Qt >= 4.7
 - QtMobility >= 1.2
-- qt-poppler
+- okular core library
 - chmlib
-- djvulibre
+
+This version makes extensive use of okular core library for reading 
+e-documents. However, libchm is still used in order to correctly handle
+chm documents.
 
 Compilation and installation (Linux only):
 1. create a folder below the application root folder: 'mkdir build'
