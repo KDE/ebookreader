@@ -10,7 +10,7 @@ Required dependencies:
 - chmlib
 
 This version makes extensive use of okular core library for reading 
-e-documents. However, libchm is still used in order to correctly handle
+e-documents. However, chmlib is still used in order to correctly handle
 chm documents.
 
 Compilation and installation (Linux only):
