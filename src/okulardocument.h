@@ -21,7 +21,7 @@
 
 #include "document.h"
 
-namaspace Okular
+namespace Okular
 {
 	class Document;
 	class Page;

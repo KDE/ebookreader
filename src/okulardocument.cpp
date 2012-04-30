@@ -17,9 +17,9 @@
 ****************************************************************************/
 
 #include <QDebug>
-#include <document.h>
-#include <page.h>
-#include <generator.h>
+#include <okular/core/document.h>
+#include <okular/core/page.h>
+#include <okular/core/generator.h>
 #include <kmimetype.h>
 #include "okulardocument.h"
 
@@ -42,10 +42,10 @@ namespace Okular
 	};
 }
 #define OKULAR_OBSERVER_ID 6
-class OkularObserver
+class OkularObserver : public Okular::DocumentObserver
 {
 public:
-	virtual uint observerId() {return OKULAR_OBSERVER_ID;}
+	virtual uint observerId() const {return OKULAR_OBSERVER_ID;}
 };
 
 //main entry point into okular core libray
@@ -55,12 +55,12 @@ public:
 	explicit PagePainter(Okular::Document *doc):
 		doc_(doc)
 	{}
-	const QPixmap* getPagePixmap(const Page *page) const
+	const QPixmap* getPagePixmap(const Okular::Page *page) const
 	{
 		if(false == page->hasPixmap(OKULAR_OBSERVER_ID, -1, -1))
 		{
-			PixmapRequest *pr = new PixmapRequest(MY_OBSERVER_ID, page->number(), page->width(), page->height(), 0, false);
-			QLinkedList<PixmapRequest*> req;
+			Okular::PixmapRequest *pr = new Okular::PixmapRequest(OKULAR_OBSERVER_ID, page->number(), page->width(), page->height(), 0, false);
+			QLinkedList<Okular::PixmapRequest*> req;
 			req.push_back(pr);
 			doc_->requestPixmaps(req);
 		}
@@ -101,7 +101,7 @@ const QPixmap* OkularDocument::getPixmap(int pageNb, qreal xres, qreal)
 	{
 		return NULL;
 	}
-	QPixmap *pixmap = NULL;
+	const QPixmap *pixmap = NULL;
 	const Okular::Page *page = doc_->page(pageNb);
 	if (NULL != page && NULL != painter_)
 	{
@@ -119,11 +119,14 @@ void OkularDocument::deletePixmap(const QPixmap *pixmap)
 	if (NULL != pixmap)
 	{
 		QMap<const QPixmap*,const Okular::Page*>::iterator it = pages_.find(pixmap);
-		int i = pages_.indexOf(pixmap);
 		if (pages_.end() != it)
 		{
-			it.value()->deletePixmap(OKULAR_OBSERVER_ID);
-			pages_.remove(pixmap);
+			Okular::Page *page = const_cast<Okular::Page*>(it.value());
+			if (NULL != page)
+			{
+				page->deletePixmap(OKULAR_OBSERVER_ID);
+				pages_.remove(pixmap);
+			}
 		}
 	}
 }

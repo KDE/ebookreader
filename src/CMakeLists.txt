@@ -11,7 +11,7 @@ set ( LIBS ${LIBS}
 	${QT_QTNETWORK_LIBRARY}
 	${QT_MOBILITY_SYSTEMINFO_LIBRARY}
 	${CHM_LIBRARY} ${PROJECT_BINARY_DIR}/../3rdparty_linux/libchmfile/libchmfile.a
-	okularcore kdecore )
+	${OKULAR_CORE_LIBRARY} kdecore )
 
 set ( tabletReader_HDRS
 	logger.h
