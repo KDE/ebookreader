@@ -33,7 +33,7 @@ class CHMDocument : public Document
 public:
     CHMDocument();
     virtual int load(const QString &fileName);
-    virtual const QPixmap* render(int page, qreal xres, qreal yres);
+    virtual const QPixmap* getPixmap(int page, qreal xres, qreal yres);
     virtual void deletePixmap(const QPixmap *pixmap);
     virtual ~CHMDocument();
 private:
