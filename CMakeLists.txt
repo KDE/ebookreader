@@ -15,10 +15,8 @@ set ( CMAKE_CXX_FLAGS_DESKTOPDEBUG "${CMAKE_CXX_FLAGS_DEBUG} -DQT_DEBUG_ENABLE_L
 
 find_package ( Qt4 4.7.0 REQUIRED )
 find_package ( QtMobility 1.2.0 REQUIRED )
-find_package ( LibPoppler REQUIRED )
-find_package ( LibPopplerQt4 REQUIRED )
+find_package ( LibOkularCore REQUIRED )
 find_package ( LibChm REQUIRED )
-find_package ( LibDjvu REQUIRED )
 
 include ( ${QT_USE_FILE} )
 include_directories (
