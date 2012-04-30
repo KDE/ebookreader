@@ -113,7 +113,7 @@ bool DocumentWidget::setDocument(const QString &filePath)
     Document *oldDoc = doc_;//keep old document
 
     KMimeType::Ptr ptr = KMimeType::findByPath(filePath);
-    if (ptr->is("application/x-chm"))
+    if (ptr->is("application/vnd.ms-htmlhelp"))
     {
 	    doc_ = new CHMDocument();
 	    parent_->setSingleThreaded(true);

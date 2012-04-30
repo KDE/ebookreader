@@ -120,13 +120,13 @@ QVariant FileBrowserModel::data(const QModelIndex &index, int role) const
             {
                 QString iconFileName;
 		KMimeType::Ptr ptr = KMimeType::findByPath(_files[fileRow]);
-                if (ptr->is("application/pdf") || ptr->is("application/x-pdf"))
+                if (ptr->is("application/pdf"))
                 {
                     iconFileName = QString(":/filebrowser/icons/Adobe-PDF-Document-icon.png");
                 } else if (ptr->is("image/vnd.djvu"))
 		{
                     iconFileName = QString(":/filebrowser/icons/Djvu-document-icon.png");
-                } else if (ptr->is("application/x-chm"))
+                } else if (ptr->is("application/vnd.ms-htmlhelp"))
 		{
                     iconFileName = QString(":/filebrowser/icons/Chm-document-icon.png");
                 } else
