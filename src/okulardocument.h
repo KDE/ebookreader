@@ -34,7 +34,7 @@ class OkularDocument : public Document
 public:
     OkularDocument();
     virtual int load(const QString &fileName);
-    virtual const QPixmap* getPixmap(int page, qreal xres, qreal yres);
+    virtual const QPixmap* getPixmap(int page, int scaleFactor);
     virtual void deletePixmap(const QPixmap *pixmap);
     virtual ~OkularDocument();
 private:

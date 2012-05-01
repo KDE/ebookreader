@@ -62,8 +62,7 @@ void DocumentWidget::loadImage(int page)
     }
 
     pageCache_[page%CACHE_SIZE]->pPixmap = doc_->
-                      getPixmap(page, scaleFactor_*physicalDpiX_,
-                                      scaleFactor_*physicalDpiY_);
+                      getPixmap(page, scaleFactor_);//TODO physicalDpi no longer needed
     pageCache_[page%CACHE_SIZE]->valid = true;
     qDebug() << "DocumentWidget::loadImage end";
 }

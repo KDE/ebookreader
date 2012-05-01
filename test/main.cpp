@@ -55,7 +55,7 @@ void TestTabletReader::openFile(const char *fileName, bool useCHM)
 	int n = 0;
 	for (n = 0; n < numPages; ++n)
 	{
-		pixmap = doc->getPixmap(n, 800, -1);
+		pixmap = doc->getPixmap(n, 1);
 		QVERIFY(NULL != pixmap);
 		doc->deletePixmap(pixmap);
 	}
@@ -68,7 +68,7 @@ void TestTabletReader::openFile(const char *fileName, bool useCHM)
 		{
 			doc->deletePixmap(pixmaps[n%3]);
 		}
-		pixmaps[n%3] = doc->getPixmap(n, -1, -1);
+		pixmaps[n%3] = doc->getPixmap(n, 1);
 		QVERIFY(NULL != pixmaps[0]);
 	}
 	delete doc;

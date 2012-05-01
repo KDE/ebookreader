@@ -58,9 +58,9 @@ int CHMDocument::load(const QString &fileName)
     return EXIT_FAILURE;
 }
 
-const QPixmap* CHMDocument::getPixmap(int page, qreal xres, qreal)
+const QPixmap* CHMDocument::getPixmap(int page, int scaleFactor)
 {
-    if ((NULL == doc_) || (NULL == req_) || (0 == numPages_) || (0 >= xres))
+    if ((NULL == doc_) || (NULL == req_) || (0 == numPages_))
     {
         return NULL;
     }
@@ -71,8 +71,7 @@ const QPixmap* CHMDocument::getPixmap(int page, qreal xres, qreal)
     QStringList urls = toc_.at(page).urls;//there must be only one URL for the TOC
     webView.load(QUrl::fromLocalFile(urls.at(0)));
     eventLoop_.exec();//wait for load to complete
-    qreal zoomFactor = xres/webView.physicalDpiX();
-    webView.setZoomFactor(zoomFactor);
+    webView.setZoomFactor(scaleFactor);
     QWebFrame *webFrame = webView.page()->mainFrame();
     webFrame->setScrollBarPolicy(Qt::Vertical, Qt::ScrollBarAlwaysOff);
     webFrame->setScrollBarPolicy(Qt::Horizontal, Qt::ScrollBarAlwaysOff);

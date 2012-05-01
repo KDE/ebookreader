@@ -55,11 +55,11 @@ public:
 	explicit PagePainter(Okular::Document *doc):
 		doc_(doc)
 	{}
-	const QPixmap* getPagePixmap(const Okular::Page *page) const
+	const QPixmap* getPagePixmap(const Okular::Page *page, int width, int height) const
 	{
-		if(false == page->hasPixmap(OKULAR_OBSERVER_ID, -1, -1))
+		if(false == page->hasPixmap(OKULAR_OBSERVER_ID))
 		{
-			Okular::PixmapRequest *pr = new Okular::PixmapRequest(OKULAR_OBSERVER_ID, page->number(), page->width(), page->height(), 0, false);
+			Okular::PixmapRequest *pr = new Okular::PixmapRequest(OKULAR_OBSERVER_ID, page->number(), width, height, 0, false);
 			QLinkedList<Okular::PixmapRequest*> req;
 			req.push_back(pr);
 			doc_->requestPixmaps(req);
@@ -101,7 +101,7 @@ int OkularDocument::load(const QString &fileName)
 	return res;
 }
 
-const QPixmap* OkularDocument::getPixmap(int pageNb, qreal, qreal)
+const QPixmap* OkularDocument::getPixmap(int pageNb, int scaleFactor)
 {
 	if (NULL == doc_ || NULL == painter_)
 	{
@@ -111,7 +111,9 @@ const QPixmap* OkularDocument::getPixmap(int pageNb, qreal, qreal)
 	const Okular::Page *page = doc_->page(pageNb);
 	if (NULL != page)
 	{
-		pixmap = painter_->getPagePixmap(page);
+		qDebug() << "scale " << scaleFactor;
+		qDebug() << "width " << page->width() << ", height " << page->height();
+		pixmap = painter_->getPagePixmap(page, scaleFactor*page->width(), scaleFactor*page->height());
 		if (NULL != pixmap)
 		{
 			pages_.insert(pixmap, page);

@@ -30,7 +30,7 @@ class Document
 public:
     Document() : numPages_(0) {}
     virtual int load(const QString &fileName) = 0;
-    virtual const QPixmap* getPixmap(int page, qreal xres, qreal yres) = 0;
+    virtual const QPixmap* getPixmap(int page, int scaleFactor) = 0;
     virtual void deletePixmap(const QPixmap *pixmap) = 0;
     int numPages() const
     {
