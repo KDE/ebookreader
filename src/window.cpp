@@ -846,7 +846,8 @@ void Window::showAboutDialog()
             {
                 pAboutDlg->setProperty("text", tr("<H2>tabletReader v2.0</H2>"
                                                   "<H3>e-book reader for touch-enabled devices</H3>"
-                                                  "<H4>Supported formats: PDF, DJVU and CHM.</H4><br>"
+                                                  "<H4>Supported formats: PDF, CHM, DJVU, EPUB, etc.</H4>"
+						  "<H4>(all Okular supported formats)</H4><br>"
                                                   "Copyright (C) 2012, Bogdan Cristea. All rights reserved.<br>"
                                                   "<i>e-mail: cristeab@gmail.com</i><br><br>"
                                                   "This program is distributed in the hope that it will be useful, "
