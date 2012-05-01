@@ -29,7 +29,7 @@
 #include <QDebug>
 #include "chmdocument.h"
 #include "chmreply.h"
-#include "window.h"//TODO: supress this header
+#include "screen_size.h"
 
 CHMDocument::CHMDocument() :
     Document(),
@@ -77,7 +77,7 @@ const QPixmap* CHMDocument::getPixmap(int page, qreal xres, qreal)
     webFrame->setScrollBarPolicy(Qt::Vertical, Qt::ScrollBarAlwaysOff);
     webFrame->setScrollBarPolicy(Qt::Horizontal, Qt::ScrollBarAlwaysOff);
     QSize size = webFrame->contentsSize();
-    int preferredWidth = int(Window::MIN_SCREEN_WIDTH*0.9);
+    int preferredWidth = int(MIN_SCREEN_WIDTH*0.9);
     if (size.width() < preferredWidth)
     {
         size = QSize(preferredWidth, size.height());//adjust page width

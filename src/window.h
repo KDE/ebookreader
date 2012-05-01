@@ -58,10 +58,6 @@ public:
          HORIZONTAL_SLIDE_SPEED_MS = 500,
          SWIPE_THRESHOLD = 5,
          LONG_PRESS_TIMEOUT_MS = 1000,
-         FULL_SCREEN_WIDTH = 1024,
-         FULL_SCREEN_HEIGHT = 768,
-         MIN_SCREEN_WIDTH = 800,
-         MIN_SCREEN_HEIGHT = 600,
          WAIT_TIMER_INTERVAL_MS = 1000};
 
 protected:
