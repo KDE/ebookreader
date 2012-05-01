@@ -59,7 +59,7 @@ void FileBrowserModel::searchPdfFiles()
     _files.clear();
     _dirs.clear();
 
-    QDir directory = QDir(_currentDir, "*.pdf *.djvu *.chm",
+    QDir directory = QDir(_currentDir, "*.*",
                           QDir::Name | QDir::IgnoreCase | QDir::LocaleAware);
 
     //fill file list
@@ -129,9 +129,12 @@ QVariant FileBrowserModel::data(const QModelIndex &index, int role) const
                 } else if (ptr->is("application/vnd.ms-htmlhelp"))
 		{
                     iconFileName = QString(":/filebrowser/icons/Chm-document-icon.png");
+		} else if (ptr->is("application/epub+zip"))
+		{ 
+                    iconFileName = QString(":/filebrowser/icons/Epub-document-icon.png");
                 } else
 		{ 
-                    iconFileName = QString(":/filebrowser/icons/unknown-document-icon.png");
+                    iconFileName = QString(":/filebrowser/icons/Document-icon.png");
                 }
                 return iconFileName;
             }
