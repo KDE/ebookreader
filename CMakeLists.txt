@@ -16,7 +16,7 @@ set ( CMAKE_CXX_FLAGS_DESKTOPDEBUG "${CMAKE_CXX_FLAGS_DEBUG} -DQT_DEBUG_ENABLE_L
 find_package ( Qt4 4.7.0 REQUIRED )
 find_package ( QtMobility 1.2.0 REQUIRED )
 find_package ( KDE4 REQUIRED 4.7.0 )
-find_package ( LibOkularCore REQUIRED )
+find_package ( Okular REQUIRED )
 find_package ( LibChm REQUIRED )
 
 include ( ${QT_USE_FILE} )
@@ -24,6 +24,11 @@ include_directories (
 	${CMAKE_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR}
 	${QT_QTCORE_INCLUDE_DIR} ${QT_QTGUI_INCLUDE_DIR} )
 
+set (CMAKE_CXX_FLAGS_DEBUG -ggdb)
+
 add_subdirectory ( 3rdparty_linux/libchmfile )
 add_subdirectory ( src )
+IF ("Debug" STREQUAL "${CMAKE_BUILD_TYPE}")
+	add_subdirectory ( test )
+ENDIF()
 

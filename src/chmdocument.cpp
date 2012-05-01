@@ -60,7 +60,7 @@ int CHMDocument::load(const QString &fileName)
 
 const QPixmap* CHMDocument::getPixmap(int page, qreal xres, qreal)
 {
-    if ((NULL == doc_) || (NULL == req_) || (0 == numPages_))
+    if ((NULL == doc_) || (NULL == req_) || (0 == numPages_) || (0 >= xres))
     {
         return NULL;
     }
@@ -83,8 +83,6 @@ const QPixmap* CHMDocument::getPixmap(int page, qreal xres, qreal)
         size = QSize(preferredWidth, size.height());//adjust page width
     }
     webView.setGeometry(QRect(QPoint(0, 0), size));
-    //the conversion QPixmap to QImage is made in order to keep unchaged the upper layer,
-    //but is redundant since the QImage object is converted back to QPixmap before being shown
     QPixmap *pixmap = new QPixmap(QPixmap::grabWidget(&webView));
     pages_.push_back(pixmap);
     return pixmap;
