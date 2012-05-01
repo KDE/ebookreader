@@ -28,7 +28,7 @@ set (CMAKE_CXX_FLAGS_DEBUG -ggdb)
 
 add_subdirectory ( 3rdparty_linux/libchmfile )
 add_subdirectory ( src )
-IF ("Debug" STREQUAL "${CMAKE_BUILD_TYPE}")
+IF (("Debug" STREQUAL "${CMAKE_BUILD_TYPE}") OR ("DesktopDebug" STREQUAL "${CMAKE_BUILD_TYPE}"))
 	add_subdirectory ( test )
 ENDIF()
 

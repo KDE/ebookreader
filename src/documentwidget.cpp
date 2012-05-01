@@ -120,7 +120,7 @@ bool DocumentWidget::setDocument(const QString &filePath)
     } else
     {
 	    doc_ = new OkularDocument();
-	    parent_->setSingleThreaded(false);
+	    parent_->setSingleThreaded(true);
     }
 
     if ((NULL != doc_) && (EXIT_SUCCESS == doc_->load(filePath)))

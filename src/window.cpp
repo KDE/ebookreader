@@ -144,6 +144,7 @@ Window::Window(QWidget *parent)
     QString filePath;
     if (NULL != (filePath = settings.value(KEY_FILE_PATH).toString()))
     {
+	qDebug() << "Found document " << filePath;
         if (document_->setDocument(filePath))
         {
             currentZoomIndex_ = settings.value(KEY_ZOOM_LEVEL, 3).toInt();
