@@ -11,9 +11,10 @@ include_directories(${QT_QTTEST_INCLUDE_DIR}
 	${QT_QTGUI_INCLUDE_DIR}	
 	${CMAKE_CURRENT_BINARY_DIR} 
 	${CMAKE_SOURCE_DIR}
-	${CMAKE_SOURCE_DIR}/../src)
+	${CMAKE_SOURCE_DIR}/../src
+	${CMAKE_SOURCE_DIR}/../3rdparty_linux/libchmfile)
 
-set(TestTabletReader_SRCS main.cpp ../src/okulardocument.cpp)
+set(TestTabletReader_SRCS main.cpp ../src/okulardocument.cpp ../src/chmdocument.cpp)
 
 QT4_WRAP_CPP(MOCS main.h)
 

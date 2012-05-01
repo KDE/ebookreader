@@ -92,11 +92,13 @@ OkularDocument::~OkularDocument()
 
 int OkularDocument::load(const QString &fileName)
 {
-	if (NULL == doc_)
+	int res = EXIT_FAILURE;
+	if ((NULL != doc_) && (true == doc_->openDocument(fileName, KUrl::fromPath(fileName), KMimeType::findByPath(fileName))))
 	{
-		return EXIT_FAILURE;
+		numPages_ = doc_->pages();
+		res = EXIT_SUCCESS;
 	}
-	return (true == doc_->openDocument(fileName, KUrl::fromPath(fileName), KMimeType::findByPath(fileName)))?EXIT_SUCCESS:EXIT_FAILURE;
+	return res;
 }
 
 const QPixmap* OkularDocument::getPixmap(int pageNb, qreal, qreal)

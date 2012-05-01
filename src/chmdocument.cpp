@@ -29,7 +29,7 @@
 #include <QDebug>
 #include "chmdocument.h"
 #include "chmreply.h"
-#include "window.h"
+#include "window.h"//TODO: supress this header
 
 CHMDocument::CHMDocument() :
     Document(),
