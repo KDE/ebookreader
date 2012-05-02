@@ -1,5 +1,5 @@
 project( chmfile )
-set ( CMAKE_BUILD_TYPE Release )
+
 include_directories (
 	${CMAKE_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR}
 	${QT_QTCORE_INCLUDE_DIR} ${QT_QTGUI_INCLUDE_DIR}
