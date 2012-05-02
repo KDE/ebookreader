@@ -111,7 +111,6 @@ Window::Window(QWidget *parent)
         flickable_->activateOn(scroll);
     }
     document_->setStackedWidget(slidingStacked_);
-    document_->setPhysicalDpi(label->physicalDpiX(), label->physicalDpiY());
     slidingStacked_->setSpeed(HORIZONTAL_SLIDE_SPEED_MS);
     slidingStacked_->setWrap(true);
     slidingStacked_->setVerticalMode(false);

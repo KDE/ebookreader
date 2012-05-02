@@ -59,11 +59,6 @@ public:
     {
         return (doc_ != NULL);
     }
-    void setPhysicalDpi(int physicalDpiX, int physicalDpiY)
-    {
-        physicalDpiX_ = physicalDpiX;
-        physicalDpiY_ = physicalDpiY;
-    }
     void setStackedWidget(SlidingStackedWidget *stackedWidget)
     {
         stackedWidget_ = stackedWidget;
@@ -126,8 +121,6 @@ private:
     QMutex cacheMutex_;//used to protect the access to page cache
     SlidingStackedWidget *stackedWidget_;
     QScrollArea *currentScrollArea_;
-    int physicalDpiX_;
-    int physicalDpiY_;
 };
 
 #endif

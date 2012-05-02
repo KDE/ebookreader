@@ -33,8 +33,7 @@ DocumentWidget::DocumentWidget(Window *parent)
       maxNumPages_(0),
       scaleFactor_(1.0),
       stackedWidget_(NULL),
-      currentScrollArea_(NULL),
-      physicalDpiX_(0), physicalDpiY_(0)
+      currentScrollArea_(NULL)
 {
     for (int n = 0; n < CACHE_SIZE; ++n)
     {
@@ -63,7 +62,7 @@ void DocumentWidget::loadImage(int page)
 
     doc_->deletePixmap(pageCache_[page%CACHE_SIZE]->pPixmap);
     pageCache_[page%CACHE_SIZE]->pPixmap = doc_->
-                      getPixmap(page, scaleFactor_);//TODO physicalDpi no longer needed
+                      getPixmap(page, scaleFactor_);
     pageCache_[page%CACHE_SIZE]->valid = true;
     qDebug() << "DocumentWidget::loadImage end";
 }
