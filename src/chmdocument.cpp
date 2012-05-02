@@ -58,9 +58,9 @@ int CHMDocument::load(const QString &fileName)
     return EXIT_FAILURE;
 }
 
-const QPixmap* CHMDocument::getPixmap(int page, int scaleFactor)
+const QPixmap* CHMDocument::getPixmap(int page, qreal scaleFactor)
 {
-    if ((NULL == doc_) || (NULL == req_) || (0 == numPages_))
+    if ((NULL == doc_) || (NULL == req_) || (0 == numPages_) || (0 >= scaleFactor))
     {
         return NULL;
     }

@@ -59,6 +59,7 @@ public:
 	{
 		if(false == page->hasPixmap(OKULAR_OBSERVER_ID))
 		{
+			qDebug() << "making pixmap request";
 			Okular::PixmapRequest *pr = new Okular::PixmapRequest(OKULAR_OBSERVER_ID, page->number(), width, height, 0, false);
 			QLinkedList<Okular::PixmapRequest*> req;
 			req.push_back(pr);
@@ -101,19 +102,20 @@ int OkularDocument::load(const QString &fileName)
 	return res;
 }
 
-const QPixmap* OkularDocument::getPixmap(int pageNb, int scaleFactor)
+const QPixmap* OkularDocument::getPixmap(int pageNb, qreal scaleFactor)
 {
-	if (NULL == doc_ || NULL == painter_)
+	if ((NULL == doc_) || (NULL == painter_) || (0 >= scaleFactor))
 	{
 		return NULL;
 	}
+	qDebug() << "OkularDocument::getPixmap: pageNb" << pageNb << ", scaleFactor" << scaleFactor;
 	const QPixmap *pixmap = NULL;
 	const Okular::Page *page = doc_->page(pageNb);
 	if (NULL != page)
 	{
-		qDebug() << "scale " << scaleFactor;
-		qDebug() << "width " << page->width() << ", height " << page->height();
-		pixmap = painter_->getPagePixmap(page, scaleFactor*page->width(), scaleFactor*page->height());
+
+		qDebug() << "width" << page->width() << ", height" << page->height();
+		pixmap = painter_->getPagePixmap(page, int(scaleFactor*page->width()), int(scaleFactor*page->height()));
 		if (NULL != pixmap)
 		{
 			pages_.insert(pixmap, page);
@@ -126,6 +128,7 @@ void OkularDocument::deletePixmap(const QPixmap *pixmap)
 {
 	if (NULL != pixmap)
 	{
+		qDebug() << "OkularDocument::deletePixmap";
 		QMap<const QPixmap*,const Okular::Page*>::iterator it = pages_.find(pixmap);
 		if (pages_.end() != it)
 		{

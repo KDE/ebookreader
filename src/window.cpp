@@ -774,13 +774,14 @@ void Window::gotoPage(int pageNb, int numPages)
 
 void Window::setZoomFactor(int index)
 {
-    qDebug() << "Window::setZoomFactor " << index;
+    qDebug() << "Window::setZoomFactor" << index;
     //set zoom factor
     if ((currentZoomIndex_ == index) || ((0 > index) || (scaleFactors_.count() <= index)))
     {
         qDebug() << "nothing to do";
         return;//nothing to do
     }
+    qDebug() << "selected zoom factor" << scaleFactors_[index];
     currentZoomIndex_ = index;
     document_->setScale(scaleFactors_[currentZoomIndex_]);
     //update all pages from circular buffer
