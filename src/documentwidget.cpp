@@ -61,6 +61,7 @@ void DocumentWidget::loadImage(int page)
         return;
     }
 
+    doc_->deletePixmap(pageCache_[page%CACHE_SIZE]->pPixmap);
     pageCache_[page%CACHE_SIZE]->pPixmap = doc_->
                       getPixmap(page, scaleFactor_);//TODO physicalDpi no longer needed
     pageCache_[page%CACHE_SIZE]->valid = true;
