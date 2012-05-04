@@ -20,6 +20,7 @@
 #define OKULAR_DOCUMENT_H
 
 #include "document.h"
+#include <kmimetype.h>
 
 namespace Okular
 {
@@ -38,10 +39,12 @@ public:
     virtual void deletePixmap(const QPixmap *pixmap);
     virtual ~OkularDocument();
 private:
+    void adjustSize(int &width, int &height);
     Okular::Document *doc_;
     OkularObserver *obs_;
     PagePainter *painter_;
     QMap<const QPixmap*, const Okular::Page*> pages_;
+    KMimeType::Ptr mimeType_;
 };
 
 #endif // OKULAR_DOCUMENT_H

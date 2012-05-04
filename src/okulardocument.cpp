@@ -20,8 +20,8 @@
 #include <okular/core/document.h>
 #include <okular/core/page.h>
 #include <okular/core/generator.h>
-#include <kmimetype.h>
 #include "okulardocument.h"
+#include "screen_size.h"
 
 //helper class, not made public by okular core library
 namespace Okular
@@ -94,12 +94,28 @@ OkularDocument::~OkularDocument()
 int OkularDocument::load(const QString &fileName)
 {
 	int res = EXIT_FAILURE;
-	if ((NULL != doc_) && (true == doc_->openDocument(fileName, KUrl::fromPath(fileName), KMimeType::findByPath(fileName))))
+	mimeType_ = KMimeType::findByPath(fileName);
+	if ((NULL != doc_) && (true == doc_->openDocument(fileName, KUrl::fromPath(fileName), mimeType_)))
 	{
 		numPages_ = doc_->pages();
 		res = EXIT_SUCCESS;
 	}
 	return res;
+}
+
+
+void OkularDocument::adjustSize(int &width, int &height)
+{
+	if(mimeType_->is("image/vnd.djvu"))
+	{
+		//ajust page size for djvu documents if needed
+		if (width > MIN_SCREEN_WIDTH)
+		{
+			int old_width = width;
+			width = int(MIN_SCREEN_WIDTH*0.9);
+			height = int(height*double(width)/old_width);
+		}
+	}
 }
 
 const QPixmap* OkularDocument::getPixmap(int pageNb, qreal scaleFactor)
@@ -115,7 +131,10 @@ const QPixmap* OkularDocument::getPixmap(int pageNb, qreal scaleFactor)
 	{
 
 		qDebug() << "width" << page->width() << ", height" << page->height();
-		pixmap = painter_->getPagePixmap(page, int(scaleFactor*page->width()), int(scaleFactor*page->height()));
+		int width = int(scaleFactor*page->width());
+		int height = int(scaleFactor*page->height());
+		adjustSize(width, height);
+		pixmap = painter_->getPagePixmap(page, width, height);
 		if (NULL != pixmap)
 		{
 			pages_.insert(pixmap, page);
