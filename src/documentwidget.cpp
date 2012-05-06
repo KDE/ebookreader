@@ -38,6 +38,7 @@ DocumentWidget::DocumentWidget(Window *parent)
     for (int n = 0; n < CACHE_SIZE; ++n)
     {
         pageCache_.append(new PageCache);
+	pageCache_[n]->pPixmap = NULL;
         pageCache_[n]->valid = false;
     }
 }

@@ -82,9 +82,7 @@ const QPixmap* CHMDocument::getPixmap(int page, qreal scaleFactor)
         size = QSize(preferredWidth, size.height());//adjust page width
     }
     webView.setGeometry(QRect(QPoint(0, 0), size));
-    QPixmap *pixmap = new QPixmap(QPixmap::grabWidget(&webView));
-    pages_.push_back(pixmap);
-    return pixmap;
+    return new QPixmap(QPixmap::grabWidget(&webView));
 }
 
 //this method is used by QWebView to load an HTML page

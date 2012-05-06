@@ -39,6 +39,7 @@ public:
     virtual ~OkularDocument();
 private:
     void adjustSize(int &width, int &height);
+    QPixmap* setWhiteBackground(const QPixmap *pixmap);
     Okular::Document *doc_;
     OkularObserver *obs_;
     PagePainter *painter_;

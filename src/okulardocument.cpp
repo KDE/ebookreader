@@ -20,6 +20,7 @@
 #include <okular/core/document.h>
 #include <okular/core/page.h>
 #include <QPixmap>
+#include <QPainter>
 #include <okular/core/generator.h>
 #include "okulardocument.h"
 #include "screen_size.h"
@@ -119,6 +120,28 @@ void OkularDocument::adjustSize(int &width, int &height)
 	}
 }
 
+QPixmap* OkularDocument::setWhiteBackground(const QPixmap *pixmap)
+{
+	QPixmap *out = NULL;
+	if(mimeType_->is("application/epub+zip"))
+	{
+		out = new QPixmap(pixmap->width(), pixmap->height());
+		if (NULL != out)
+		{
+			out->fill(Qt::white);
+			QPainter p;
+			p.begin(out);
+			p.setBackgroundMode(Qt::OpaqueMode);
+			p.drawPixmap(0, 0, *pixmap);
+			p.end();
+		}
+	} else {
+		//alreay has white background
+		out = new QPixmap(*pixmap);
+	}
+	return out;
+}
+
 //get Pixmap from okular core library and immediately create a copy of it
 const QPixmap* OkularDocument::getPixmap(int pageNb, qreal scaleFactor)
 {
@@ -127,7 +150,7 @@ const QPixmap* OkularDocument::getPixmap(int pageNb, qreal scaleFactor)
 		return NULL;
 	}
 	qDebug() << "OkularDocument::getPixmap: pageNb" << pageNb << ", scaleFactor" << scaleFactor;
-	const QPixmap *out = NULL;
+	QPixmap *out = NULL;
 	Okular::Page *page = const_cast<Okular::Page*>(doc_->page(pageNb));
 	if (NULL != page)
 	{
@@ -139,8 +162,7 @@ const QPixmap* OkularDocument::getPixmap(int pageNb, qreal scaleFactor)
 		const QPixmap *pixmap = painter_->getPagePixmap(page, width, height);
 		if (NULL != pixmap)
 		{
-			out = new QPixmap(*pixmap);
-			pages_.push_back(out);
+			out = setWhiteBackground(pixmap);
 			//delete immediatelly internal pixmap
 			page->deletePixmap(OKULAR_OBSERVER_ID);
 		}
