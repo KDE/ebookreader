@@ -36,14 +36,12 @@ public:
     OkularDocument();
     virtual int load(const QString &fileName);
     virtual const QPixmap* getPixmap(int page, qreal scaleFactor);
-    virtual void deletePixmap(const QPixmap *pixmap);
     virtual ~OkularDocument();
 private:
     void adjustSize(int &width, int &height);
     Okular::Document *doc_;
     OkularObserver *obs_;
     PagePainter *painter_;
-    QMap<const QPixmap*, const Okular::Page*> pages_;
     KMimeType::Ptr mimeType_;
 };
 

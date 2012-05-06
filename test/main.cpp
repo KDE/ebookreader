@@ -10,28 +10,44 @@
 
 void TestTabletReader::openPDF()
 {
+#ifdef PDF_FILE
 	openFile(PDF_FILE);
+#else
+#pragma message("No PDF file")
+#endif
 }
 
 void TestTabletReader::openDJVU()
 {
+#ifdef DJVU_FILE
 	openFile(DJVU_FILE);
+#else
+#pragma message("No DJVU file")
+#endif
 }
 
 void TestTabletReader::openEPUB()
 {
+#ifdef EPUB_FILE
 	openFile(EPUB_FILE);
+#else
+#pragma message("No EPUB file")
+#endif
 }
 
 void TestTabletReader::openCHM()
 {
+#ifdef CHM_FILE
 	openFile(CHM_FILE, true);
+#else
+#pragma message("No CHM file")
+#endif
 }
 
 void TestTabletReader::openFile(const char *fileName, bool useCHM)
 {
 	int argc = 1;
-	char *argv[] = {"testTabletReader"};
+	char *argv[] = {(char*)"testTabletReader"};
 	QApplication app(argc, argv);//needed by OkularDocument class
 	Document *doc = NULL;
 	if (true == useCHM)
@@ -53,15 +69,18 @@ void TestTabletReader::openFile(const char *fileName, bool useCHM)
 	//get at most 10 pages one by one
 	numPages = (10 < numPages)?10:numPages;
 	int n = 0;
+	qDebug() << "one by one";
 	for (n = 0; n < numPages; ++n)
 	{
 		pixmap = doc->getPixmap(n, 1);
 		QVERIFY(NULL != pixmap);
+		QVERIFY2(false == pixmap->isNull(), "one page");
 		doc->deletePixmap(pixmap);
 	}
 
 	//get three pages each time by deleting one when a fourth is generated
 	const QPixmap *pixmaps[3] = {NULL};
+	qDebug() << "three pages";
 	for (n = 0; n < numPages; ++n)
 	{
 		if (3 <= n)
@@ -69,7 +88,8 @@ void TestTabletReader::openFile(const char *fileName, bool useCHM)
 			doc->deletePixmap(pixmaps[n%3]);
 		}
 		pixmaps[n%3] = doc->getPixmap(n, 1);
-		QVERIFY(NULL != pixmaps[0]);
+		QVERIFY(NULL != pixmaps[n%3]);
+		QVERIFY2(false == pixmaps[n%3]->isNull(), "three pages");
 	}
 	delete doc;
 }

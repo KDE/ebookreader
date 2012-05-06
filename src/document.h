@@ -31,7 +31,15 @@ public:
     Document() : numPages_(0) {}
     virtual int load(const QString &fileName) = 0;
     virtual const QPixmap* getPixmap(int page, qreal scaleFactor) = 0;
-    virtual void deletePixmap(const QPixmap *pixmap) = 0;
+    virtual void deletePixmap(const QPixmap *pixmap)
+    {
+	    int i = 0;
+	    if ((NULL != pixmap) && (-1 != (i = pages_.indexOf(pixmap))))
+	    {
+		    delete pages_[i];
+		    pages_.remove(i);
+	    }
+    }
     int numPages() const
     {
         return numPages_;
@@ -42,6 +50,7 @@ public:
     }
 protected:
     int numPages_;
+    QVector<const QPixmap*> pages_;
 };
 
 #endif // DOCUMENT_H

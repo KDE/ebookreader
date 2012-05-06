@@ -34,7 +34,6 @@ public:
     CHMDocument();
     virtual int load(const QString &fileName);
     virtual const QPixmap* getPixmap(int page, qreal scaleFactor);
-    virtual void deletePixmap(const QPixmap *pixmap);
     virtual ~CHMDocument();
 private:
     LCHMFile *doc_;
@@ -54,7 +53,6 @@ private:
     RequestHandler *req_;
     QEventLoop eventLoop_;
     friend class RequestHandler;
-    QVector<const QPixmap*> pages_;
 };
 
 #endif // CHMDOCUMENT_H

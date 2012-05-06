@@ -19,6 +19,7 @@
 #include <QDebug>
 #include <okular/core/document.h>
 #include <okular/core/page.h>
+#include <QPixmap>
 #include <okular/core/generator.h>
 #include "okulardocument.h"
 #include "screen_size.h"
@@ -118,6 +119,7 @@ void OkularDocument::adjustSize(int &width, int &height)
 	}
 }
 
+//get Pixmap from okular core library and immediately create a copy of it
 const QPixmap* OkularDocument::getPixmap(int pageNb, qreal scaleFactor)
 {
 	if ((NULL == doc_) || (NULL == painter_) || (0 >= scaleFactor))
@@ -125,8 +127,8 @@ const QPixmap* OkularDocument::getPixmap(int pageNb, qreal scaleFactor)
 		return NULL;
 	}
 	qDebug() << "OkularDocument::getPixmap: pageNb" << pageNb << ", scaleFactor" << scaleFactor;
-	const QPixmap *pixmap = NULL;
-	const Okular::Page *page = doc_->page(pageNb);
+	const QPixmap *out = NULL;
+	Okular::Page *page = const_cast<Okular::Page*>(doc_->page(pageNb));
 	if (NULL != page)
 	{
 
@@ -134,30 +136,15 @@ const QPixmap* OkularDocument::getPixmap(int pageNb, qreal scaleFactor)
 		int width = int(scaleFactor*page->width());
 		int height = int(scaleFactor*page->height());
 		adjustSize(width, height);
-		pixmap = painter_->getPagePixmap(page, width, height);
+		const QPixmap *pixmap = painter_->getPagePixmap(page, width, height);
 		if (NULL != pixmap)
 		{
-			pages_.insert(pixmap, page);
+			out = new QPixmap(*pixmap);
+			pages_.push_back(out);
+			//delete immediatelly internal pixmap
+			page->deletePixmap(OKULAR_OBSERVER_ID);
 		}
 	}
-	return pixmap;
-}
-
-void OkularDocument::deletePixmap(const QPixmap *pixmap)
-{
-	if (NULL != pixmap)
-	{
-		qDebug() << "OkularDocument::deletePixmap";
-		QMap<const QPixmap*,const Okular::Page*>::iterator it = pages_.find(pixmap);
-		if (pages_.end() != it)
-		{
-			Okular::Page *page = const_cast<Okular::Page*>(it.value());
-			if (NULL != page)
-			{
-				page->deletePixmap(OKULAR_OBSERVER_ID);
-				pages_.remove(pixmap);
-			}
-		}
-	}
+	return out;
 }
 

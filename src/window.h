@@ -107,13 +107,14 @@ private:
         {            
             if (true == document_->invalidatePageCache(page))
             {
-                qDebug() << "Window::preloadPageMultiThreaded";
+                qDebug() << "Window::preloadPage: emit";
                 emit updateCache(page);
             }
         }
         else
         {
             //the single threaded version of this function is called from onAnimationFinished slot
+	    qDebug() << "Window::preloadPage: enqueue" << page;
             pageToLoadNo_.enqueue(page);//put into queue the page number
         }
     }

@@ -33,7 +33,7 @@
 #define KEY_PAGE "current_page"
 #define KEY_FILE_PATH "current_file_path"
 #define KEY_ZOOM_LEVEL "current_zoom_level"
-#define HELP_FILE ":/help/help/tabletReader.pdf"
+#define HELP_FILE "tabletReader.pdf"
 
 QTM_USE_NAMESPACE
 
@@ -139,6 +139,12 @@ Window::Window(QWidget *parent)
         qDebug() << "worker thread is NOT running";
     }
 
+
+    //wait timer initialisation (used to handle too long actions: document openings, page changes)
+    waitTimer_ = new QTimer(this);
+    waitTimer_->setInterval(WAIT_TIMER_INTERVAL_MS);
+    connect(waitTimer_, SIGNAL(timeout()), this, SLOT(showWaitDialog()));
+
     //set document if one has been previously open
     QSettings settings(ORGANIZATION, APPLICATION);
     QString filePath;
@@ -149,6 +155,8 @@ Window::Window(QWidget *parent)
         {
             currentZoomIndex_ = settings.value(KEY_ZOOM_LEVEL, 3).toInt();
             setupDocDisplay(settings.value(KEY_PAGE, 0).toInt()+1, filePath);
+	    //simulate an onAnimationFinished
+	    onAnimationFinished();
             fileBrowserModel_->setCurrentDir(filePath);
         }        
     } else
@@ -157,11 +165,6 @@ Window::Window(QWidget *parent)
         showHelp(false);
     }
     animationFinished_ = true;
-
-    //wait timer initialisation (used to handle too long actions: document openings, page changes)
-    waitTimer_ = new QTimer(this);
-    waitTimer_->setInterval(WAIT_TIMER_INTERVAL_MS);
-    connect(waitTimer_, SIGNAL(timeout()), this, SLOT(showWaitDialog()));
 
     normalScreen();
 
@@ -502,8 +505,11 @@ void Window::openFile(const QString &filePath)
     {
         //show wait dialog
         showWaitDialog();
+	//reset queue
+	pageToLoadNo_.clear();
         //load document
         setupDocDisplay(1, filePath);
+	qDebug() << "slide in next";
         slidingStacked_->slideInNext();
     } else
     {
@@ -751,7 +757,7 @@ void Window::setupDocDisplay(unsigned int pageNumber, const QString &filePath)
 
 void Window::gotoPage(int pageNb, int numPages)
 {
-    qDebug() << "Window::gotoPage";
+    qDebug() << "Window::gotoPage: page nb" << pageNb << ", numPages" << numPages;
     //set current page
     if (true == document_->invalidatePageCache(pageNb-1))
     {

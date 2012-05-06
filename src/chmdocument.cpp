@@ -87,19 +87,6 @@ const QPixmap* CHMDocument::getPixmap(int page, qreal scaleFactor)
     return pixmap;
 }
 
-void CHMDocument::deletePixmap(const QPixmap *pixmap)
-{
-	if (NULL != pixmap)
-	{
-		int i = pages_.indexOf(pixmap);
-		if (-1 != i)
-		{
-			delete pages_[i];
-			pages_.remove(i);
-		}
-	}
-}
-
 //this method is used by QWebView to load an HTML page
 QNetworkReply* CHMDocument::RequestHandler::createRequest(Operation op, const QNetworkRequest &req,
                              QIODevice *outgoingData)

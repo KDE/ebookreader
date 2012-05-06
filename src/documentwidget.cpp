@@ -64,7 +64,7 @@ void DocumentWidget::loadImage(int page)
     pageCache_[page%CACHE_SIZE]->pPixmap = doc_->
                       getPixmap(page, scaleFactor_);
     pageCache_[page%CACHE_SIZE]->valid = true;
-    qDebug() << "DocumentWidget::loadImage end";
+    qDebug() << "DocumentWidget::loadImage end" << page%CACHE_SIZE;
 }
 
 void DocumentWidget::showPage(int page)
@@ -97,11 +97,18 @@ void DocumentWidget::showPage(int page)
         loadImage(currentPage_);//load image into memory
         pageCache_[currentPage_%CACHE_SIZE]->valid = true;
     } else {
-        qDebug() << "DocumentWidget::showPage: valid cache";
+        qDebug() << "DocumentWidget::showPage: valid cache" << currentPage_%CACHE_SIZE;
     }
     qDebug() << "DocumentWidget::showPage: begin setPixmap";
-    label->setPixmap(*(pageCache_[currentPage_%CACHE_SIZE]->pPixmap));
-    label->adjustSize();
+    const QPixmap *pPix = pageCache_[currentPage_%CACHE_SIZE]->pPixmap;
+    if ((NULL != pPix) && (false == pPix->isNull()))
+    {
+	qDebug() << "setPixmap" << pPix;
+    	label->setPixmap(*pPix);
+    	label->adjustSize();
+    } else {
+	    qDebug() << "pixmap is NULL or empty" << pPix;
+    }
     qDebug() << "DocumentWidget::showPage: end setPixmap";
     cacheMutex_.unlock();
 }
