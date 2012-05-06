@@ -26,7 +26,6 @@
 
 DocumentWidget::DocumentWidget(Window *parent)
     : QObject(parent),
-      parent_(parent),
       doc_(NULL),
       currentPage_(-1),
       currentIndex_(-1),
@@ -92,7 +91,7 @@ void DocumentWidget::showPage(int page)
     //set image on the scroll area
     currentScrollArea_ = (QScrollArea*)stackedWidget_->widget(currentIndex_);//get next/prev widget
     QLabel *label = (QLabel*)currentScrollArea_->widget();
-    cacheMutex_.lock();
+    //mutex lock might be needed
     if (false == pageCache_[currentPage_%CACHE_SIZE]->valid) {
         qDebug() << "DocumentWidget::showPage: invalid cache";
         loadImage(currentPage_);//load image into memory
@@ -111,7 +110,6 @@ void DocumentWidget::showPage(int page)
 	    qDebug() << "pixmap is NULL or empty" << pPix;
     }
     qDebug() << "DocumentWidget::showPage: end setPixmap";
-    cacheMutex_.unlock();
 }
 
 //factory method
@@ -123,11 +121,9 @@ bool DocumentWidget::setDocument(const QString &filePath)
     if (ptr->is("application/vnd.ms-htmlhelp"))
     {
 	    doc_ = new CHMDocument();
-	    parent_->setSingleThreaded(true);
     } else
     {
 	    doc_ = new OkularDocument();
-	    parent_->setSingleThreaded(true);
     }
 
     if ((NULL != doc_) && (EXIT_SUCCESS == doc_->load(filePath)))

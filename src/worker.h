@@ -22,7 +22,6 @@
 #include <QThread>
 #include <QtSystemInfo/QSystemBatteryInfo>
 
-class QProgressDialog;
 class DocumentWidget;
 class Window;
 
@@ -33,12 +32,9 @@ class Worker : public QObject
     Q_OBJECT
 public:
     Worker(DocumentWidget *doc = NULL, Window *win = NULL);
-
-signals:
-    void appUpAuthCheckError();
+    void onUpdateCache(int page);
 
 public slots:
-    void onUpdateCache(int page);
     void onBatteryStatusChanged(QSystemBatteryInfo::BatteryStatus status);
 
 private:

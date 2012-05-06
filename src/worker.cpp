@@ -32,13 +32,12 @@ Worker::Worker(DocumentWidget *doc, Window *win) :
 void Worker::onUpdateCache(int page)
 {
     qDebug() << "Worker::onUpdateCache begin page" << page;
-    doc_->cacheMutex_.lock();
+    //mutex lock might be needed
     if (false == doc_->pageCache_[page%DocumentWidget::CACHE_SIZE]->valid) {
         doc_->loadImage(page);
     } else {
         qDebug() << "Worker::onUpdateCache: nothing to do";
     }
-    doc_->cacheMutex_.unlock();
     qDebug() << "Worker::onUpdateCache end";
 }
 

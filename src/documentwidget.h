@@ -86,9 +86,8 @@ public:
             qDebug() << "DocumentWidget::invalidatePageCache: nothing to do";
             return false;//operation failed
         }
-        cacheMutex_.lock();
+	pageCache_[page%CACHE_SIZE]->pPixmap = NULL;
         pageCache_[page%CACHE_SIZE]->valid = false;
-        cacheMutex_.unlock();
         return true;//operation successful
     }
 
@@ -107,7 +106,6 @@ public slots:
     }
 
 private:
-    Window *parent_;
     Document *doc_;
     int currentPage_;
     int currentIndex_;
@@ -118,7 +116,6 @@ private:
         bool valid;
     };
     QList<PageCache*> pageCache_;
-    QMutex cacheMutex_;//used to protect the access to page cache
     SlidingStackedWidget *stackedWidget_;
     QScrollArea *currentScrollArea_;
 };

@@ -54,7 +54,6 @@ Window::Window(QWidget *parent)
       waitTimer_(NULL),
       waitDialog_(NULL),
       batteryInfo_(NULL),
-      isSingleThreaded_(false),
       pageToLoadNo_(QQueue<int>())
 {
     eTime_.start();//used to measure the elapsed time since the app is started
@@ -122,7 +121,6 @@ Window::Window(QWidget *parent)
             this, SLOT(onAnimationFinished()));
     connect(increaseScaleAction, SIGNAL(triggered()), this, SLOT(increaseScale()));
     connect(decreaseScaleAction, SIGNAL(triggered()), this, SLOT(decreaseScale()));
-    connect(this, SIGNAL(updateCache(int)), worker_, SLOT(onUpdateCache(int)));
 
     statusBar()->hide();
 
