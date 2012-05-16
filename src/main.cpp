@@ -20,9 +20,16 @@
 #include <QTranslator>
 #include "window.h"
 #include "logger.h"
+#include "SingleApp.h"
 
 int main(int argc, char *argv[])
 {
+    SingleApp single;
+    if (true == single.isRunning())
+    {
+	    qDebug() << "already running";
+	    return EXIT_SUCCESS;
+    }
     QApplication app(argc, argv);    
 #ifdef QT_DEBUG_ENABLE_LOG
     //in release mode the log file is not created

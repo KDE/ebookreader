@@ -15,5 +15,6 @@ private slots:
 	void openPS();
 	void openJPG();
 	void openODT();
+	void singleApp();
 };
 
