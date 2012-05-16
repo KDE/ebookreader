@@ -10,5 +10,10 @@ private slots:
 	void openDJVU();
 	void openEPUB();
 	void openCHM();
+	void openTIF();
+	void openDVI();
+	void openPS();
+	void openJPG();
+	void openODT();
 };
 

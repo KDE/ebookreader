@@ -18,6 +18,7 @@
 
 #include <QtGui>
 #include <kmimetype.h>
+#include <core/settings_core.h>
 #include "documentwidget.h"
 #include "SlidingStackedWidget.h"
 #include "okulardocument.h"
@@ -123,6 +124,7 @@ bool DocumentWidget::setDocument(const QString &filePath)
 	    doc_ = new CHMDocument();
     } else
     {
+	    Okular::SettingsCore::instance("");
 	    doc_ = new OkularDocument();
     }
 

@@ -17,11 +17,11 @@
 ****************************************************************************/
 
 #include <QDebug>
-#include <okular/core/document.h>
-#include <okular/core/page.h>
+#include <core/document.h>
+#include <core/page.h>
 #include <QPixmap>
 #include <QPainter>
-#include <okular/core/generator.h>
+#include <core/generator.h>
 #include "okulardocument.h"
 #include "screen_size.h"
 
@@ -81,7 +81,7 @@ OkularDocument::OkularDocument() :
 {
 	if (NULL != doc_)
 	{
-		doc_->addObserver(obs_);
+		doc_->addObserver(obs_);		
 	}
 }
 

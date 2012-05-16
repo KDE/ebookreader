@@ -2,11 +2,17 @@
 #include <okulardocument.h>
 #include <chmdocument.h>
 #include <QApplication>
+#include <core/settings_core.h>
 
 #define PDF_FILE "/home/bogdan/Biblio/eBooks/umbrello.pdf"
 #define DJVU_FILE "/home/bogdan/Biblio/eBooks/Linear Programming - Foundation and Extensions 2nd ed. - R. vanderbei.djvu"
 #define EPUB_FILE "/home/bogdan/Biblio/eBooks/JulesVerne/verne-mysterious-island.epub"
 #define CHM_FILE "/home/bogdan/Biblio/eBooks/oram07beautiful.chm"
+#define TIF_FILE "/home/bogdan/Biblio/OkularSamples/CCITT_8.TIF"
+#define DVI_FILE "/home/bogdan/Biblio/OkularSamples/CV-euro_en.dvi"
+#define PS_FILE "/home/bogdan/Biblio/OkularSamples/CV-euro_en.ps"
+#define JPG_FILE "/home/bogdan/Biblio/OkularSamples/example1.jpg"
+#define ODT_FILE "/home/bogdan/Biblio/OkularSamples/example1.odt"
 
 void TestTabletReader::openPDF()
 {
@@ -38,9 +44,54 @@ void TestTabletReader::openEPUB()
 void TestTabletReader::openCHM()
 {
 #ifdef CHM_FILE
-	openFile(CHM_FILE, true);
+	openFile(CHM_FILE, true);//TODO: solve this exception
 #else
 #pragma message("No CHM file")
+#endif
+}
+
+void TestTabletReader::openTIF()
+{
+#ifdef TIF_FILE
+	openFile(TIF_FILE, false);
+#else
+#pragma message("No TIF file")
+#endif
+}
+
+void TestTabletReader::openDVI()
+{
+#ifdef DVI_FILE
+	openFile(DVI_FILE, false);
+#else
+#pragma message("No DVI file")
+#endif
+}
+
+void TestTabletReader::openPS()
+{
+#ifdef PS_FILE
+	openFile(PS_FILE, false);
+#else
+#pragma message("No PS file")
+#endif
+}
+
+void TestTabletReader::openJPG()
+{
+#ifdef JPG_FILE
+	openFile(JPG_FILE, false);
+#else
+#pragma message("No JPG file")
+#endif
+}
+
+void TestTabletReader::openODT()
+{
+#ifdef ODT_FILE
+	openFile(ODT_FILE, false);
+#else
+#pragma message("No ODT file")
 #endif
 }
 
@@ -54,8 +105,9 @@ void TestTabletReader::openFile(const char *fileName, bool useCHM)
 	{
 		doc = new CHMDocument();
 	} else {
+		Okular::SettingsCore::instance("");
 		doc = new OkularDocument();
-	}
+	}	
 	QCOMPARE(EXIT_SUCCESS, doc->load(fileName));
 	int numPages = doc->numPages();
 	QVERIFY(0 != numPages);
@@ -69,7 +121,6 @@ void TestTabletReader::openFile(const char *fileName, bool useCHM)
 	//get at most 10 pages one by one
 	numPages = (10 < numPages)?10:numPages;
 	int n = 0;
-	qDebug() << "one by one";
 	for (n = 0; n < numPages; ++n)
 	{
 		pixmap = doc->getPixmap(n, 1);
@@ -80,7 +131,6 @@ void TestTabletReader::openFile(const char *fileName, bool useCHM)
 
 	//get three pages each time by deleting one when a fourth is generated
 	const QPixmap *pixmaps[3] = {NULL};
-	qDebug() << "three pages";
 	for (n = 0; n < numPages; ++n)
 	{
 		if (3 <= n)

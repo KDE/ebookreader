@@ -3,6 +3,7 @@ project(TestTabletReader)
 include_directories(${QT_QTTEST_INCLUDE_DIR}
 	${QT_QTCORE_INCLUDE_DIR}
 	${QT_QTGUI_INCLUDE_DIR}
+	${OKULAR_INCLUDE_DIR}/okular
 	${QT_MOBILITY_INCLUDE_DIR}/QtMobility
 	${CMAKE_CURRENT_BINARY_DIR} 
 	${CMAKE_SOURCE_DIR}/test
