@@ -24,13 +24,18 @@
 
 int main(int argc, char *argv[])
 {
+    QApplication app(argc, argv);
     SingleApp single;
-    if (true == single.isRunning())
+
+    QStringList args = app.arguments();
+    if ((1 >= args.length()) || (0 != args[1].compare("-f")))
     {
+    	if (true == single.isRunning())
+    	{
 	    qDebug() << "already running";
 	    return EXIT_SUCCESS;
+    	}
     }
-    QApplication app(argc, argv);    
 #ifdef QT_DEBUG_ENABLE_LOG
     //in release mode the log file is not created
     Logger::instance("tabletReader.log");
