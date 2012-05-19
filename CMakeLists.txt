@@ -26,6 +26,7 @@ include_directories (
 
 add_subdirectory ( 3rdparty_linux/libchmfile )
 add_subdirectory ( src )
+add_subdirectory ( src/help )
 IF (("Debug" STREQUAL "${CMAKE_BUILD_TYPE}") OR ("DesktopDebug" STREQUAL "${CMAKE_BUILD_TYPE}"))
 	add_subdirectory ( test )
 ENDIF()

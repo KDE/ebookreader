@@ -64,9 +64,6 @@
         <file>qml/WaitDialog/gfx/rotation_icon.png</file>
         <file>qml/waitdialog.qml</file>
     </qresource>
-    <qresource prefix="/help">
-        <file>help/tabletReader.pdf</file>
-    </qresource>
     <qresource prefix="/translations">
         <file>tabletReader_fr.qm</file>
         <file>tabletReader_ro.qm</file>

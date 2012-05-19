@@ -33,7 +33,7 @@
 #define KEY_PAGE "current_page"
 #define KEY_FILE_PATH "current_file_path"
 #define KEY_ZOOM_LEVEL "current_zoom_level"
-#define HELP_FILE "tabletReader.pdf"
+#define HELP_FILE "/../share/doc/atReaderHelp.pdf"
 
 QTM_USE_NAMESPACE
 
@@ -814,7 +814,8 @@ void Window::setZoomFactor(int index)
 void Window::showHelp(bool slideNext)
 {
     qDebug() << "Window::showHelp";
-    if (document_->setDocument(HELP_FILE))
+    QString fileName = QCoreApplication::applicationDirPath()+QString(HELP_FILE);
+    if (document_->setDocument(fileName))
     {
         setupDocDisplay(1, HELP_FILE);
         document_->showCurrentPageUpper();
@@ -824,7 +825,7 @@ void Window::showHelp(bool slideNext)
         }            
     } else
     {
-        qDebug() << "cannot open help file";
+        qDebug() << "cannot open help file" << fileName;
         showWarningMessage(tr("Cannot open help file"));
     }
 }
