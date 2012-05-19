@@ -26,13 +26,14 @@
 #include "filebrowsermodel.h"
 #include "worker.h"
 #include "flickable.h"
+#include "screen_size.h"
 
 #define ORGANIZATION "Bogdan Cristea"
 #define APPLICATION "tabletReader"
 #define KEY_PAGE "current_page"
 #define KEY_FILE_PATH "current_file_path"
 #define KEY_ZOOM_LEVEL "current_zoom_level"
-#define HELP_FILE ":/help/help/tabletReader.pdf"
+#define HELP_FILE "tabletReader.pdf"
 
 QTM_USE_NAMESPACE
 
@@ -53,7 +54,6 @@ Window::Window(QWidget *parent)
       waitTimer_(NULL),
       waitDialog_(NULL),
       batteryInfo_(NULL),
-      isSingleThreaded_(false),
       pageToLoadNo_(QQueue<int>())
 {
     eTime_.start();//used to measure the elapsed time since the app is started
@@ -110,7 +110,6 @@ Window::Window(QWidget *parent)
         flickable_->activateOn(scroll);
     }
     document_->setStackedWidget(slidingStacked_);
-    document_->setPhysicalDpi(label->physicalDpiX(), label->physicalDpiY());
     slidingStacked_->setSpeed(HORIZONTAL_SLIDE_SPEED_MS);
     slidingStacked_->setWrap(true);
     slidingStacked_->setVerticalMode(false);
@@ -122,7 +121,6 @@ Window::Window(QWidget *parent)
             this, SLOT(onAnimationFinished()));
     connect(increaseScaleAction, SIGNAL(triggered()), this, SLOT(increaseScale()));
     connect(decreaseScaleAction, SIGNAL(triggered()), this, SLOT(decreaseScale()));
-    connect(this, SIGNAL(updateCache(int)), worker_, SLOT(onUpdateCache(int)));
 
     statusBar()->hide();
 
@@ -139,15 +137,24 @@ Window::Window(QWidget *parent)
         qDebug() << "worker thread is NOT running";
     }
 
+
+    //wait timer initialisation (used to handle too long actions: document openings, page changes)
+    waitTimer_ = new QTimer(this);
+    waitTimer_->setInterval(WAIT_TIMER_INTERVAL_MS);
+    connect(waitTimer_, SIGNAL(timeout()), this, SLOT(showWaitDialog()));
+
     //set document if one has been previously open
     QSettings settings(ORGANIZATION, APPLICATION);
     QString filePath;
     if (NULL != (filePath = settings.value(KEY_FILE_PATH).toString()))
     {
+	qDebug() << "Found document " << filePath;
         if (document_->setDocument(filePath))
         {
             currentZoomIndex_ = settings.value(KEY_ZOOM_LEVEL, 3).toInt();
             setupDocDisplay(settings.value(KEY_PAGE, 0).toInt()+1, filePath);
+	    //simulate an onAnimationFinished
+	    onAnimationFinished();
             fileBrowserModel_->setCurrentDir(filePath);
         }        
     } else
@@ -156,11 +163,6 @@ Window::Window(QWidget *parent)
         showHelp(false);
     }
     animationFinished_ = true;
-
-    //wait timer initialisation (used to handle too long actions: document openings, page changes)
-    waitTimer_ = new QTimer(this);
-    waitTimer_->setInterval(WAIT_TIMER_INTERVAL_MS);
-    connect(waitTimer_, SIGNAL(timeout()), this, SLOT(showWaitDialog()));
 
     normalScreen();
 
@@ -501,8 +503,11 @@ void Window::openFile(const QString &filePath)
     {
         //show wait dialog
         showWaitDialog();
+	//reset queue
+	pageToLoadNo_.clear();
         //load document
         setupDocDisplay(1, filePath);
+	qDebug() << "slide in next";
         slidingStacked_->slideInNext();
     } else
     {
@@ -750,7 +755,7 @@ void Window::setupDocDisplay(unsigned int pageNumber, const QString &filePath)
 
 void Window::gotoPage(int pageNb, int numPages)
 {
-    qDebug() << "Window::gotoPage";
+    qDebug() << "Window::gotoPage: page nb" << pageNb << ", numPages" << numPages;
     //set current page
     if (true == document_->invalidatePageCache(pageNb-1))
     {
@@ -772,13 +777,14 @@ void Window::gotoPage(int pageNb, int numPages)
 
 void Window::setZoomFactor(int index)
 {
-    qDebug() << "Window::setZoomFactor " << index;
+    qDebug() << "Window::setZoomFactor" << index;
     //set zoom factor
     if ((currentZoomIndex_ == index) || ((0 > index) || (scaleFactors_.count() <= index)))
     {
         qDebug() << "nothing to do";
         return;//nothing to do
     }
+    qDebug() << "selected zoom factor" << scaleFactors_[index];
     currentZoomIndex_ = index;
     document_->setScale(scaleFactors_[currentZoomIndex_]);
     //update all pages from circular buffer
@@ -808,22 +814,14 @@ void Window::setZoomFactor(int index)
 void Window::showHelp(bool slideNext)
 {
     qDebug() << "Window::showHelp";
-    QFile file(HELP_FILE);
-    if (true == file.open(QIODevice::ReadOnly))
+    if (document_->setDocument(HELP_FILE))
     {
-        if (document_->loadFromData(file.readAll()))
+        setupDocDisplay(1, HELP_FILE);
+        document_->showCurrentPageUpper();
+        if (true == slideNext)
         {
-            setupDocDisplay(1, HELP_FILE);
-            document_->showCurrentPageUpper();
-            if (true == slideNext)
-            {
-                slidingStacked_->slideInNext();
-            }            
-        } else
-        {
-            qDebug() << "cannot load from data";
-        }
-        file.close();
+            slidingStacked_->slideInNext();
+        }            
     } else
     {
         qDebug() << "cannot open help file";
@@ -853,7 +851,8 @@ void Window::showAboutDialog()
             {
                 pAboutDlg->setProperty("text", tr("<H2>tabletReader v2.0</H2>"
                                                   "<H3>e-book reader for touch-enabled devices</H3>"
-                                                  "<H4>Supported formats: PDF, DJVU and CHM.</H4><br>"
+                                                  "<H4>Supported formats: PDF, CHM, DJVU, EPUB, etc.</H4>"
+						  "<H4>(all Okular supported formats)</H4><br>"
                                                   "Copyright (C) 2012, Bogdan Cristea. All rights reserved.<br>"
                                                   "<i>e-mail: cristeab@gmail.com</i><br><br>"
                                                   "This program is distributed in the hope that it will be useful, "

@@ -16,28 +16,34 @@
 **
 ****************************************************************************/
 
-#ifndef PDFDOCUMENT_H
-#define PDFDOCUMENT_H
+#ifndef OKULAR_DOCUMENT_H
+#define OKULAR_DOCUMENT_H
 
 #include "document.h"
+#include <kmimetype.h>
 
-namespace Poppler
+namespace Okular
 {
-class Document;
+	class Document;
+	class Page;
 }
+class OkularObserver;
+class PagePainter;
 
-class PDFDocument : public Document
+class OkularDocument : public Document
 {
 public:
-    PDFDocument() :
-        Document(), doc_(NULL)
-    {}
+    OkularDocument();
     virtual int load(const QString &fileName);
-    virtual int loadFromData(const QByteArray &data);
-    virtual QImage renderToImage(int page, qreal xres, qreal yres);
-    virtual ~PDFDocument();
+    virtual const QPixmap* getPixmap(int page, qreal scaleFactor);
+    virtual ~OkularDocument();
 private:
-    Poppler::Document *doc_;
+    void adjustSize(int &width, int &height);
+    QPixmap* setWhiteBackground(const QPixmap *pixmap);
+    Okular::Document *doc_;
+    OkularObserver *obs_;
+    PagePainter *painter_;
+    KMimeType::Ptr mimeType_;
 };
 
-#endif // PDFDOCUMENT_H
+#endif // OKULAR_DOCUMENT_H

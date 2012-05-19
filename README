@@ -6,9 +6,14 @@ is targeted at Linux OSs, but Windows is also supported
 Required dependencies:
 - Qt >= 4.7
 - QtMobility >= 1.2
-- qt-poppler
+- okular core library
 - chmlib
-- djvulibre
+
+The full version makes extensive use of okular core library for reading 
+e-documents. However, chmlib is still used in order to handle
+chm documents. The light version of tabletReader supports natively only
+three document formats (PDF, CHM and DJVU) and has no dependence on 
+okular core library.
 
 Compilation and installation (Linux only):
 1. create a folder below the application root folder: 'mkdir build'

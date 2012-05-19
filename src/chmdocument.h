@@ -33,7 +33,7 @@ class CHMDocument : public Document
 public:
     CHMDocument();
     virtual int load(const QString &fileName);
-    virtual QImage renderToImage(int page, qreal xres, qreal yres);
+    virtual const QPixmap* getPixmap(int page, qreal scaleFactor);
     virtual ~CHMDocument();
 private:
     LCHMFile *doc_;

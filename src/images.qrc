@@ -1,16 +1,16 @@
 <RCC>
     <qresource prefix="/toolbar">
         <file>qml/Toolbar/pics/back.png</file>
-        <file>qml/Toolbar/pics/Folder-Blue-Documents-icon.png</file>
-        <file>qml/Toolbar/pics/goto-page-icon.png</file>
+        <file>qml/Toolbar/pics/Actions-document-open-folder-icon.png</file>
+        <file>qml/Toolbar/pics/Actions-go-jump-locationbar-icon.png</file>
         <file>qml/Toolbar/pics/toolbaritem.png</file>
         <file>qml/Toolbar/pics/toolbaritem_p.png</file>
-        <file>qml/Toolbar/pics/window-full-screen-icon.png</file>
-        <file>qml/Toolbar/pics/zoom-icon.png</file>
+        <file>qml/Toolbar/pics/Actions-view-fullscreen-icon.png</file>
+        <file>qml/Toolbar/pics/Actions-page-zoom-icon.png</file>
         <file>qml/Toolbar/pics/help-icon.png</file>
-        <file>qml/Toolbar/pics/About-icon.png</file>
-        <file>qml/Toolbar/pics/Button-Close-icon.png</file>
-        <file>qml/Toolbar/pics/properties-icon.png</file>
+        <file>qml/Toolbar/pics/Actions-help-about-icon.png</file>
+        <file>qml/Toolbar/pics/Actions-application-exit-icon.png</file>
+        <file>qml/Toolbar/pics/Actions-document-properties-icon.png</file>
     </qresource>
     <qresource prefix="/filebrowser">
         <file>icons/Adobe-PDF-Document-icon.png</file>
@@ -19,6 +19,8 @@
         <file>icons/Apps-session-quit-icon.png</file>
         <file>icons/Djvu-document-icon.png</file>
         <file>icons/Chm-document-icon.png</file>
+        <file>icons/Epub-document-icon.png</file>
+        <file>icons/Document-icon.png</file>
     </qresource>
     <qresource prefix="/qml">
         <file>qml/gotopage.qml</file>

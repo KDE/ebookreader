@@ -4,22 +4,21 @@ include_directories (
 	${CMAKE_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR}
 	${QT_QTCORE_INCLUDE_DIR} ${QT_QTGUI_INCLUDE_DIR} ${QT_QTDECLARATIVE_INCLUDE_DIR} ${QT_QTXML_INCLUDE_DIR} ${QT_QTWEBKIT_INCLUDE_DIR} 
 	${QT_MOBILITY_INCLUDE_DIR}/QtMobility ${QT_MOBILITY_SYSTEMINFO_INCLUDE_DIR}
-	${POPPLER_INCLUDE_DIR} ${POPPLER_QT4_INCLUDE_DIR}/poppler/qt4
-	${CHM_INCLUDE_DIR} ../3rdparty_linux/libchmfile
-	${DJVU_INCLUDE_DIR}/libdjvu )
+	${OKULAR_INCLUDE_DIR}/okular
+	${CHM_INCLUDE_DIR} ../3rdparty_linux/libchmfile )
 set ( LIBS ${LIBS}
 	${QT_QTNETWORK_LIBRARY}
 	${QT_MOBILITY_SYSTEMINFO_LIBRARY}
-	${POPPLER_LIBRARY} ${POPPLER_QT4_LIBRARY}
-	${CHM_LIBRARY} ${PROJECT_BINARY_DIR}/../3rdparty_linux/libchmfile/libchmfile.a
-	${DJVU_LIBRARY} )
+	${CHM_LIBRARY} 
+	${PROJECT_BINARY_DIR}/../lib/libchmfile.a
+	${OKULAR_CORE_LIBRARY} 
+	${KDE4_KDECORE_LIBRARY} )
 
 set ( tabletReader_HDRS
 	logger.h
-	pdfdocument.h
 	document.h
-	djvudocument.h
 	chmdocument.h
+	okulardocument.h
 	)
 
 set ( tabletReader_SRCS
@@ -31,11 +30,9 @@ set ( tabletReader_SRCS
 	worker.cpp
 	logger.cpp
 	filebrowsermodel.cpp
-	pdfdocument.cpp
-	djvudocument.cpp
-	kdjvu.cpp
 	chmdocument.cpp
 	chmreply.cpp
+	okulardocument.cpp
 	)
 
 set ( tabletReader_RSCS
@@ -56,7 +53,6 @@ set ( tabletReader_MOCS
 	flickable.h
 	worker.h
 	filebrowsermodel.h
-	kdjvu.h
 	chmreply.h
 	)
 QT4_WRAP_CPP(MOCS ${tabletReader_MOCS})

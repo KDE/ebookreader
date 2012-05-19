@@ -50,25 +50,14 @@ public:
     ~Window();
     bool hasTouchScreen();
     QString batteryStatus();
-    void setSingleThreaded(bool value = true)
-    {
-        isSingleThreaded_ = value;
-    }
     enum {TOOLTIP_VISIBLE_TIME_MS = 1500,
          HORIZONTAL_SLIDE_SPEED_MS = 500,
          SWIPE_THRESHOLD = 5,
          LONG_PRESS_TIMEOUT_MS = 1000,
-         FULL_SCREEN_WIDTH = 1024,
-         FULL_SCREEN_HEIGHT = 768,
-         MIN_SCREEN_WIDTH = 800,
-         MIN_SCREEN_HEIGHT = 600,
          WAIT_TIMER_INTERVAL_MS = 1000};
 
 protected:
     void closeEvent(QCloseEvent *);
-
-signals:
-    void updateCache(int);
 
 private slots:
     void showFileBrowser();
@@ -107,34 +96,21 @@ private:
     void saveSettings();
     void preloadPage(int page)
     {
-        if (false == isSingleThreaded_)
-        {            
-            if (true == document_->invalidatePageCache(page))
-            {
-                qDebug() << "Window::preloadPageMultiThreaded";
-                emit updateCache(page);
-            }
-        }
-        else
-        {
-            //the single threaded version of this function is called from onAnimationFinished slot
-            pageToLoadNo_.enqueue(page);//put into queue the page number
-        }
+    	//the single threaded version of this function is called from onAnimationFinished slot
+	qDebug() << "Window::preloadPage: enqueue" << page;
+        pageToLoadNo_.enqueue(page);//put into queue the page number
     }
     //should be called only from onAnimationFinished slot
     void preloadPageSingleThreaded()
     {        
-        if (true == isSingleThreaded_)
+    	while (false == pageToLoadNo_.isEmpty())
         {
-            while (false == pageToLoadNo_.isEmpty())
-            {
-                int page = pageToLoadNo_.dequeue();
+        	int page = pageToLoadNo_.dequeue();
                 if (true == document_->invalidatePageCache(page))
                 {
                     qDebug() << "Window::preloadPageSingleThreaded";
                     worker_->onUpdateCache(page);
                 }
-            }
         }
     }
 
@@ -162,7 +138,6 @@ private:
     QTM_NAMESPACE::QSystemBatteryInfo *batteryInfo_;
     int currentPage_;
     QElapsedTimer eTime_;    
-    bool isSingleThreaded_;
     QQueue<int> pageToLoadNo_;
 };
 

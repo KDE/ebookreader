@@ -20,25 +20,21 @@
 #define DOCUMENT_H
 
 #include <QString>
-#include <QByteArray>
-#include <QImage>
 
-/* Interface for handling electronic documents (PDF, DJVU, CHM, etc)
+class QPixmap;
+
+/* Interface for handling electronic documents
  */
 class Document
 {
 public:
-    Document() :
-        numPages_(0)
-    {
-    }
+    Document() : numPages_(0) {}
     virtual int load(const QString &fileName) = 0;
-    virtual int loadFromData(const QByteArray&)
+    virtual const QPixmap* getPixmap(int page, qreal scaleFactor) = 0;
+    virtual void deletePixmap(const QPixmap *pixmap)
     {
-        return EXIT_FAILURE;
+	    delete pixmap;
     }
-    //this method needs to be thread safe
-    virtual QImage renderToImage(int page, qreal xres, qreal yres) = 0;
     int numPages() const
     {
         return numPages_;

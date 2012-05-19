@@ -17,29 +17,28 @@
 ****************************************************************************/
 
 #include <QtGui>
-#include "poppler-qt4.h"
+#include <kmimetype.h>
+#include <core/settings_core.h>
 #include "documentwidget.h"
 #include "SlidingStackedWidget.h"
-#include "pdfdocument.h"
-#include "djvudocument.h"
+#include "okulardocument.h"
 #include "chmdocument.h"
 #include "window.h"
 
 DocumentWidget::DocumentWidget(Window *parent)
     : QObject(parent),
-      parent_(parent),
       doc_(NULL),
       currentPage_(-1),
       currentIndex_(-1),
       maxNumPages_(0),
       scaleFactor_(1.0),
       stackedWidget_(NULL),
-      currentScrollArea_(NULL),
-      physicalDpiX_(0), physicalDpiY_(0)
+      currentScrollArea_(NULL)
 {
     for (int n = 0; n < CACHE_SIZE; ++n)
     {
-        pageCache_.append(new ImageCache);
+        pageCache_.append(new PageCache);
+	pageCache_[n]->pPixmap = NULL;
         pageCache_[n]->valid = false;
     }
 }
@@ -62,11 +61,11 @@ void DocumentWidget::loadImage(int page)
         return;
     }
 
-    pageCache_[page%CACHE_SIZE]->image = doc_->
-                      renderToImage(page, scaleFactor_*physicalDpiX_,
-                                      scaleFactor_*physicalDpiY_);
+    doc_->deletePixmap(pageCache_[page%CACHE_SIZE]->pPixmap);
+    pageCache_[page%CACHE_SIZE]->pPixmap = doc_->
+                      getPixmap(page, scaleFactor_);
     pageCache_[page%CACHE_SIZE]->valid = true;
-    qDebug() << "DocumentWidget::loadImage end";
+    qDebug() << "DocumentWidget::loadImage end" << page%CACHE_SIZE;
 }
 
 void DocumentWidget::showPage(int page)
@@ -93,19 +92,25 @@ void DocumentWidget::showPage(int page)
     //set image on the scroll area
     currentScrollArea_ = (QScrollArea*)stackedWidget_->widget(currentIndex_);//get next/prev widget
     QLabel *label = (QLabel*)currentScrollArea_->widget();
-    cacheMutex_.lock();
+    //mutex lock might be needed
     if (false == pageCache_[currentPage_%CACHE_SIZE]->valid) {
         qDebug() << "DocumentWidget::showPage: invalid cache";
         loadImage(currentPage_);//load image into memory
         pageCache_[currentPage_%CACHE_SIZE]->valid = true;
     } else {
-        qDebug() << "DocumentWidget::showPage: valid cache";
+        qDebug() << "DocumentWidget::showPage: valid cache" << currentPage_%CACHE_SIZE;
     }
     qDebug() << "DocumentWidget::showPage: begin setPixmap";
-    label->setPixmap(QPixmap::fromImage(pageCache_[currentPage_%CACHE_SIZE]->image));
-    label->adjustSize();
+    const QPixmap *pPix = pageCache_[currentPage_%CACHE_SIZE]->pPixmap;
+    if ((NULL != pPix) && (false == pPix->isNull()))
+    {
+	qDebug() << "setPixmap" << pPix;
+    	label->setPixmap(*pPix);
+    	label->adjustSize();
+    } else {
+	    qDebug() << "pixmap is NULL or empty" << pPix;
+    }
     qDebug() << "DocumentWidget::showPage: end setPixmap";
-    cacheMutex_.unlock();
 }
 
 //factory method
@@ -113,48 +118,17 @@ bool DocumentWidget::setDocument(const QString &filePath)
 {
     Document *oldDoc = doc_;//keep old document
 
-    switch (fileType(filePath))
+    KMimeType::Ptr ptr = KMimeType::findByPath(filePath);
+    if (ptr->is("application/vnd.ms-htmlhelp"))
     {
-    case ID_PDF:
-        doc_ = new PDFDocument();
-        parent_->setSingleThreaded(false);
-        break;
-    case ID_DJVU:
-        doc_ = new DJVUDocument();
-        parent_->setSingleThreaded(false);
-        break;
-    case ID_CHM:
-        doc_ = new CHMDocument();
-        parent_->setSingleThreaded(true);
-        break;
-    default:
-        qDebug() << "unknown file extension";
-        doc_ = NULL;
+	    doc_ = new CHMDocument();
+    } else
+    {
+	    Okular::SettingsCore::instance("");
+	    doc_ = new OkularDocument();
     }
 
     if ((NULL != doc_) && (EXIT_SUCCESS == doc_->load(filePath)))
-    {
-        maxNumPages_ = doc_->numPages();
-        currentPage_ = -1;
-        delete oldDoc;//previous Document must be deleted
-        return true;
-    } else
-    {
-        //an error occured
-        delete doc_;
-        //restore old document
-        doc_ = oldDoc;
-    }
-    return false;
-}
-
-//this method is used to load only PDF files
-bool DocumentWidget::loadFromData(const QByteArray &fileContents)
-{
-    Document *oldDoc = doc_;//keep old document
-
-    doc_ = new PDFDocument();
-    if ((NULL != doc_) && (EXIT_SUCCESS == doc_->loadFromData(fileContents)))
     {
         maxNumPages_ = doc_->numPages();
         currentPage_ = -1;

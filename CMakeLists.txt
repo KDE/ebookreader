@@ -10,15 +10,14 @@ message ("-- Build type: " ${CMAKE_BUILD_TYPE})
 set ( CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake/Modules/ ${CMAKE_MODULE_PATH} )
 set ( CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -DQT_NO_DEBUG_OUTPUT" )
 set ( CMAKE_CXX_FLAGS_DESKTOPRELEASE "${CMAKE_CXX_FLAGS_RELEASE} -DQT_NO_DEBUG_OUTPUT -DDESKTOP_APP" )
-set ( CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -DQT_DEBUG_ENABLE_LOG" )
-set ( CMAKE_CXX_FLAGS_DESKTOPDEBUG "${CMAKE_CXX_FLAGS_DEBUG} -DQT_DEBUG_ENABLE_LOG -DDESKTOP_APP" )
+set ( CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -DQT_DEBUG_ENABLE_LOG -ggdb" )
+set ( CMAKE_CXX_FLAGS_DESKTOPDEBUG "${CMAKE_CXX_FLAGS_DEBUG} -DQT_DEBUG_ENABLE_LOG -DDESKTOP_APP -ggdb" )
 
 find_package ( Qt4 4.7.0 REQUIRED )
 find_package ( QtMobility 1.2.0 REQUIRED )
-find_package ( LibPoppler REQUIRED )
-find_package ( LibPopplerQt4 REQUIRED )
+find_package ( KDE4 REQUIRED 4.7.0 )
+find_package ( Okular REQUIRED )
 find_package ( LibChm REQUIRED )
-find_package ( LibDjvu REQUIRED )
 
 include ( ${QT_USE_FILE} )
 include_directories (
@@ -27,4 +26,7 @@ include_directories (
 
 add_subdirectory ( 3rdparty_linux/libchmfile )
 add_subdirectory ( src )
+IF (("Debug" STREQUAL "${CMAKE_BUILD_TYPE}") OR ("DesktopDebug" STREQUAL "${CMAKE_BUILD_TYPE}"))
+	add_subdirectory ( test )
+ENDIF()
 

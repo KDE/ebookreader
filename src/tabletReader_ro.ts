@@ -11,18 +11,18 @@
 <context>
     <name>FileBrowserModel</name>
     <message>
-        <location filename="filebrowsermodel.cpp" line="44"/>
-        <location filename="filebrowsermodel.cpp" line="147"/>
+        <location filename="filebrowsermodel.cpp" line="45"/>
+        <location filename="filebrowsermodel.cpp" line="151"/>
         <source>Go</source>
         <translation>Revenire</translation>
     </message>
     <message>
-        <location filename="filebrowsermodel.cpp" line="82"/>
+        <location filename="filebrowsermodel.cpp" line="83"/>
         <source>Go Back To &apos;</source>
         <translation>Revenire la &apos;</translation>
     </message>
     <message>
-        <location filename="filebrowsermodel.cpp" line="84"/>
+        <location filename="filebrowsermodel.cpp" line="85"/>
         <source>Go Back To /</source>
         <translation>Revenire la /</translation>
     </message>
@@ -31,131 +31,104 @@
         <translation type="obsolete">Director curent: </translation>
     </message>
     <message>
-        <location filename="filebrowsermodel.h" line="38"/>
         <source>Close File Browser</source>
-        <translation>Inchide Navigatorul de Fisiere</translation>
+        <translation type="obsolete">Inchide Navigatorul de Fisiere</translation>
     </message>
 </context>
 <context>
     <name>KDjVu</name>
     <message>
-        <location filename="kdjvu.cpp" line="673"/>
         <source>Unknown</source>
-        <translation>Necunoscut</translation>
+        <translation type="obsolete">Necunoscut</translation>
     </message>
     <message>
-        <location filename="kdjvu.cpp" line="676"/>
         <source>Single Page</source>
-        <translation>O singura pagina</translation>
+        <translation type="obsolete">O singura pagina</translation>
     </message>
     <message>
-        <location filename="kdjvu.cpp" line="679"/>
         <source>Bundled</source>
-        <translation>Inclus</translation>
+        <translation type="obsolete">Inclus</translation>
     </message>
     <message>
-        <location filename="kdjvu.cpp" line="682"/>
         <source>Indirect</source>
-        <translation>Indirect</translation>
+        <translation type="obsolete">Indirect</translation>
     </message>
     <message>
-        <location filename="kdjvu.cpp" line="685"/>
         <source>Bundled (old)</source>
-        <translation>Inclus (vechi)</translation>
+        <translation type="obsolete">Inclus (vechi)</translation>
     </message>
     <message>
-        <location filename="kdjvu.cpp" line="688"/>
         <source>Indexed (old)</source>
-        <translation>Indexat (vechi)</translation>
+        <translation type="obsolete">Indexat (vechi)</translation>
     </message>
 </context>
 <context>
     <name>MainWindow</name>
     <message>
-        <location filename="window.ui" line="14"/>
-        <location filename="ui_window.h" line="87"/>
         <source>PDF Viewer</source>
-        <translation>Cititor PDF</translation>
+        <translation type="obsolete">Cititor PDF</translation>
     </message>
     <message>
-        <location filename="window.ui" line="52"/>
-        <location filename="ui_window.h" line="92"/>
         <source>toolBar</source>
-        <translation>toolBar</translation>
+        <translation type="obsolete">toolBar</translation>
     </message>
     <message>
-        <location filename="window.ui" line="72"/>
-        <location filename="ui_window.h" line="88"/>
         <source>&amp;Increase Scale</source>
-        <translation>&amp;Mareste Scara</translation>
+        <translation type="obsolete">&amp;Mareste Scara</translation>
     </message>
     <message>
-        <location filename="window.ui" line="75"/>
-        <location filename="ui_window.h" line="89"/>
         <source>Ctrl++</source>
-        <translation>Ctrl++</translation>
+        <translation type="obsolete">Ctrl++</translation>
     </message>
     <message>
-        <location filename="window.ui" line="80"/>
-        <location filename="ui_window.h" line="90"/>
         <source>&amp;Decrease Scale</source>
-        <translation>M&amp;icsoreaza Scara</translation>
+        <translation type="obsolete">M&amp;icsoreaza Scara</translation>
     </message>
     <message>
-        <location filename="window.ui" line="83"/>
-        <location filename="ui_window.h" line="91"/>
         <source>Ctrl+-</source>
-        <translation>Ctrl+-</translation>
+        <translation type="obsolete">Ctrl+-</translation>
     </message>
 </context>
 <context>
     <name>ModalDialog</name>
     <message>
-        <location filename="qml/ModalDialog/ModalDialog.qml" line="98"/>
         <source>OK</source>
-        <translation>OK</translation>
+        <translation type="obsolete">OK</translation>
     </message>
     <message>
-        <location filename="qml/ModalDialog/ModalDialog.qml" line="114"/>
         <source>Cancel</source>
-        <translation>Anulare</translation>
+        <translation type="obsolete">Anulare</translation>
     </message>
 </context>
 <context>
     <name>PopupListModel</name>
     <message>
-        <location filename="qml/PopupMenu/PopupListModel.qml" line="28"/>
         <source>Open</source>
-        <translation>Deschide</translation>
+        <translation type="obsolete">Deschide</translation>
     </message>
     <message>
-        <location filename="qml/PopupMenu/PopupListModel.qml" line="29"/>
         <source>Normal Screen</source>
-        <translation>Ecran Normal</translation>
+        <translation type="obsolete">Ecran Normal</translation>
     </message>
     <message>
-        <location filename="qml/PopupMenu/PopupListModel.qml" line="30"/>
         <source>Go To Page</source>
-        <translation>Mergi la Pagina</translation>
+        <translation type="obsolete">Mergi la Pagina</translation>
     </message>
     <message>
-        <location filename="qml/PopupMenu/PopupListModel.qml" line="31"/>
         <source>Zoom</source>
-        <translation>Marire</translation>
+        <translation type="obsolete">Marire</translation>
     </message>
     <message>
-        <location filename="qml/PopupMenu/PopupListModel.qml" line="32"/>
         <source>Properties</source>
-        <translation>Proprietati</translation>
+        <translation type="obsolete">Proprietati</translation>
     </message>
     <message>
         <source>Show/Hide Page Number</source>
         <translation type="obsolete">Afiseaza/Ascunde Numarul de Pagina</translation>
     </message>
     <message>
-        <location filename="qml/PopupMenu/PopupListModel.qml" line="33"/>
         <source>Exit</source>
-        <translation>Iesire</translation>
+        <translation type="obsolete">Iesire</translation>
     </message>
 </context>
 <context>
@@ -194,7 +167,7 @@
         <translation type="obsolete">&lt;H2&gt; TabletReader v1.1 &lt;/ H2&gt; &lt;br&gt; &lt;h3&gt; cititor PDF pentru dispozitivele cu ecran tactil &lt;/ H3&gt; &lt;br&gt; Copyright (C) 2012, Bogdan Cristea. Toate drepturile rezervate. &lt;br&gt; Acest program este distribuit în speranţa că va fi util, fără nici o GARANŢIE, nici chiar fără garanţia implicită de vandabilitate sau POTRIVIRE PENTRU UN ANUMIT SCOP. A se vedea GNU General Public License pentru mai multe detalii. &lt;br&gt; &lt;br&gt;</translation>
     </message>
     <message>
-        <location filename="window.cpp" line="974"/>
+        <location filename="window.cpp" line="959"/>
         <source>Cannot get authorization code for Intel AppUp(TM) software</source>
         <translation>Nu se poate citi codul de autorizare pentru programul Intel AppUp (TM)</translation>
     </message>
@@ -203,56 +176,56 @@
         <translation type="obsolete">Nu puteti folosi tabletReader</translation>
     </message>
     <message>
-        <location filename="window.cpp" line="218"/>
+        <location filename="window.cpp" line="210"/>
         <source>Full Screen</source>
         <translation>Tot Ecranul</translation>
     </message>
     <message>
-        <location filename="window.cpp" line="221"/>
-        <location filename="window.cpp" line="483"/>
+        <location filename="window.cpp" line="213"/>
+        <location filename="window.cpp" line="475"/>
         <source>Go To Page</source>
         <translation>Mergi la Pagina</translation>
     </message>
     <message>
-        <location filename="window.cpp" line="224"/>
-        <location filename="window.cpp" line="489"/>
+        <location filename="window.cpp" line="216"/>
+        <location filename="window.cpp" line="481"/>
         <source>Zoom</source>
         <translation>Marire</translation>
     </message>
     <message>
-        <location filename="window.cpp" line="227"/>
-        <location filename="window.cpp" line="486"/>
+        <location filename="window.cpp" line="219"/>
+        <location filename="window.cpp" line="478"/>
         <source>Properties</source>
         <translation>Proprietati</translation>
     </message>
     <message>
-        <location filename="window.cpp" line="230"/>
+        <location filename="window.cpp" line="222"/>
         <source>Help</source>
         <translation>Ajutor</translation>
     </message>
     <message>
-        <location filename="window.cpp" line="233"/>
+        <location filename="window.cpp" line="225"/>
         <source>About</source>
         <translation>Despre</translation>
     </message>
     <message>
-        <location filename="window.cpp" line="236"/>
-        <location filename="window.cpp" line="492"/>
+        <location filename="window.cpp" line="228"/>
+        <location filename="window.cpp" line="484"/>
         <source>Exit</source>
         <translation>Iesire</translation>
     </message>
     <message>
-        <location filename="window.cpp" line="252"/>
+        <location filename="window.cpp" line="244"/>
         <source>Cannot create fileBrowser object</source>
         <translation>Nu se poate crea obiectul fileBrowser</translation>
     </message>
     <message>
-        <location filename="window.cpp" line="253"/>
+        <location filename="window.cpp" line="245"/>
         <source>not enough memory</source>
         <translation>memorie insuficienta</translation>
     </message>
     <message>
-        <location filename="window.cpp" line="258"/>
+        <location filename="window.cpp" line="250"/>
         <source>fileBrowserObject is NULL</source>
         <translation>obiectul fileBrowserObject este NULL</translation>
     </message>
@@ -261,104 +234,108 @@
         <translation type="obsolete">&lt;H2&gt; TabletReader v1.0 &lt;/H2&gt;&lt;H3&gt; cititor PDF pentru dispozitivele cu ecran tactil &lt;/H3&gt; &lt;br&gt; Copyright (C) 2012, Bogdan Cristea. Toate drepturile rezervate. &lt;br&gt;&lt;i&gt;e-mail: cristeab@gmail.com&lt;/i&gt;&lt;br&gt;&lt;br&gt;Acest program este distribuit în speranţa că va fi util, fără nici o GARANŢIE, nici chiar fără garanţia implicită de vandabilitate sau POTRIVIRE PENTRU UN ANUMIT SCOP. A se vedea GNU General Public License pentru mai multe detalii. &lt;br&gt;</translation>
     </message>
     <message>
-        <location filename="window.cpp" line="519"/>
+        <location filename="window.cpp" line="511"/>
         <source>%1 cannot be opened</source>
         <translation>%1 nu poate fi deschis</translation>
     </message>
     <message>
-        <location filename="window.cpp" line="863"/>
         <source>&lt;H2&gt;tabletReader v2.0&lt;/H2&gt;&lt;H3&gt;e-book reader for touch-enabled devices&lt;/H3&gt;&lt;H4&gt;Supported formats: PDF, DJVU and CHM.&lt;/H4&gt;&lt;br&gt;Copyright (C) 2012, Bogdan Cristea. All rights reserved.&lt;br&gt;&lt;i&gt;e-mail: cristeab@gmail.com&lt;/i&gt;&lt;br&gt;&lt;br&gt;This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.&lt;br&gt;&lt;br&gt;</source>
-        <translation>&lt;H2&gt; TabletReader v2.0 &lt;/H2&gt;&lt;H3&gt; cititor de carti electronice pentru dispozitivele cu ecran tactil &lt;/H3&gt;&lt;H4&gt;Formate suportate: PDF, DJVU si CHM.&lt;/H&gt;&lt;br&gt; Copyright (C) 2012, Bogdan Cristea. Toate drepturile rezervate. &lt;br&gt;&lt;i&gt;e-mail: cristeab@gmail.com&lt;/i&gt;&lt;br&gt;&lt;br&gt;Acest program este distribuit în speranţa că va fi util, fără nici o GARANŢIE, nici chiar fără garanţia implicită de vandabilitate sau POTRIVIRE PENTRU UN ANUMIT SCOP. A se vedea GNU General Public License pentru mai multe detalii. &lt;br&gt;</translation>
+        <translation type="obsolete">&lt;H2&gt; TabletReader v2.0 &lt;/H2&gt;&lt;H3&gt; cititor de carti electronice pentru dispozitivele cu ecran tactil &lt;/H3&gt;&lt;H4&gt;Formate suportate: PDF, DJVU si CHM.&lt;/H&gt;&lt;br&gt; Copyright (C) 2012, Bogdan Cristea. Toate drepturile rezervate. &lt;br&gt;&lt;i&gt;e-mail: cristeab@gmail.com&lt;/i&gt;&lt;br&gt;&lt;br&gt;Acest program este distribuit în speranţa că va fi util, fără nici o GARANŢIE, nici chiar fără garanţia implicită de vandabilitate sau POTRIVIRE PENTRU UN ANUMIT SCOP. A se vedea GNU General Public License pentru mai multe detalii. &lt;br&gt;</translation>
     </message>
     <message>
-        <location filename="window.cpp" line="975"/>
+        <location filename="window.cpp" line="847"/>
+        <source>&lt;H2&gt;tabletReader v2.0&lt;/H2&gt;&lt;H3&gt;e-book reader for touch-enabled devices&lt;/H3&gt;&lt;H4&gt;Supported formats: PDF, CHM, DJVU, EPUB, etc.&lt;/H4&gt;&lt;H4&gt;(all Okular supported formats)&lt;/H4&gt;&lt;br&gt;Copyright (C) 2012, Bogdan Cristea. All rights reserved.&lt;br&gt;&lt;i&gt;e-mail: cristeab@gmail.com&lt;/i&gt;&lt;br&gt;&lt;br&gt;This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.&lt;br&gt;&lt;br&gt;</source>
+        <translation>&lt;H2&gt; TabletReader v2.0 &lt;/H2&gt;&lt;H3&gt; cititor de carti electronice pentru dispozitivele cu ecran tactil &lt;/H3&gt;&lt;H4&gt;Formate suportate: PDF, CHM, DJVU, EPUB, etc.&lt;/H4&gt;&lt;H4&gt;(toate formatele suportate de Okular)&lt;/H4&gt;&lt;br&gt; Copyright (C) 2012, Bogdan Cristea. Toate drepturile rezervate. &lt;br&gt;&lt;i&gt;e-mail: cristeab@gmail.com&lt;/i&gt;&lt;br&gt;&lt;br&gt;Acest program este distribuit în speranţa că va fi util, fără nici o GARANŢIE, nici chiar fără garanţia implicită de vandabilitate sau POTRIVIRE PENTRU UN ANUMIT SCOP. A se vedea GNU General Public License pentru mai multe detalii. &lt;br&gt;</translation>
+    </message>
+    <message>
+        <location filename="window.cpp" line="960"/>
         <source>You can use tabletReader, but it is highly recommended to connect to Intel AppUp center</source>
         <translation>Puteti folosi tabletReader, dar este recomandat sa fiti conectat la centrul AppUp al Intel</translation>
     </message>
     <message>
-        <location filename="window.cpp" line="1001"/>
+        <location filename="window.cpp" line="986"/>
         <source>&lt;H3&gt;Document path:&lt;br&gt;&lt;i&gt;%1&lt;/i&gt;&lt;/H3&gt;</source>
         <translation>&lt;H3&gt;Calea documentului:&lt;br&gt;&lt;i&gt;%1&lt;/i&gt;&lt;/H3&gt;</translation>
     </message>
     <message>
-        <location filename="window.cpp" line="1003"/>
+        <location filename="window.cpp" line="988"/>
         <source>&lt;H3&gt;Current page / Number of pages:&lt;br&gt;&lt;b&gt;%1 / %2&lt;/b&gt;&lt;/H3&gt;</source>
         <oldsource>&lt;H3&gt;Current page / Page number:&lt;br&gt;&lt;b&gt;%1 / %2&lt;/b&gt;&lt;/H3&gt;</oldsource>
         <translation>&lt;H3&gt;Pagina curenta / Numarul de pagini:&lt;br&gt;&lt;b&gt;%1 / %2&lt;/b&gt;&lt;/H3&gt;</translation>
     </message>
     <message>
-        <location filename="window.cpp" line="1005"/>
+        <location filename="window.cpp" line="990"/>
         <source>&lt;H3&gt;Elapsed time:&lt;br&gt;%1&lt;/H3&gt;</source>
         <translation>&lt;H3&gt;Timpul scurs:&lt;br&gt;%1&lt;/H3&gt;</translation>
     </message>
     <message>
-        <location filename="window.cpp" line="1007"/>
+        <location filename="window.cpp" line="992"/>
         <source>&lt;H3&gt;Battery status:&lt;br&gt;%1&lt;/H3&gt;</source>
         <translation>&lt;H3&gt;Starea bateriei:&lt;br&gt;%1&lt;/H3&gt;</translation>
     </message>
     <message>
-        <location filename="window.cpp" line="1037"/>
+        <location filename="window.cpp" line="1022"/>
         <source>no charger</source>
         <translation>fara incarcator</translation>
     </message>
     <message>
-        <location filename="window.cpp" line="1040"/>
+        <location filename="window.cpp" line="1025"/>
         <source>wall charger</source>
         <translation>incarcator conectat</translation>
     </message>
     <message>
-        <location filename="window.cpp" line="1046"/>
+        <location filename="window.cpp" line="1031"/>
         <source>charging</source>
         <translation>se incarca</translation>
     </message>
     <message>
-        <location filename="window.cpp" line="1050"/>
+        <location filename="window.cpp" line="1035"/>
         <source>unknown</source>
         <translation>necunoscut</translation>
     </message>
     <message>
-        <location filename="window.cpp" line="1055"/>
+        <location filename="window.cpp" line="1040"/>
         <source>, %1% remaining capacity</source>
         <translation>, %1% capacitate ramasa</translation>
     </message>
     <message>
-        <location filename="window.cpp" line="1057"/>
+        <location filename="window.cpp" line="1042"/>
         <source>, unknown remaining capacity</source>
         <translation>, capacitate ramasa necunoscuta</translation>
     </message>
     <message>
-        <location filename="window.cpp" line="1071"/>
+        <location filename="window.cpp" line="1056"/>
         <source>1 hour</source>
         <translation>1 ora</translation>
     </message>
     <message>
-        <location filename="window.cpp" line="1074"/>
+        <location filename="window.cpp" line="1059"/>
         <source>%1 hours</source>
         <translation>%1 ore</translation>
     </message>
     <message>
-        <location filename="window.cpp" line="1086"/>
+        <location filename="window.cpp" line="1071"/>
         <source>1 minute</source>
         <translation>1 minut</translation>
     </message>
     <message>
-        <location filename="window.cpp" line="1089"/>
+        <location filename="window.cpp" line="1074"/>
         <source>%1 minutes</source>
         <translation>%1 minute</translation>
     </message>
     <message>
-        <location filename="window.cpp" line="1101"/>
+        <location filename="window.cpp" line="1086"/>
         <source>1 second</source>
         <translation>1 secunda</translation>
     </message>
     <message>
-        <location filename="window.cpp" line="1104"/>
+        <location filename="window.cpp" line="1089"/>
         <source>%1 seconds</source>
         <translation>%1 secunde</translation>
     </message>
     <message>
-        <location filename="window.cpp" line="215"/>
-        <location filename="window.cpp" line="480"/>
+        <location filename="window.cpp" line="207"/>
+        <location filename="window.cpp" line="472"/>
         <source>Open</source>
         <translation>Deschide</translation>
     </message>
@@ -367,12 +344,12 @@
         <translation type="obsolete">Afiseaza/Ascunde Numarul de Pagina</translation>
     </message>
     <message>
-        <location filename="window.cpp" line="495"/>
+        <location filename="window.cpp" line="487"/>
         <source>Normal Screen</source>
         <translation>Ecran Normal</translation>
     </message>
     <message>
-        <location filename="window.cpp" line="518"/>
+        <location filename="window.cpp" line="510"/>
         <source>Failed to open file</source>
         <translation>Fisierul nu poate fi deschis</translation>
     </message>
@@ -385,7 +362,7 @@
         <translation type="obsolete">pagina %1 din %2</translation>
     </message>
     <message>
-        <location filename="window.cpp" line="839"/>
+        <location filename="window.cpp" line="823"/>
         <source>Cannot open help file</source>
         <translation>Nu se poate deschide fichierul de ajutor</translation>
     </message>
@@ -397,60 +374,50 @@
 <context>
     <name>gotopage</name>
     <message>
-        <location filename="qml/gotopage.qml" line="70"/>
         <source>GoTo Page</source>
-        <translation>Mergi la Pagina</translation>
+        <translation type="obsolete">Mergi la Pagina</translation>
     </message>
 </context>
 <context>
     <name>maintoolbar</name>
     <message>
-        <location filename="qml/maintoolbar.qml" line="33"/>
         <source>Open</source>
-        <translation>Deschide</translation>
+        <translation type="obsolete">Deschide</translation>
     </message>
     <message>
-        <location filename="qml/maintoolbar.qml" line="39"/>
         <source>Full Screen</source>
-        <translation>Ecran Complet</translation>
+        <translation type="obsolete">Ecran Complet</translation>
     </message>
     <message>
-        <location filename="qml/maintoolbar.qml" line="45"/>
         <source>Go To Page</source>
-        <translation>Mergi la Pagina</translation>
+        <translation type="obsolete">Mergi la Pagina</translation>
     </message>
     <message>
-        <location filename="qml/maintoolbar.qml" line="51"/>
         <source>Zoom</source>
-        <translation>Marire</translation>
+        <translation type="obsolete">Marire</translation>
     </message>
     <message>
-        <location filename="qml/maintoolbar.qml" line="57"/>
         <source>Properties</source>
-        <translation>Proprietati</translation>
+        <translation type="obsolete">Proprietati</translation>
     </message>
     <message>
-        <location filename="qml/maintoolbar.qml" line="63"/>
         <source>Help</source>
-        <translation>Ajutor</translation>
+        <translation type="obsolete">Ajutor</translation>
     </message>
     <message>
-        <location filename="qml/maintoolbar.qml" line="69"/>
         <source>About</source>
-        <translation>Despre</translation>
+        <translation type="obsolete">Despre</translation>
     </message>
     <message>
-        <location filename="qml/maintoolbar.qml" line="75"/>
         <source>Exit</source>
-        <translation>Iesire</translation>
+        <translation type="obsolete">Iesire</translation>
     </message>
 </context>
 <context>
     <name>zoompage</name>
     <message>
-        <location filename="qml/zoompage.qml" line="60"/>
         <source>Zoom Factor</source>
-        <translation>Factor</translation>
+        <translation type="obsolete">Factor</translation>
     </message>
 </context>
 </TS>

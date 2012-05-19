@@ -29,7 +29,7 @@
 #include <QDebug>
 #include "chmdocument.h"
 #include "chmreply.h"
-#include "window.h"
+#include "screen_size.h"
 
 CHMDocument::CHMDocument() :
     Document(),
@@ -58,11 +58,11 @@ int CHMDocument::load(const QString &fileName)
     return EXIT_FAILURE;
 }
 
-QImage CHMDocument::renderToImage(int page, qreal xres, qreal)
+const QPixmap* CHMDocument::getPixmap(int page, qreal scaleFactor)
 {
-    if ((NULL == doc_) || (NULL == req_) || (0 == numPages_))
+    if ((NULL == doc_) || (NULL == req_) || (0 == numPages_) || (0 >= scaleFactor))
     {
-        return QImage();
+        return NULL;
     }
 
     QWebView webView;//we need to recreate the view at each page
@@ -71,21 +71,18 @@ QImage CHMDocument::renderToImage(int page, qreal xres, qreal)
     QStringList urls = toc_.at(page).urls;//there must be only one URL for the TOC
     webView.load(QUrl::fromLocalFile(urls.at(0)));
     eventLoop_.exec();//wait for load to complete
-    qreal zoomFactor = xres/webView.physicalDpiX();
-    webView.setZoomFactor(zoomFactor);
+    webView.setZoomFactor(scaleFactor);
     QWebFrame *webFrame = webView.page()->mainFrame();
     webFrame->setScrollBarPolicy(Qt::Vertical, Qt::ScrollBarAlwaysOff);
     webFrame->setScrollBarPolicy(Qt::Horizontal, Qt::ScrollBarAlwaysOff);
     QSize size = webFrame->contentsSize();
-    int preferredWidth = int(Window::MIN_SCREEN_WIDTH*0.9);
+    int preferredWidth = int(MIN_SCREEN_WIDTH*0.9);
     if (size.width() < preferredWidth)
     {
         size = QSize(preferredWidth, size.height());//adjust page width
     }
     webView.setGeometry(QRect(QPoint(0, 0), size));
-    //the conversion QPixmap to QImage is made in order to keep unchaged the upper layer,
-    //but is redundant since the QImage object is converted back to QPixmap before being shown
-    return QPixmap::grabWidget(&webView).toImage();
+    return new QPixmap(QPixmap::grabWidget(&webView));
 }
 
 //this method is used by QWebView to load an HTML page

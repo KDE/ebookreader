@@ -14,45 +14,14 @@
 ** this program; if not, write to the Free Software Foundation, Inc., 51 Franklin
 ** Street - Fifth Floor, Boston, MA 02110-1301, USA.
 **
-** Reference: qindle project (http://code.google.com/p/qindle/)
-**
 ****************************************************************************/
+ 
+#ifndef SCREEN_SIZE_H
+#define SCREEN_SIZE_H
 
-#include "kdjvu.h"
-#include "djvudocument.h"
+#define FULL_SCREEN_WIDTH 1024
+#define FULL_SCREEN_HEIGHT 768
+#define MIN_SCREEN_WIDTH 800
+#define MIN_SCREEN_HEIGHT 600
 
-DJVUDocument::DJVUDocument() :
-    Document(), doc_(new KDjVu())
-{
-}
-
-DJVUDocument::~DJVUDocument()
-{
-    delete doc_;
-}
-
-int DJVUDocument::load(const QString &fileName)
-{
-    if ((NULL != doc_) && (true == doc_->openFile(fileName)))
-    {
-        numPages_ = doc_->pages().size();
-        return EXIT_SUCCESS;
-    }
-    return EXIT_FAILURE;
-}
-
-QImage DJVUDocument::renderToImage(int page, qreal xres, qreal yres)
-{
-    if (NULL == doc_)
-    {
-        return QImage();
-    }
-    KDjVu::Page* curpage = doc_->pages().at(page);
-    if (NULL == curpage)
-    {
-        return QImage();
-    }
-    int width = qRound(curpage->width()*xres/curpage->dpi());
-    int height = qRound(curpage->height()*yres/curpage->dpi());
-    return doc_->image(page, width, height, 0);
-}
+#endif

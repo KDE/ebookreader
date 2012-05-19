@@ -19,6 +19,7 @@
 #include <QMainWindow>
 #include <QDir>
 #include <QDebug>
+#include <kmimetype.h>
 #include "filebrowsermodel.h"
 #include "documentwidget.h"
 
@@ -58,7 +59,7 @@ void FileBrowserModel::searchPdfFiles()
     _files.clear();
     _dirs.clear();
 
-    QDir directory = QDir(_currentDir, "*.pdf *.djvu *.chm",
+    QDir directory = QDir(_currentDir, "*.*",
                           QDir::Name | QDir::IgnoreCase | QDir::LocaleAware);
 
     //fill file list
@@ -118,19 +119,22 @@ QVariant FileBrowserModel::data(const QModelIndex &index, int role) const
             } else
             {
                 QString iconFileName;
-                switch (DocumentWidget::fileType(_files[fileRow]))
+		KMimeType::Ptr ptr = KMimeType::findByPath(_files[fileRow]);
+                if (ptr->is("application/pdf"))
                 {
-                case DocumentWidget::ID_PDF:
                     iconFileName = QString(":/filebrowser/icons/Adobe-PDF-Document-icon.png");
-                    break;
-                case DocumentWidget::ID_DJVU:
+                } else if (ptr->is("image/vnd.djvu"))
+		{
                     iconFileName = QString(":/filebrowser/icons/Djvu-document-icon.png");
-                    break;
-                case DocumentWidget::ID_CHM:
+                } else if (ptr->is("application/vnd.ms-htmlhelp"))
+		{
                     iconFileName = QString(":/filebrowser/icons/Chm-document-icon.png");
-                    break;
-                default:
-                    qDebug() << "unknown file type";
+		} else if (ptr->is("application/epub+zip"))
+		{ 
+                    iconFileName = QString(":/filebrowser/icons/Epub-document-icon.png");
+                } else
+		{ 
+                    iconFileName = QString(":/filebrowser/icons/Document-icon.png");
                 }
                 return iconFileName;
             }
