@@ -31,31 +31,31 @@ Rectangle {
 
         ToolbarView {
             toolbarItemTitle: qsTr("Open")
-            toolbarItemIcon: ":/toolbar/qml/Toolbar/pics/Folder-Blue-Documents-icon.png"
+            toolbarItemIcon: ":/toolbar/qml/Toolbar/pics/Actions-document-open-folder-icon.png"
             clip: true
         }
 
         ToolbarView {
             toolbarItemTitle: qsTr("Full Screen")
-            toolbarItemIcon: ":/toolbar/qml/Toolbar/pics/window-full-screen-icon.png"
+            toolbarItemIcon: ":/toolbar/qml/Toolbar/pics/Actions-view-fullscreen-icon.png"
             clip: true
         }
 
         ToolbarView {
             toolbarItemTitle: qsTr("Go To Page")
-            toolbarItemIcon: ":/toolbar/qml/Toolbar/pics/goto-page-icon.png"
+            toolbarItemIcon: ":/toolbar/qml/Toolbar/pics/Actions-go-jump-locationbar-icon.png"
             clip: true
         }
 
         ToolbarView {
             toolbarItemTitle: qsTr("Zoom")
-            toolbarItemIcon: ":/toolbar/qml/Toolbar/pics/zoom-icon.png"
+            toolbarItemIcon: ":/toolbar/qml/Toolbar/pics/Actions-page-zoom-icon.png"
             clip: true
         }
 
         ToolbarView {
             toolbarItemTitle: qsTr("Properties")
-            toolbarItemIcon: ":/toolbar/qml/Toolbar/pics/properties-icon.png"
+            toolbarItemIcon: ":/toolbar/qml/Toolbar/pics/Actions-document-properties-icon.png"
             clip: true
         }
 
@@ -67,13 +67,13 @@ Rectangle {
 
         ToolbarView {
             toolbarItemTitle: qsTr("About")
-            toolbarItemIcon: ":/toolbar/qml/Toolbar/pics/About-icon.png"
+            toolbarItemIcon: ":/toolbar/qml/Toolbar/pics/Actions-help-about-icon.png"
             clip: true
         }
 
         ToolbarView {
             toolbarItemTitle: qsTr("Exit")
-            toolbarItemIcon: ":/toolbar/qml/Toolbar/pics/Button-Close-icon.png"
+            toolbarItemIcon: ":/toolbar/qml/Toolbar/pics/Actions-application-exit-icon.png"
             clip: true
         }
     }
