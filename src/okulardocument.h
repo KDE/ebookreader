@@ -36,6 +36,7 @@ public:
     OkularDocument();
     virtual int load(const QString &fileName);
     virtual const QPixmap* getPixmap(int page, qreal scaleFactor);
+    virtual QString path() const;
     virtual ~OkularDocument();
 private:
     void adjustSize(int &width, int &height);

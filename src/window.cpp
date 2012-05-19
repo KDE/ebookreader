@@ -814,7 +814,17 @@ void Window::setZoomFactor(int index)
 void Window::showHelp(bool slideNext)
 {
     qDebug() << "Window::showHelp";
+    static QString oldFileName = "";
     QString fileName = QCoreApplication::applicationDirPath()+QString(HELP_FILE);
+    if (true == oldFileName.isEmpty())
+    {
+	    oldFileName = document_->path();
+	    //TODO: memorize the old page number
+    } else
+    {
+	    fileName = oldFileName;//reopen the old document
+	    oldFileName = "";
+    }
     if (document_->setDocument(fileName))
     {
         setupDocDisplay(1, HELP_FILE);
@@ -822,7 +832,7 @@ void Window::showHelp(bool slideNext)
         if (true == slideNext)
         {
             slidingStacked_->slideInNext();
-        }            
+        }
     } else
     {
         qDebug() << "cannot open help file" << fileName;

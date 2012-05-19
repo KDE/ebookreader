@@ -34,6 +34,7 @@ public:
     CHMDocument();
     virtual int load(const QString &fileName);
     virtual const QPixmap* getPixmap(int page, qreal scaleFactor);
+    virtual QString path() const;
     virtual ~CHMDocument();
 private:
     LCHMFile *doc_;

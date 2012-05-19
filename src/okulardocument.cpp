@@ -85,6 +85,11 @@ OkularDocument::OkularDocument() :
 	}
 }
 
+QString OkularDocument::path() const
+{
+	return (NULL != doc_)?doc_->currentDocument().path():QString("");
+}
+
 OkularDocument::~OkularDocument()
 {
     delete doc_;

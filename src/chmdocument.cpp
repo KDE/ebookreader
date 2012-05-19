@@ -30,6 +30,7 @@
 #include "chmdocument.h"
 #include "chmreply.h"
 #include "screen_size.h"
+#include "libchmfileimpl.h" 
 
 CHMDocument::CHMDocument() :
     Document(),
@@ -42,6 +43,11 @@ CHMDocument::~CHMDocument()
 {
     delete doc_;
     delete req_;
+}
+
+QString CHMDocument::path() const
+{
+    return (NULL != doc_)?doc_->impl()->m_filename:QString("");
 }
 
 int CHMDocument::load(const QString &fileName)

@@ -63,6 +63,10 @@ public:
     {
         stackedWidget_ = stackedWidget;
     }
+    QString path() const
+    {
+	    return doc_->path();
+    }
 
     void showCurrentPageUpper()
     {
