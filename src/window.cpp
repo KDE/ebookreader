@@ -54,7 +54,8 @@ Window::Window(QWidget *parent)
       waitTimer_(NULL),
       waitDialog_(NULL),
       batteryInfo_(NULL),
-      pageToLoadNo_(QQueue<int>())
+      pageToLoadNo_(QQueue<int>()),
+      helpFile_(QCoreApplication::applicationDirPath()+QString(HELP_FILE))
 {
     eTime_.start();//used to measure the elapsed time since the app is started
 
@@ -815,7 +816,7 @@ void Window::showHelp(bool slideNext)
 {
     qDebug() << "Window::showHelp";
     static QString oldFileName = "";
-    QString fileName = QCoreApplication::applicationDirPath()+QString(HELP_FILE);
+    QString fileName = helpFile_;
     if (true == oldFileName.isEmpty())
     {
 	    oldFileName = document_->path();

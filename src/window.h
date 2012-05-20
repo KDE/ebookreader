@@ -139,6 +139,7 @@ private:
     int currentPage_;
     QElapsedTimer eTime_;    
     QQueue<int> pageToLoadNo_;
+    const QString helpFile_;
 };
 
 #endif
