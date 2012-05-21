@@ -38,7 +38,7 @@ int main(int argc, char *argv[])
     }
 #ifdef QT_DEBUG_ENABLE_LOG
     //in release mode the log file is not created
-    Logger::instance("tabletReader.log");
+    Logger::instance("atReader.log");
 #endif
     //translation object
     QTranslator translator;

@@ -89,7 +89,7 @@ private:
     bool showNextPage();
     bool showPrevPage();
     void showPageNumber(int currentPage, int nbPages);
-    void setupDocDisplay(unsigned int pageNumber, const QString &filePath);
+    void setupDocDisplay(unsigned int pageNumber);
     void gotoPage(int pageNb, int numPages);
     void setZoomFactor(int index);
     QString elapsedTime();
@@ -117,7 +117,6 @@ private:
     SlidingStackedWidget *slidingStacked_;
     DocumentWidget *document_;
     QDeclarativeView *toolBar_;
-    QString lastFilePath_;
     QVector<qreal> scaleFactors_;
     int currentZoomIndex_;
     QPoint startPoint_;
@@ -140,6 +139,10 @@ private:
     QElapsedTimer eTime_;    
     QQueue<int> pageToLoadNo_;
     const QString helpFile_;
+    struct _docStatus_ {
+	    QString path;
+	    int currentPage;
+    } docStatus_;
 };
 
 #endif

@@ -23,6 +23,7 @@ import "Toolbar"
 Rectangle {
     width: 800
     height: 64
+    property bool hlpBck: true
 
     Toolbar {
         id: toolbar
@@ -60,8 +61,8 @@ Rectangle {
         }
 
         ToolbarView {
-            toolbarItemTitle: qsTr("Help")
-            toolbarItemIcon: ":/toolbar/qml/Toolbar/pics/help-icon.png"
+            toolbarItemTitle: (true == hlpBck)?qsTr("Help"):qsTr("Back")
+            toolbarItemIcon: (true == hlpBck)?":/toolbar/qml/Toolbar/pics/help-icon.png":":/toolbar/qml/Toolbar/pics/back.png"
             clip: true
         }
 

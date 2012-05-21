@@ -29,7 +29,7 @@
 #include "screen_size.h"
 
 #define ORGANIZATION "Bogdan Cristea"
-#define APPLICATION "tabletReader"
+#define APPLICATION "atReader"
 #define KEY_PAGE "current_page"
 #define KEY_FILE_PATH "current_file_path"
 #define KEY_ZOOM_LEVEL "current_zoom_level"
@@ -55,8 +55,11 @@ Window::Window(QWidget *parent)
       waitDialog_(NULL),
       batteryInfo_(NULL),
       pageToLoadNo_(QQueue<int>()),
-      helpFile_(QCoreApplication::applicationDirPath()+QString(HELP_FILE))
+      helpFile_(QCoreApplication::applicationDirPath()+QString(HELP_FILE)) 
 {
+    docStatus_.path = "";
+    docStatus_.currentPage = -1;
+
     eTime_.start();//used to measure the elapsed time since the app is started
 
     //main window
@@ -153,7 +156,7 @@ Window::Window(QWidget *parent)
         if (document_->setDocument(filePath))
         {
             currentZoomIndex_ = settings.value(KEY_ZOOM_LEVEL, 3).toInt();
-            setupDocDisplay(settings.value(KEY_PAGE, 0).toInt()+1, filePath);
+            setupDocDisplay(settings.value(KEY_PAGE, 0).toInt()+1);
 	    //simulate an onAnimationFinished
 	    onAnimationFinished();
             fileBrowserModel_->setCurrentDir(filePath);
@@ -221,7 +224,7 @@ void Window::onSendCommand(const QString &cmd)
     } else if (tr("Properties") == cmd)
     {
         showPropertiesDialog();
-    } else if (tr("Help") == cmd)
+    } else if ((tr("Help") == cmd) || (tr("Back") == cmd))
     {
         showHelp();
     } else if (tr("About") == cmd)
@@ -507,7 +510,7 @@ void Window::openFile(const QString &filePath)
 	//reset queue
 	pageToLoadNo_.clear();
         //load document
-        setupDocDisplay(1, filePath);
+        setupDocDisplay(1);
 	qDebug() << "slide in next";
         slidingStacked_->slideInNext();
     } else
@@ -719,7 +722,7 @@ bool Window::showPrevPage()
 
 void Window::closeEvent(QCloseEvent *evt)
 {    
-    qDebug() << "Window::closeEvent" << lastFilePath_ << document_->currentPage();
+    qDebug() << "Window::closeEvent" << document_->path() << document_->currentPage();
 
     saveSettings();
     //terminate worker thread
@@ -744,10 +747,9 @@ void Window::onAnimationFinished()
     animationFinished_ = true;//must be the last statement
 }
 
-void Window::setupDocDisplay(unsigned int pageNumber, const QString &filePath)
+void Window::setupDocDisplay(unsigned int pageNumber)
 {
     qDebug() << "Window::setupDocDisplay" << pageNumber;
-    lastFilePath_ = filePath;    
     //set document zoom factor
     document_->setScale(scaleFactors_[currentZoomIndex_]);
     //set current page
@@ -815,20 +817,33 @@ void Window::setZoomFactor(int index)
 void Window::showHelp(bool slideNext)
 {
     qDebug() << "Window::showHelp";
-    static QString oldFileName = "";
     QString fileName = helpFile_;
-    if (true == oldFileName.isEmpty())
+    int currentPage = 1;
+    if (true == document_->isLoaded())
     {
-	    oldFileName = document_->path();
-	    //TODO: memorize the old page number
-    } else
-    {
-	    fileName = oldFileName;//reopen the old document
-	    oldFileName = "";
+    	if (-1 == docStatus_.currentPage)
+    	{
+	    docStatus_.path = document_->path();
+	    docStatus_.currentPage = document_->currentPage()+1;
+    	} else
+   	{
+	    fileName = docStatus_.path;//reopen the previous document
+	    currentPage = docStatus_.currentPage;
+	    docStatus_.currentPage = -1;//reset document status
+    	}
     }
+    QObject *pDisp = toolBar_->rootObject();
+    if (NULL != pDisp)
+    {
+        if (false == pDisp->setProperty("hlpBck", helpFile_ != fileName))
+	{
+		qDebug() << "cannot set hlpBck property";
+	}
+    }
+    qDebug() << "fileName" << fileName;
     if (document_->setDocument(fileName))
     {
-        setupDocDisplay(1, HELP_FILE);
+        setupDocDisplay(currentPage);
         document_->showCurrentPageUpper();
         if (true == slideNext)
         {
@@ -1000,7 +1015,7 @@ void Window::showPropertiesDialog()
             if (NULL != pAboutDlg)
             {
                 //document path
-                QString msg = tr("<H3>Document path:<br><i>%1</i></H3>").arg(lastFilePath_);
+                QString msg = tr("<H3>Document path:<br><i>%1</i></H3>").arg(document_->path());
                 //current page / page number
                 msg += tr("<H3>Current page / Number of pages:<br><b>%1 / %2</b></H3>").arg(document_->currentPage()+1).arg(document_->numPages());
                 //time since the application was started
@@ -1111,12 +1126,16 @@ QString Window::elapsedTime()
 
 void Window::saveSettings()
 {
-    if ((NULL != document_) && (QString(HELP_FILE) != lastFilePath_))
+    if ((NULL != document_) && (true == document_->isLoaded()))
     {
-        //the current settings are not saved if the last file is the help file
-        QSettings settings(ORGANIZATION, APPLICATION);
-        settings.setValue(KEY_PAGE, document_->currentPage());
-        settings.setValue(KEY_FILE_PATH, lastFilePath_);
-        settings.setValue(KEY_ZOOM_LEVEL, currentZoomIndex_);
+    	QString filePath = document_->path();
+	if (helpFile_ != filePath)
+	{
+        	//the current settings are not saved if the last file is the help file
+	        QSettings settings(ORGANIZATION, APPLICATION);
+        	settings.setValue(KEY_PAGE, document_->currentPage());
+	        settings.setValue(KEY_FILE_PATH, filePath);
+	        settings.setValue(KEY_ZOOM_LEVEL, currentZoomIndex_);
+	}
     }
 }
