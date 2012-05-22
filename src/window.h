@@ -71,8 +71,6 @@ private slots:
     void openFile(const QString &filePath);    
     void fullScreen();
     void normalScreen();
-    void increaseScale();
-    void decreaseScale();
     void onAnimationFinished();
     void onSendCommand(const QString &cmd);
     void showHelp(bool slideNext = true);

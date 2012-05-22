@@ -69,14 +69,6 @@ Window::Window(QWidget *parent)
     setWindowTitle(tr(APPLICATION));
     setStyleSheet("background-color: black");
 
-    //actions for zoom in/out
-    QAction *increaseScaleAction = new QAction(this);
-    increaseScaleAction->setShortcut(tr("Ctrl++"));
-    QAction *decreaseScaleAction = new QAction(this);
-    decreaseScaleAction->setShortcut(tr("Ctrl+-"));
-    addAction(increaseScaleAction);
-    addAction(decreaseScaleAction);
-
     //zoom scale factors
     scaleFactors_ << 0.25 << 0.5 << 0.75 << 1.
                   << 1.25 << 1.5 << 2. << 3. << 4.;
@@ -123,8 +115,6 @@ Window::Window(QWidget *parent)
 
     connect(slidingStacked_, SIGNAL(animationFinished()),
             this, SLOT(onAnimationFinished()));
-    connect(increaseScaleAction, SIGNAL(triggered()), this, SLOT(increaseScale()));
-    connect(decreaseScaleAction, SIGNAL(triggered()), this, SLOT(decreaseScale()));
 
     statusBar()->hide();
 
@@ -566,16 +556,6 @@ void Window::normalScreen()
     {
         toolBar_->show();
     }
-}
-
-void Window::increaseScale()
-{
-    qDebug() << "Window::increaseScale";
-}
-
-void Window::decreaseScale()
-{
-    qDebug() << "Window::decreaseScale";
 }
 
 bool Window::eventFilter(QObject *, QEvent *event)
