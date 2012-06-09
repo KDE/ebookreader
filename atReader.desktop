@@ -1,0 +1,19 @@
+[Desktop Entry]
+Terminal=false
+Name=atReader
+Name[de]=atReader
+Name[es]=atReader
+Name[fr]=atReader
+Name[nl]=atReader
+Name[pl]=TabletowyCzytnik
+Name[pt]=Leitor da Tablete
+Name[pt_BR]=atReader
+Name[sk]=atReader
+Name[uk]=atReader
+Name[x-test]=xxatReaderxx
+Exec=atReader
+Icon=atReader
+Type=Application
+InitialPreference=7
+Categories=Office;Viewer;
+MimeType=application/vnd.kde.atReader-archive;

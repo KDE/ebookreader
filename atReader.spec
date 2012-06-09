@@ -1,5 +1,5 @@
 #
-# spec file for package tabletReader
+# spec file for package atReader
 #
 # Copyright (c) 2011 SUSE LINUX Products GmbH, Nuernberg, Germany.
 #
@@ -15,7 +15,7 @@
 # Please submit bugfixes or comments via http://bugs.opensuse.org/
 #
 
-Name:           tabletReader
+Name:           atReader
 Version:        2.0.0
 Release:        1
 License:        GPLv2+
@@ -48,18 +48,18 @@ CHM.
 %install
   make install INSTALL_ROOT=%{buildroot}
   mkdir -p %{buildroot}%{_kde4_applicationsdir}
-  cp tabletReader.desktop %{buildroot}%{_kde4_applicationsdir}
-  mkdir -p %{buildroot}%{_kde4_appsdir}/tabletReader/
+  cp atReader.desktop %{buildroot}%{_kde4_applicationsdir}
+  mkdir -p %{buildroot}%{_kde4_appsdir}/atReader/
   mkdir -p %{buildroot}%{_kde4_bindir}
-  mv %{buildroot}/tabletReader %{buildroot}%{_kde4_bindir}
+  mv %{buildroot}/atReader %{buildroot}%{_kde4_bindir}
   mkdir -p %{buildroot}%{_kde4_iconsdir}/hicolor/{16x16,22x22,32x32,48x48,64x64,128x128}/apps
-  cp src/icons/128x128/tabletReader.png %{buildroot}%{_kde4_iconsdir}/hicolor/128x128/apps/
-  cp src/icons/64x64/tabletReader.png %{buildroot}%{_kde4_iconsdir}/hicolor/64x64/apps/
-  cp src/icons/48x48/tabletReader.png %{buildroot}%{_kde4_iconsdir}/hicolor/48x48/apps/
-  cp src/icons/32x32/tabletReader.png %{buildroot}%{_kde4_iconsdir}/hicolor/32x32/apps/
-  cp src/icons/22x22/tabletReader.png %{buildroot}%{_kde4_iconsdir}/hicolor/22x22/apps/
-  cp src/icons/16x16/tabletReader.png %{buildroot}%{_kde4_iconsdir}/hicolor/16x16/apps/
-  %suse_update_desktop_file -r tabletReader   Office Viewer
+  cp src/icons/128x128/atReader.png %{buildroot}%{_kde4_iconsdir}/hicolor/128x128/apps/
+  cp src/icons/64x64/atReader.png %{buildroot}%{_kde4_iconsdir}/hicolor/64x64/apps/
+  cp src/icons/48x48/atReader.png %{buildroot}%{_kde4_iconsdir}/hicolor/48x48/apps/
+  cp src/icons/32x32/atReader.png %{buildroot}%{_kde4_iconsdir}/hicolor/32x32/apps/
+  cp src/icons/22x22/atReader.png %{buildroot}%{_kde4_iconsdir}/hicolor/22x22/apps/
+  cp src/icons/16x16/atReader.png %{buildroot}%{_kde4_iconsdir}/hicolor/16x16/apps/
+  %suse_update_desktop_file -r atReader   Office Viewer
   %kde_post_install
 
 %clean
@@ -67,9 +67,9 @@ CHM.
 
 %files
 %defattr(-,root,root)
-%{_kde4_applicationsdir}/tabletReader*.desktop
-%{_kde4_appsdir}/tabletReader/
-%{_kde4_bindir}/tabletReader
-%{_kde4_iconsdir}/hicolor/*/apps/tabletReader.*
+%{_kde4_applicationsdir}/atReader*.desktop
+%{_kde4_appsdir}/atReader/
+%{_kde4_bindir}/atReader
+%{_kde4_iconsdir}/hicolor/*/apps/atReader.*
 
 %changelog
