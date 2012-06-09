@@ -702,7 +702,7 @@ bool Window::showPrevPage()
 
 void Window::closeEvent(QCloseEvent *evt)
 {
-    qDebug() << "Window::closeEvent" << document_->path() << document_->currentPage();
+    qDebug() << "Window::closeEvent";
 
     saveSettings();
     //terminate worker thread
