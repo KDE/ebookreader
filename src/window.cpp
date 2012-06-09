@@ -38,24 +38,24 @@
 QTM_USE_NAMESPACE
 
 Window::Window(QWidget *parent)
-    : QMainWindow(parent),
-      slidingStacked_(NULL),
-      document_(NULL),
-      toolBar_(NULL),
-      fileBrowser_(NULL),
-      gotoPage_(NULL),
-      zoomPage_(NULL),
-      commandPopupMenu_(NULL),
-      aboutDialog_(NULL),
-      worker_(NULL),
-      thread_(NULL),
-      flickable_(NULL),
-      fileBrowserModel_(new FileBrowserModel(this)),
-      waitTimer_(NULL),
-      waitDialog_(NULL),
-      batteryInfo_(NULL),
-      pageToLoadNo_(QQueue<int>()),
-      helpFile_(QCoreApplication::applicationDirPath()+QString(HELP_FILE)) 
+        : QMainWindow(parent),
+        slidingStacked_(NULL),
+        document_(NULL),
+        toolBar_(NULL),
+        fileBrowser_(NULL),
+        gotoPage_(NULL),
+        zoomPage_(NULL),
+        commandPopupMenu_(NULL),
+        aboutDialog_(NULL),
+        worker_(NULL),
+        thread_(NULL),
+        flickable_(NULL),
+        fileBrowserModel_(new FileBrowserModel(this)),
+        waitTimer_(NULL),
+        waitDialog_(NULL),
+        batteryInfo_(NULL),
+        pageToLoadNo_(QQueue<int>()),
+        helpFile_(QCoreApplication::applicationDirPath()+QString(HELP_FILE))
 {
     docStatus_.path = "";
     docStatus_.currentPage = -1;
@@ -71,7 +71,7 @@ Window::Window(QWidget *parent)
 
     //zoom scale factors
     scaleFactors_ << 0.25 << 0.5 << 0.75 << 1.
-                  << 1.25 << 1.5 << 2. << 3. << 4.;
+    << 1.25 << 1.5 << 2. << 3. << 4.;
     currentZoomIndex_ = 3;//zoom 100%
 
     //create main document
@@ -94,7 +94,7 @@ Window::Window(QWidget *parent)
     {
         //scroll areas (one for each page)
         scroll = new QScrollArea(centralWidget);
-	scroll->setFrameShape(QFrame::NoFrame);
+        scroll->setFrameShape(QFrame::NoFrame);
         scroll->setWidgetResizable(true);
         scroll->setAlignment(Qt::AlignCenter);
         label = new QLabel();//QLabel is used to display a page
@@ -137,29 +137,6 @@ Window::Window(QWidget *parent)
     waitTimer_->setInterval(WAIT_TIMER_INTERVAL_MS);
     connect(waitTimer_, SIGNAL(timeout()), this, SLOT(showWaitDialog()));
 
-    //set document if one has been previously open
-    QSettings settings(ORGANIZATION, APPLICATION);
-    QString filePath;
-    if (NULL != (filePath = settings.value(KEY_FILE_PATH).toString()))
-    {
-	qDebug() << "Found document " << filePath;
-        if (document_->setDocument(filePath))
-        {
-            currentZoomIndex_ = settings.value(KEY_ZOOM_LEVEL, 3).toInt();
-            setupDocDisplay(settings.value(KEY_PAGE, 0).toInt()+1);
-	    //simulate an onAnimationFinished
-	    onAnimationFinished();
-            fileBrowserModel_->setCurrentDir(filePath);
-        }        
-    } else
-    {
-        qDebug() << "no document found";
-        showHelp(false);
-    }
-    animationFinished_ = true;
-
-    normalScreen();
-
     //main toolbar
     if (NULL != (toolBar_ = new QDeclarativeView(this)))
     {
@@ -179,6 +156,29 @@ Window::Window(QWidget *parent)
         }
         gridLayout->addWidget(toolBar_, 0, 0, 1, 1);
     }
+
+    //set document if one has been previously open
+    QSettings settings(ORGANIZATION, APPLICATION);
+    QString filePath;
+    if (NULL != (filePath = settings.value(KEY_FILE_PATH).toString()))
+    {
+        qDebug() << "Found document " << filePath;
+        if (document_->setDocument(filePath))
+        {
+            currentZoomIndex_ = settings.value(KEY_ZOOM_LEVEL, 3).toInt();
+            setupDocDisplay(settings.value(KEY_PAGE, 0).toInt()+1);
+            //simulate an onAnimationFinished
+            onAnimationFinished();
+            fileBrowserModel_->setCurrentDir(filePath);
+        }
+    } else
+    {
+        qDebug() << "no document found";
+        showHelp(false);
+    }
+    animationFinished_ = true;
+
+    normalScreen();
 
     //battery status
     batteryInfo_ = new QSystemBatteryInfo(this);
@@ -497,11 +497,11 @@ void Window::openFile(const QString &filePath)
     {
         //show wait dialog
         showWaitDialog();
-	//reset queue
-	pageToLoadNo_.clear();
+        //reset queue
+        pageToLoadNo_.clear();
         //load document
         setupDocDisplay(1);
-	qDebug() << "slide in next";
+        qDebug() << "slide in next";
         slidingStacked_->slideInNext();
     } else
     {
@@ -591,10 +591,10 @@ bool Window::eventFilter(QObject *, QEvent *event)
                 pressTimer_.invalidate();
                 showCommandPopupMenu();
             }
-        } else if( xDiff > yDiff )
+        } else if ( xDiff > yDiff )
         {
             // horizontal swipe detected, now find direction
-            if( startPoint_.x() > endPoint_.x() )
+            if ( startPoint_.x() > endPoint_.x() )
             {
                 //left swipe
                 showNextPage();
@@ -661,7 +661,7 @@ bool Window::showNextPage()
         waitTimer_->start();
         //load a new page
         document_->setPage(currentPage_);
-        document_->showCurrentPageUpper();        
+        document_->showCurrentPageUpper();
         //emit signal to update the cache after the page has been displayed
         preloadPage(currentPage_);
         //make sure that the next page is ready
@@ -688,7 +688,7 @@ bool Window::showPrevPage()
         waitTimer_->start();
         //load a new page
         document_->setPage(currentPage_);
-        document_->showCurrentPageLower();        
+        document_->showCurrentPageLower();
         //emit signal to update the cache after the page has been displayed
         preloadPage(currentPage_-2);
         //make sure that the prev page is ready
@@ -701,7 +701,7 @@ bool Window::showPrevPage()
 }
 
 void Window::closeEvent(QCloseEvent *evt)
-{    
+{
     qDebug() << "Window::closeEvent" << document_->path() << document_->currentPage();
 
     saveSettings();
@@ -720,7 +720,7 @@ void Window::closeEvent(QCloseEvent *evt)
 
 void Window::onAnimationFinished()
 {
-    qDebug() << "Window::onAnimationFinished";        
+    qDebug() << "Window::onAnimationFinished";
     closeWaitDialog();
     //preload page
     preloadPageSingleThreaded();
@@ -791,7 +791,7 @@ void Window::setZoomFactor(int index)
     {
         qDebug() << "Window::gotoPage: preload previous page";
         preloadPage(pageNb-2);//previous page (index starts from 0)
-    }    
+    }
 }
 
 void Window::showHelp(bool slideNext)
@@ -801,24 +801,24 @@ void Window::showHelp(bool slideNext)
     int currentPage = 1;
     if (true == document_->isLoaded())
     {
-    	if (-1 == docStatus_.currentPage)
-    	{
-	    docStatus_.path = document_->path();
-	    docStatus_.currentPage = document_->currentPage()+1;
-    	} else
-   	{
-	    fileName = docStatus_.path;//reopen the previous document
-	    currentPage = docStatus_.currentPage;
-	    docStatus_.currentPage = -1;//reset document status
-    	}
+        if (-1 == docStatus_.currentPage)
+        {
+            docStatus_.path = document_->path();
+            docStatus_.currentPage = document_->currentPage()+1;
+        } else
+        {
+            fileName = docStatus_.path;//reopen the previous document
+            currentPage = docStatus_.currentPage;
+            docStatus_.currentPage = -1;//reset document status
+        }
     }
     QObject *pDisp = toolBar_->rootObject();
     if (NULL != pDisp)
     {
         if (false == pDisp->setProperty("hlpBck", helpFile_ != fileName))
-	{
-		qDebug() << "cannot set hlpBck property";
-	}
+        {
+            qDebug() << "cannot set hlpBck property";
+        }
     }
     qDebug() << "fileName" << fileName;
     if (document_->setDocument(fileName))
@@ -859,7 +859,7 @@ void Window::showAboutDialog()
                 pAboutDlg->setProperty("text", tr("<H2>tabletReader v2.0</H2>"
                                                   "<H3>e-book reader for touch-enabled devices</H3>"
                                                   "<H4>Supported formats: PDF, CHM, DJVU, EPUB, etc.</H4>"
-						  "<H4>(all Okular supported formats)</H4><br>"
+                                                  "<H4>(all Okular supported formats)</H4><br>"
                                                   "Copyright (C) 2012, Bogdan Cristea. All rights reserved.<br>"
                                                   "<i>e-mail: cristeab@gmail.com</i><br><br>"
                                                   "This program is distributed in the hope that it will be useful, "
@@ -969,7 +969,7 @@ void Window::closeWaitDialog()
 void Window::onAppUpAuthCheckError()
 {
     showWarningMessage(tr("Cannot get authorization code for Intel AppUp(TM) software"),
-    tr("You can use tabletReader, but it is highly recommended to connect to Intel AppUp center"));
+                       tr("You can use tabletReader, but it is highly recommended to connect to Intel AppUp center"));
     //aplication will exit
     //connect(aboutDialog_->engine(), SIGNAL(quit()), this, SLOT(close()));
 }
@@ -1028,7 +1028,7 @@ bool Window::hasTouchScreen()
 QString Window::batteryStatus()
 {
     QString msg;
-    switch(batteryInfo_->chargerType())
+    switch (batteryInfo_->chargerType())
     {
     case QSystemBatteryInfo::NoCharger:
         msg = tr("no charger");
@@ -1108,14 +1108,14 @@ void Window::saveSettings()
 {
     if ((NULL != document_) && (true == document_->isLoaded()))
     {
-    	QString filePath = document_->path();
-	if (helpFile_ != filePath)
-	{
-        	//the current settings are not saved if the last file is the help file
-	        QSettings settings(ORGANIZATION, APPLICATION);
-        	settings.setValue(KEY_PAGE, document_->currentPage());
-	        settings.setValue(KEY_FILE_PATH, filePath);
-	        settings.setValue(KEY_ZOOM_LEVEL, currentZoomIndex_);
-	}
+        QString filePath = document_->path();
+        if (helpFile_ != filePath)
+        {
+            //the current settings are not saved if the last file is the help file
+            QSettings settings(ORGANIZATION, APPLICATION);
+            settings.setValue(KEY_PAGE, document_->currentPage());
+            settings.setValue(KEY_FILE_PATH, filePath);
+            settings.setValue(KEY_ZOOM_LEVEL, currentZoomIndex_);
+        }
     }
 }
