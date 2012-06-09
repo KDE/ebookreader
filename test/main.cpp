@@ -3,7 +3,6 @@
 #include <chmdocument.h>
 #include <QApplication>
 #include <core/settings_core.h>
-#include "SingleApp.h"
 
 #define PDF_FILE "/home/bogdan/Biblio/eBooks/umbrello.pdf"
 #define DJVU_FILE "/home/bogdan/Biblio/eBooks/Linear Programming - Foundation and Extensions 2nd ed. - R. vanderbei.djvu"
@@ -143,13 +142,6 @@ void TestTabletReader::openFile(const char *fileName, bool useCHM)
 		QVERIFY2(false == pixmaps[n%3]->isNull(), "three pages");
 	}
 	delete doc;
-}
-
-void TestTabletReader::singleApp()
-{
-	SingleApp single;
-	QVERIFY(false == single.isRunning());
-	QVERIFY(true == single.isRunning());
 }
 
 QTEST_MAIN(TestTabletReader);
