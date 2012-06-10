@@ -41,8 +41,8 @@ set ( tabletReader_RSCS
 QT4_ADD_RESOURCES(RSCS ${tabletReader_RSCS})
 
 set ( tabletReader_TRS
-	tabletReader_fr.ts
-	tabletReader_ro.ts
+	atReader_fr.ts
+	atReader_ro.ts
 	)
 QT4_ADD_TRANSLATION(TRS ${tabletReader_TRS})
 

@@ -65,7 +65,7 @@
         <file>qml/waitdialog.qml</file>
     </qresource>
     <qresource prefix="/translations">
-        <file>tabletReader_fr.qm</file>
-        <file>tabletReader_ro.qm</file>
+        <file>atReader_fr.qm</file>
+        <file>atReader_ro.qm</file>
     </qresource>
 </RCC>
