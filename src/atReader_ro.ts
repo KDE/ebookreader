@@ -454,19 +454,16 @@
 <context>
     <name>calculator</name>
     <message>
-        <location filename="qml/Core/calculator.js" line="24"/>
         <source>First</source>
-        <translation>Prima</translation>
+        <translation type="obsolete">Prima</translation>
     </message>
     <message>
-        <location filename="qml/Core/calculator.js" line="26"/>
         <source>Middle</source>
-        <translation>Mijloc</translation>
+        <translation type="obsolete">Mijloc</translation>
     </message>
     <message>
-        <location filename="qml/Core/calculator.js" line="29"/>
         <source>Last</source>
-        <translation>Ultima</translation>
+        <translation type="obsolete">Ultima</translation>
     </message>
 </context>
 <context>
@@ -478,19 +475,16 @@
         <translation>Mergi la Pagina</translation>
     </message>
     <message>
-        <location filename="qml/gotopage.qml" line="113"/>
         <source>First</source>
-        <translation>Prima</translation>
+        <translation type="obsolete">Prima</translation>
     </message>
     <message>
-        <location filename="qml/gotopage.qml" line="114"/>
         <source>Middle</source>
-        <translation>Mijloc</translation>
+        <translation type="obsolete">Mijloc</translation>
     </message>
     <message>
-        <location filename="qml/gotopage.qml" line="115"/>
         <source>Last</source>
-        <translation>Ultima</translation>
+        <translation type="obsolete">Ultima</translation>
     </message>
 </context>
 <context>

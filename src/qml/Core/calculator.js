@@ -20,12 +20,12 @@ function doOperation(op) {
     } else if (op == "DEL") {
         display.text = ""
         lastOp = ""
-    } else if (op == qsTr("First")) {
+    } else if (op == "First") {
         display.text = "1"
-    } else if (op == qsTr("Middle")) {
+    } else if (op == "Middle") {
         var mid = Math.ceil(display.nbPages/2)
         display.text = mid.toString()
-    } else if (op == qsTr("Last")) {
+    } else if (op == "Last") {
         display.text = display.nbPages.toString()
     }
 }

@@ -454,19 +454,16 @@
 <context>
     <name>calculator</name>
     <message>
-        <location filename="qml/Core/calculator.js" line="24"/>
         <source>First</source>
-        <translation>Premiere</translation>
+        <translation type="obsolete">Premiere</translation>
     </message>
     <message>
-        <location filename="qml/Core/calculator.js" line="26"/>
         <source>Middle</source>
-        <translation>Milieu</translation>
+        <translation type="obsolete">Milieu</translation>
     </message>
     <message>
-        <location filename="qml/Core/calculator.js" line="29"/>
         <source>Last</source>
-        <translation>Derniere</translation>
+        <translation type="obsolete">Derniere</translation>
     </message>
 </context>
 <context>
@@ -478,19 +475,16 @@
         <translation>Aller à la Page</translation>
     </message>
     <message>
-        <location filename="qml/gotopage.qml" line="113"/>
         <source>First</source>
-        <translation>Premiere</translation>
+        <translation type="obsolete">Premiere</translation>
     </message>
     <message>
-        <location filename="qml/gotopage.qml" line="114"/>
         <source>Middle</source>
-        <translation>Milieu</translation>
+        <translation type="obsolete">Milieu</translation>
     </message>
     <message>
-        <location filename="qml/gotopage.qml" line="115"/>
         <source>Last</source>
-        <translation>Derniere</translation>
+        <translation type="obsolete">Derniere</translation>
     </message>
 </context>
 <context>

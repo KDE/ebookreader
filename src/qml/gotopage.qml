@@ -110,9 +110,9 @@ Rectangle
                         Button { width: grid.w; height: column.h; operation: "0"; color: 'blue' }
                         Button { width: grid.w; height: column.h; operation: "DEL"; color: 'blue' }
 
-                        Button { width: grid.w; height: column.h; operation: qsTr("First"); color: 'blue' }
-                        Button { width: grid.w; height: column.h; operation: qsTr("Middle"); color: 'blue' }
-                        Button { width: grid.w; height: column.h; operation: qsTr("Last"); color: 'blue' }
+                        Button { width: grid.w; height: column.h; operation: "First"; color: 'blue' }
+                        Button { width: grid.w; height: column.h; operation: "Middle"; color: 'blue' }
+                        Button { width: grid.w; height: column.h; operation: "Last"; color: 'blue' }
                     }
                 }
             }
