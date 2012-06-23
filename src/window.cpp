@@ -313,6 +313,7 @@ void Window::showGotoPage()
             if (NULL != pDisp)
             {
                 connect(pDisp, SIGNAL(setPage(QString)), this, SLOT(closeGotoPage(QString)));
+                pDisp->setProperty("nbPages", document_->numPages());
                 gotoPage_->show();
             } else {
                 qDebug() << "cannot get disp object";
