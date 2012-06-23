@@ -530,28 +530,15 @@ void Window::normalScreen()
     {
         int width = pDesktop->width();
         int height = pDesktop->height();
-        if ((FULL_SCREEN_WIDTH >= width) || (FULL_SCREEN_HEIGHT >= height))
+        qDebug() << "using normal mode";
+        showNormal();
+        resize((MIN_SCREEN_WIDTH<width)?MIN_SCREEN_WIDTH:width,
+               (MIN_SCREEN_HEIGHT<height)?MIN_SCREEN_HEIGHT:height);
+        if (true == hasTouchScreen())
         {
-            qDebug() << "using full screen mode with toolbar";
-            setFixedSize(width, height);
-            showFullScreen();
-            if (true == hasTouchScreen())
-            {
-                QApplication::setOverrideCursor(QCursor(Qt::BlankCursor));
-            }
-        } else
-        {
-            qDebug() << "using normal mode";
-            showNormal();
-            resize((MIN_SCREEN_WIDTH<width)?MIN_SCREEN_WIDTH:width,
-                   (MIN_SCREEN_HEIGHT<height)?MIN_SCREEN_HEIGHT:height);
-            if (true == hasTouchScreen())
-            {
-                QApplication::restoreOverrideCursor();
-            }
+            QApplication::restoreOverrideCursor();
         }
     }
-
     if (NULL != toolBar_)
     {
         toolBar_->show();
