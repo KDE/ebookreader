@@ -80,6 +80,7 @@ Rectangle
                     width: box.width-3
                     height: 56
                     text: ""
+                    property int nbPages: 0
                 }
 
                 Column {
@@ -89,7 +90,7 @@ Rectangle
                     property real w: (box.width / 4) - ((spacing * (4 - 1)) / 4)
 
                     Grid {
-                        id: grid; rows: 4; columns: 3; spacing: 6
+                        id: grid; rows: 5; columns: 3; spacing: 6
 
                         property real w: (box.width / columns) - ((spacing * (columns - 1)) / columns)
 
@@ -108,6 +109,10 @@ Rectangle
                         Button { width: grid.w; height: column.h; operation: "OK"; color: 'blue' }
                         Button { width: grid.w; height: column.h; operation: "0"; color: 'blue' }
                         Button { width: grid.w; height: column.h; operation: "DEL"; color: 'blue' }
+
+                        Button { width: grid.w; height: column.h; operation: "First"; color: 'blue' }
+                        Button { width: grid.w; height: column.h; operation: "Middle"; color: 'blue' }
+                        Button { width: grid.w; height: column.h; operation: "Last"; color: 'blue' }
                     }
                 }
             }

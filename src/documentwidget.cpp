@@ -104,7 +104,7 @@ void DocumentWidget::showPage(int page)
     const QPixmap *pPix = pageCache_[currentPage_%CACHE_SIZE]->pPixmap;
     if ((NULL != pPix) && (false == pPix->isNull()))
     {
-	qDebug() << "setPixmap" << pPix;
+	    qDebug() << "setPixmap" << pPix;
     	label->setPixmap(*pPix);
     	label->adjustSize();
     } else {

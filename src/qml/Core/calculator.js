@@ -1,7 +1,6 @@
 var lastOp = ""
 
 function doOperation(op) {
-
     if (op.toString().length==1 && (op >= "0" && op <= "9") ) {
         if (display.text.toString().length >= 14) {
             return; // No arbitrary length numbers
@@ -21,5 +20,12 @@ function doOperation(op) {
     } else if (op == "DEL") {
         display.text = ""
         lastOp = ""
+    } else if (op == "First") {
+        display.text = "1"
+    } else if (op == "Middle") {
+        var mid = Math.ceil(display.nbPages/2)
+        display.text = mid.toString()
+    } else if (op == "Last") {
+        display.text = display.nbPages.toString()
     }
 }

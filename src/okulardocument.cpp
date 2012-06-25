@@ -159,8 +159,11 @@ const QPixmap* OkularDocument::getPixmap(int pageNb, qreal scaleFactor)
 	Okular::Page *page = const_cast<Okular::Page*>(doc_->page(pageNb));
 	if (NULL != page)
 	{
-
 		qDebug() << "width" << page->width() << ", height" << page->height();
+        if (MAX_ZOOM_FACTOR < scaleFactor)
+        {
+            scaleFactor /= page->width();//adjust scale factor to occupy the entire window width
+        }
 		int width = int(scaleFactor*page->width());
 		int height = int(scaleFactor*page->height());
 		adjustSize(width, height);

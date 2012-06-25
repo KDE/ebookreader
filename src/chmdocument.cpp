@@ -77,15 +77,21 @@ const QPixmap* CHMDocument::getPixmap(int page, qreal scaleFactor)
     QStringList urls = toc_.at(page).urls;//there must be only one URL for the TOC
     webView.load(QUrl::fromLocalFile(urls.at(0)));
     eventLoop_.exec();//wait for load to complete
-    webView.setZoomFactor(scaleFactor);
+    webView.setZoomFactor((MAX_ZOOM_FACTOR >= scaleFactor)?scaleFactor:1.0);
     QWebFrame *webFrame = webView.page()->mainFrame();
     webFrame->setScrollBarPolicy(Qt::Vertical, Qt::ScrollBarAlwaysOff);
     webFrame->setScrollBarPolicy(Qt::Horizontal, Qt::ScrollBarAlwaysOff);
     QSize size = webFrame->contentsSize();
-    int preferredWidth = int(MIN_SCREEN_WIDTH*0.9);
-    if (size.width() < preferredWidth)
+    if (MAX_ZOOM_FACTOR >= scaleFactor)
     {
-        size = QSize(preferredWidth, size.height());//adjust page width
+        int prefWidth = int(0.9*MIN_SCREEN_WIDTH);
+        if (size.width() < prefWidth)
+        {
+            size = QSize(prefWidth, size.height());//adjust page width
+        }
+    } else
+    {
+        size = QSize(scaleFactor, size.height());
     }
     webView.setGeometry(QRect(QPoint(0, 0), size));
     return new QPixmap(QPixmap::grabWidget(&webView));

@@ -70,8 +70,7 @@ Window::Window(QWidget *parent)
     setStyleSheet("background-color: black");
 
     //zoom scale factors
-    scaleFactors_ << 0.25 << 0.5 << 0.75 << 1.
-    << 1.25 << 1.5 << 2. << 3. << 4.;
+    scaleFactors_ << -1 << 0.25 << 0.5 << 0.75 << 1. << 1.25 << 1.5 << 2. << 3. << 4.;
     currentZoomIndex_ = 3;//zoom 100%
 
     //create main document
@@ -157,6 +156,8 @@ Window::Window(QWidget *parent)
         gridLayout->addWidget(toolBar_, 0, 0, 1, 1);
     }
 
+    normalScreen();
+
     //set document if one has been previously open
     QSettings settings(ORGANIZATION, APPLICATION);
     QString filePath;
@@ -177,8 +178,6 @@ Window::Window(QWidget *parent)
         showHelp(false);
     }
     animationFinished_ = true;
-
-    normalScreen();
 
     //battery status
     batteryInfo_ = new QSystemBatteryInfo(this);
@@ -313,6 +312,7 @@ void Window::showGotoPage()
             if (NULL != pDisp)
             {
                 connect(pDisp, SIGNAL(setPage(QString)), this, SLOT(closeGotoPage(QString)));
+                pDisp->setProperty("nbPages", document_->numPages());
                 gotoPage_->show();
             } else {
                 qDebug() << "cannot get disp object";
@@ -530,28 +530,15 @@ void Window::normalScreen()
     {
         int width = pDesktop->width();
         int height = pDesktop->height();
-        if ((FULL_SCREEN_WIDTH >= width) || (FULL_SCREEN_HEIGHT >= height))
+        qDebug() << "using normal mode";
+        showNormal();
+        resize((MIN_SCREEN_WIDTH<width)?MIN_SCREEN_WIDTH:width,
+               (MIN_SCREEN_HEIGHT<height)?MIN_SCREEN_HEIGHT:height);
+        if (true == hasTouchScreen())
         {
-            qDebug() << "using full screen mode with toolbar";
-            setFixedSize(width, height);
-            showFullScreen();
-            if (true == hasTouchScreen())
-            {
-                QApplication::setOverrideCursor(QCursor(Qt::BlankCursor));
-            }
-        } else
-        {
-            qDebug() << "using normal mode";
-            showNormal();
-            resize((MIN_SCREEN_WIDTH<width)?MIN_SCREEN_WIDTH:width,
-                   (MIN_SCREEN_HEIGHT<height)?MIN_SCREEN_HEIGHT:height);
-            if (true == hasTouchScreen())
-            {
-                QApplication::restoreOverrideCursor();
-            }
+            QApplication::restoreOverrideCursor();
         }
     }
-
     if (NULL != toolBar_)
     {
         toolBar_->show();
@@ -731,7 +718,7 @@ void Window::setupDocDisplay(unsigned int pageNumber)
 {
     qDebug() << "Window::setupDocDisplay" << pageNumber;
     //set document zoom factor
-    document_->setScale(scaleFactors_[currentZoomIndex_]);
+    setZoomFactor(scaleFactors_[currentZoomIndex_]);
     //set current page
     gotoPage(pageNumber, document_->numPages());
 }
@@ -769,7 +756,7 @@ void Window::setZoomFactor(int index)
     }
     qDebug() << "selected zoom factor" << scaleFactors_[index];
     currentZoomIndex_ = index;
-    document_->setScale(scaleFactors_[currentZoomIndex_]);
+    setZoomFactor( scaleFactors_[currentZoomIndex_]);
     //update all pages from circular buffer
     int pageNb = document_->currentPage()+1;
     int numPages = document_->numPages();
