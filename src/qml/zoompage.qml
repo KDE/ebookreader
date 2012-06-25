@@ -36,7 +36,7 @@ Rectangle
     Rectangle {
         id: container
 
-        width: 105
+        width: 140
         height: 260
         color: "transparent"
         anchors.centerIn: parent

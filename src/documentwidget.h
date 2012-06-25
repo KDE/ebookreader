@@ -90,7 +90,7 @@ public:
             qDebug() << "DocumentWidget::invalidatePageCache: nothing to do";
             return false;//operation failed
         }
-	pageCache_[page%CACHE_SIZE]->pPixmap = NULL;
+	    pageCache_[page%CACHE_SIZE]->pPixmap = NULL;
         pageCache_[page%CACHE_SIZE]->valid = false;
         return true;//operation successful
     }

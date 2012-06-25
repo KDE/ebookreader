@@ -70,8 +70,7 @@ Window::Window(QWidget *parent)
     setStyleSheet("background-color: black");
 
     //zoom scale factors
-    scaleFactors_ << 0.25 << 0.5 << 0.75 << 1.
-    << 1.25 << 1.5 << 2. << 3. << 4.;
+    scaleFactors_ << -1 << 0.25 << 0.5 << 0.75 << 1. << 1.25 << 1.5 << 2. << 3. << 4.;
     currentZoomIndex_ = 3;//zoom 100%
 
     //create main document
@@ -157,6 +156,8 @@ Window::Window(QWidget *parent)
         gridLayout->addWidget(toolBar_, 0, 0, 1, 1);
     }
 
+    normalScreen();
+
     //set document if one has been previously open
     QSettings settings(ORGANIZATION, APPLICATION);
     QString filePath;
@@ -177,8 +178,6 @@ Window::Window(QWidget *parent)
         showHelp(false);
     }
     animationFinished_ = true;
-
-    normalScreen();
 
     //battery status
     batteryInfo_ = new QSystemBatteryInfo(this);
@@ -719,7 +718,7 @@ void Window::setupDocDisplay(unsigned int pageNumber)
 {
     qDebug() << "Window::setupDocDisplay" << pageNumber;
     //set document zoom factor
-    document_->setScale(scaleFactors_[currentZoomIndex_]);
+    setZoomFactor(scaleFactors_[currentZoomIndex_]);
     //set current page
     gotoPage(pageNumber, document_->numPages());
 }
@@ -757,7 +756,7 @@ void Window::setZoomFactor(int index)
     }
     qDebug() << "selected zoom factor" << scaleFactors_[index];
     currentZoomIndex_ = index;
-    document_->setScale(scaleFactors_[currentZoomIndex_]);
+    setZoomFactor( scaleFactors_[currentZoomIndex_]);
     //update all pages from circular buffer
     int pageNb = document_->currentPage()+1;
     int numPages = document_->numPages();

@@ -111,6 +111,11 @@ private:
                 }
         }
     }
+    void setZoomFactor(qreal factor)
+    {
+        //use either the zoom factor or the window width
+        document_->setScale((-1 == factor)?width():factor);
+    }
 
     SlidingStackedWidget *slidingStacked_;
     DocumentWidget *document_;
