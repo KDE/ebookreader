@@ -14,7 +14,7 @@ set ( CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -DQT_DEBUG_ENABLE_LOG -ggd
 set ( CMAKE_CXX_FLAGS_DESKTOPDEBUG "${CMAKE_CXX_FLAGS_DEBUG} -DQT_DEBUG_ENABLE_LOG -DDESKTOP_APP -ggdb" )
 
 find_package ( Qt4 4.7.0 REQUIRED )
-find_package ( QtMobility 1.2.0 REQUIRED )
+find_package ( QtMobility 1.2.0 )
 find_package ( KDE4 REQUIRED 4.7.0 )
 find_package ( Okular REQUIRED )
 find_package ( LibChm REQUIRED )
