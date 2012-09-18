@@ -5,7 +5,7 @@ IF ( NOT CMAKE_BUILD_TYPE )
 	set ( CMAKE_BUILD_TYPE Release )
 ENDIF()
 
-message ("-- Build type: " ${CMAKE_BUILD_TYPE})
+message (STATUS "Build type: " ${CMAKE_BUILD_TYPE})
 
 set ( CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake/Modules/ ${CMAKE_MODULE_PATH} )
 set ( CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -DQT_NO_DEBUG_OUTPUT" )
