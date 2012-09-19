@@ -41,6 +41,7 @@ void Worker::onUpdateCache(int page)
     qDebug() << "Worker::onUpdateCache end";
 }
 
+#ifndef NO_MOBILITY
 void Worker::onBatteryStatusChanged(QSystemBatteryInfo::BatteryStatus status)
 {
     if ((QSystemBatteryInfo::BatteryEmpty == status) ||
@@ -50,3 +51,4 @@ void Worker::onBatteryStatusChanged(QSystemBatteryInfo::BatteryStatus status)
         qDebug() << "battery empty or critical, settings saved";
     }
 }
+#endif

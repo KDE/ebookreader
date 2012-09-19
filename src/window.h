@@ -23,7 +23,9 @@
 #include <QPoint>
 #include <QElapsedTimer>
 #include <QQueue>
+#ifndef NO_MOBILITY
 #include <qmobilityglobal.h>
+#endif
 #include "documentwidget.h"
 #include "worker.h"
 
@@ -35,9 +37,11 @@ class FileBrowserModel;
 class QDeclarativeView;
 class Flickable;
 class QTimer;
+#ifndef NO_MOBILITY
 QTM_BEGIN_NAMESPACE
 class QSystemBatteryInfo;
 QTM_END_NAMESPACE
+#endif
 
 class Window : public QMainWindow
 {
@@ -135,7 +139,9 @@ private:
     FileBrowserModel* fileBrowserModel_;
     QTimer *waitTimer_;
     QDeclarativeView *waitDialog_;
+#ifndef NO_MOBILITY
     QTM_NAMESPACE::QSystemBatteryInfo *batteryInfo_;
+#endif
     int currentPage_;
     QElapsedTimer eTime_;    
     QQueue<int> pageToLoadNo_;

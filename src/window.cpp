@@ -19,8 +19,10 @@
 #include <QtGui>
 #include <QScrollArea>
 #include <QtDeclarative>
+#ifndef NO_MOBILITY
 #include <QtSystemInfo/QSystemDeviceInfo>
 #include <QtSystemInfo/QSystemBatteryInfo>
+#endif
 #include "window.h"
 #include "SlidingStackedWidget.h"
 #include "filebrowsermodel.h"
@@ -35,7 +37,9 @@
 #define KEY_ZOOM_LEVEL "current_zoom_level"
 #define HELP_FILE "tabletReader.pdf"
 
+#ifndef NO_MOBILITY
 QTM_USE_NAMESPACE
+#endif
 
 Window::Window(QWidget *parent)
     : QMainWindow(parent),
@@ -53,7 +57,9 @@ Window::Window(QWidget *parent)
       fileBrowserModel_(new FileBrowserModel(this)),
       waitTimer_(NULL),
       waitDialog_(NULL),
+#ifndef NO_MOBILITY
       batteryInfo_(NULL),
+#endif
       pageToLoadNo_(QQueue<int>())
 {
     eTime_.start();//used to measure the elapsed time since the app is started
@@ -186,10 +192,12 @@ Window::Window(QWidget *parent)
         gridLayout->addWidget(toolBar_, 0, 0, 1, 1);
     }
 
+#ifndef NO_MOBILITY    
     //battery status
     batteryInfo_ = new QSystemBatteryInfo(this);
     connect(batteryInfo_, SIGNAL(batteryStatusChanged(QSystemBatteryInfo::BatteryStatus)),
             worker_, SLOT(onBatteryStatusChanged(QSystemBatteryInfo::BatteryStatus)));
+#endif
 
 #ifndef DESKTOP_APP
     setWindowFlags(Qt::X11BypassWindowManagerHint);
@@ -1012,15 +1020,20 @@ void Window::showPropertiesDialog()
 
 bool Window::hasTouchScreen()
 {
+#ifndef NO_MOBILITY
     QSystemDeviceInfo systemInfo;
     QSystemDeviceInfo::InputMethodFlags flags = systemInfo.inputMethodType();
     return ((flags & (QSystemDeviceInfo::SingleTouch |
                       QSystemDeviceInfo::MultiTouch)) != 0)?true:false;
+#else
+    return true;
+#endif
 }
 
 QString Window::batteryStatus()
 {
-    QString msg;
+    QString msg("");
+#ifndef NO_MOBILITY
     switch(batteryInfo_->chargerType())
     {
     case QSystemBatteryInfo::NoCharger:
@@ -1046,6 +1059,7 @@ QString Window::batteryStatus()
     } else{
         msg += tr(", unknown remaining capacity");
     }
+#endif
     return msg;
 }
 

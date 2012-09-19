@@ -20,12 +20,16 @@
 #define WORKER_H
 
 #include <QThread>
+#ifndef NO_MOBILITY
 #include <QtSystemInfo/QSystemBatteryInfo>
+#endif
 
 class DocumentWidget;
 class Window;
 
+#ifndef NO_MOBILITY
 QTM_USE_NAMESPACE
+#endif
 
 class Worker : public QObject
 {
@@ -34,8 +38,10 @@ public:
     Worker(DocumentWidget *doc = NULL, Window *win = NULL);
     void onUpdateCache(int page);
 
+#ifndef NO_MOBILITY
 public slots:
     void onBatteryStatusChanged(QSystemBatteryInfo::BatteryStatus status);
+#endif
 
 private:
     DocumentWidget *doc_;
