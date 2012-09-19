@@ -53,7 +53,7 @@ public:
     }
     int numPages() const
     {
-        return doc_->numPages();
+        return (NULL != doc_)?doc_->numPages():0;
     }
     bool isLoaded()
     {
