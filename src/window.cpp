@@ -1032,7 +1032,7 @@ bool Window::hasTouchScreen()
 
 QString Window::batteryStatus()
 {
-    QString msg("");
+    QString msg("N/A");
 #ifndef NO_MOBILITY
     switch(batteryInfo_->chargerType())
     {
