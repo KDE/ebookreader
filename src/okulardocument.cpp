@@ -28,6 +28,7 @@
 //helper class, not made public by okular core library
 namespace Okular
 {
+  //TODO: should use the true DocumentObserver class
 	class DocumentObserver
 	{
 	public:
@@ -41,6 +42,7 @@ namespace Okular
 		virtual void notifyVisibleRectsChanged() {}
 		virtual void notifyZoom(int) {}
 		virtual bool canUnloadPixmap(int) const {return true;}
+    virtual void notifyCurrentPageChanged(int, int) {}
 	};
 }
 #define OKULAR_OBSERVER_ID 6
