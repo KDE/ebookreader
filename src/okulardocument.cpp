@@ -22,29 +22,10 @@
 #include <QPixmap>
 #include <QPainter>
 #include <core/generator.h>
+#include <core/observer.h>
 #include "okulardocument.h"
 #include "screen_size.h"
 
-//helper class, not made public by okular core library
-namespace Okular
-{
-//TODO: should use the true DocumentObserver class
-class DocumentObserver
-{
-public:
-  DocumentObserver() {}
-  virtual ~DocumentObserver() {}
-  virtual uint observerId() const = 0;
-  virtual void notifySetup(const QVector< Okular::Page * > &, int) {}
-  virtual void notifyViewportChanged(bool) {}
-  virtual void notifyPageChanged(int, int) {}
-  virtual void notifyContentsCleared(int) {}
-  virtual void notifyVisibleRectsChanged() {}
-  virtual void notifyZoom(int) {}
-  virtual bool canUnloadPixmap(int) const {return true;}
-  virtual void notifyCurrentPageChanged(int, int) {}
-};
-}
 #define OKULAR_OBSERVER_ID 6
 class OkularObserver : public Okular::DocumentObserver
 {
