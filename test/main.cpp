@@ -53,7 +53,7 @@ void TestTabletReader::openCHM()
 void TestTabletReader::openTIF()
 {
 #ifdef TIF_FILE
-	openFile(TIF_FILE, false);
+	openFile(TIF_FILE);
 #else
 #pragma message("No TIF file")
 #endif
@@ -62,7 +62,7 @@ void TestTabletReader::openTIF()
 void TestTabletReader::openDVI()
 {
 #ifdef DVI_FILE
-	openFile(DVI_FILE, false);
+	openFile(DVI_FILE);
 #else
 #pragma message("No DVI file")
 #endif
@@ -71,7 +71,7 @@ void TestTabletReader::openDVI()
 void TestTabletReader::openPS()
 {
 #ifdef PS_FILE
-	openFile(PS_FILE, false);
+	openFile(PS_FILE);
 #else
 #pragma message("No PS file")
 #endif
@@ -80,7 +80,7 @@ void TestTabletReader::openPS()
 void TestTabletReader::openJPG()
 {
 #ifdef JPG_FILE
-	openFile(JPG_FILE, false);
+	openFile(JPG_FILE);
 #else
 #pragma message("No JPG file")
 #endif
@@ -89,7 +89,7 @@ void TestTabletReader::openJPG()
 void TestTabletReader::openODT()
 {
 #ifdef ODT_FILE
-	openFile(ODT_FILE, false);
+	openFile(ODT_FILE);
 #else
 #pragma message("No ODT file")
 #endif
