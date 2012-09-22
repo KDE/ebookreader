@@ -22,7 +22,6 @@
 #include "documentwidget.h"
 #include "SlidingStackedWidget.h"
 #include "okulardocument.h"
-#include "chmdocument.h"
 #include "window.h"
 
 DocumentWidget::DocumentWidget(Window *parent)
@@ -118,13 +117,8 @@ bool DocumentWidget::setDocument(const QString &filePath)
   Document *oldDoc = doc_;//keep old document
 
   KMimeType::Ptr ptr = KMimeType::findByPath(filePath);
-  if(ptr->is("application/vnd.ms-htmlhelp")) {
-    doc_ = new CHMDocument();
-  }
-  else {
-    Okular::SettingsCore::instance("");
-    doc_ = new OkularDocument();
-  }
+  Okular::SettingsCore::instance("");
+  doc_ = new OkularDocument();
 
   if((NULL != doc_) && (EXIT_SUCCESS == doc_->load(filePath))) {
     maxNumPages_ = doc_->numPages();

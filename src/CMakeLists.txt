@@ -1,23 +1,18 @@
 project ( tabletReader )
 
-include_directories (
-	${CMAKE_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR}
+include_directories ( ${CMAKE_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR}
 	${QT_QTCORE_INCLUDE_DIR} ${QT_QTGUI_INCLUDE_DIR} ${QT_QTDECLARATIVE_INCLUDE_DIR} ${QT_QTXML_INCLUDE_DIR} ${QT_QTWEBKIT_INCLUDE_DIR} 
 	${QT_MOBILITY_INCLUDE_DIR}/QtMobility ${QT_MOBILITY_SYSTEMINFO_INCLUDE_DIR}
-	${OKULAR_INCLUDE_DIR}/okular
-	${CHM_INCLUDE_DIR} ../3rdparty_linux/libchmfile )
+	${OKULAR_INCLUDE_DIR}/okular )
 set ( LIBS ${LIBS}
 	${QT_QTNETWORK_LIBRARY}
 	${QT_MOBILITY_SYSTEMINFO_LIBRARY}
-	${CHM_LIBRARY} 
-	${PROJECT_BINARY_DIR}/../lib/libchmfile.a
 	${OKULAR_CORE_LIBRARY} 
 	${KDE4_KDECORE_LIBRARY} )
 
 set ( tabletReader_HDRS
 	logger.h
 	document.h
-	chmdocument.h
 	okulardocument.h
 	)
 

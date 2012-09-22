@@ -1,6 +1,5 @@
 #include <main.h>
 #include <okulardocument.h>
-#include <chmdocument.h>
 #include <QApplication>
 #include <core/settings_core.h>
 #include "SingleApp.h"
@@ -45,7 +44,7 @@ void TestTabletReader::openEPUB()
 void TestTabletReader::openCHM()
 {
 #ifdef CHM_FILE
-	openFile(CHM_FILE, true);//TODO: solve this exception
+	openFile(CHM_FILE);
 #else
 #pragma message("No CHM file")
 #endif
@@ -96,27 +95,18 @@ void TestTabletReader::openODT()
 #endif
 }
 
-void TestTabletReader::openFile(const char *fileName, bool useCHM)
+void TestTabletReader::openFile(const char *fileName)
 {
 	int argc = 1;
 	char *argv[] = {(char*)"testTabletReader"};
 	QApplication app(argc, argv);//needed by OkularDocument class
-	Document *doc = NULL;
-	if (true == useCHM)
-	{
-		doc = new CHMDocument();
-	} else {
-		Okular::SettingsCore::instance("");
-		doc = new OkularDocument();
-	}	
+
+  Okular::SettingsCore::instance("");
+	Document *doc = new OkularDocument();
+
 	QCOMPARE(EXIT_SUCCESS, doc->load(fileName));
 	int numPages = doc->numPages();
 	QVERIFY(0 != numPages);
-	if (true == useCHM)
-	{
-		delete doc;
-		return;//TODO: cannot get pages with CHM docs
-	}
 	const QPixmap *pixmap = NULL;
 
 	//get at most 10 pages one by one
