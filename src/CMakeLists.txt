@@ -30,8 +30,6 @@ set ( tabletReader_SRCS
 	worker.cpp
 	logger.cpp
 	filebrowsermodel.cpp
-	chmdocument.cpp
-	chmreply.cpp
 	okulardocument.cpp
 	)
 
@@ -53,7 +51,6 @@ set ( tabletReader_MOCS
 	flickable.h
 	worker.h
 	filebrowsermodel.h
-	chmreply.h
 	)
 if (QT_MOBILITY_FOUND)
   QT4_WRAP_CPP(MOCS ${tabletReader_MOCS})
