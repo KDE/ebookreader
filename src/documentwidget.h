@@ -32,92 +32,80 @@ class Window;
 
 class DocumentWidget : public QObject
 {
-    Q_OBJECT
+  Q_OBJECT
 
-    friend class Worker;
+  friend class Worker;
 
 public:
-    DocumentWidget(Window *parent = 0);
-    ~DocumentWidget();
-    qreal scale() const
-    {
-        return scaleFactor_;
-    }
-    int currentPage() const
-    {
-        return currentPage_;
-    }
-    int currentIndex() const
-    {
-        return currentPage_%CACHE_SIZE;
-    }
-    int numPages() const
-    {
-        return (NULL != doc_)?doc_->numPages():0;
-    }
-    bool isLoaded()
-    {
-        return (doc_ != NULL);
-    }
-    void setStackedWidget(SlidingStackedWidget *stackedWidget)
-    {
-        stackedWidget_ = stackedWidget;
-    }
+  DocumentWidget(Window *parent = 0);
+  ~DocumentWidget();
+  qreal scale() const {
+    return scaleFactor_;
+  }
+  int currentPage() const {
+    return currentPage_;
+  }
+  int currentIndex() const {
+    return currentPage_ % CACHE_SIZE;
+  }
+  int numPages() const {
+    return (NULL != doc_) ? doc_->numPages() : 0;
+  }
+  bool isLoaded() {
+    return (doc_ != NULL);
+  }
+  void setStackedWidget(SlidingStackedWidget *stackedWidget) {
+    stackedWidget_ = stackedWidget;
+  }
 
-    void showCurrentPageUpper()
-    {
-        if (NULL != currentScrollArea_)
-        {
-            currentScrollArea_->verticalScrollBar()->setValue(0);
-        }
+  void showCurrentPageUpper() {
+    if(NULL != currentScrollArea_) {
+      currentScrollArea_->verticalScrollBar()->setValue(0);
     }
-    void showCurrentPageLower()
-    {
-        if (NULL != currentScrollArea_)
-        {
-            QScrollBar *scroll = currentScrollArea_->verticalScrollBar();
-            scroll->setValue(scroll->maximum());
-        }
+  }
+  void showCurrentPageLower() {
+    if(NULL != currentScrollArea_) {
+      QScrollBar *scroll = currentScrollArea_->verticalScrollBar();
+      scroll->setValue(scroll->maximum());
     }
-    bool invalidatePageCache(int page)
-    {
-        qDebug() << "DocumentWidget::invalidatePageCache" << page;
-        if (0 > page || maxNumPages_ <= page) {
-            qDebug() << "DocumentWidget::invalidatePageCache: nothing to do";
-            return false;//operation failed
-        }
-	pageCache_[page%CACHE_SIZE]->pPixmap = NULL;
-        pageCache_[page%CACHE_SIZE]->valid = false;
-        return true;//operation successful
+  }
+  bool invalidatePageCache(int page) {
+    qDebug() << "DocumentWidget::invalidatePageCache" << page;
+    if(0 > page || maxNumPages_ <= page) {
+      qDebug() << "DocumentWidget::invalidatePageCache: nothing to do";
+      return false;//operation failed
     }
+    pageCache_[page % CACHE_SIZE]->pPixmap = NULL;
+    pageCache_[page % CACHE_SIZE]->valid = false;
+    return true;//operation successful
+  }
 
-    void loadImage(int page);
+  void loadImage(int page);
 
-    enum {CACHE_SIZE = 3};
+  enum {CACHE_SIZE = 3};
 
-    void showPage(int page = -1);
+  void showPage(int page = -1);
 
 public slots:
-    bool setDocument(const QString &filePath);
-    void setPage(int page = -1);
-    void setScale(qreal scale)
-    {
-        scaleFactor_ = scale;
-    }
+  bool setDocument(const QString &filePath);
+  void setPage(int page = -1);
+  void setScale(qreal scale) {
+    scaleFactor_ = scale;
+  }
 
 private:
-    Document *doc_;
-    int currentPage_;
-    int currentIndex_;
-    int maxNumPages_;
-    qreal scaleFactor_;
-    struct PageCache {
-        const QPixmap *pPixmap;
-        bool valid;
-    };
-    QList<PageCache*> pageCache_;
-    SlidingStackedWidget *stackedWidget_;
-    QScrollArea *currentScrollArea_;
+  Document *doc_;
+  int currentPage_;
+  int currentIndex_;
+  int maxNumPages_;
+  qreal scaleFactor_;
+  struct PageCache {
+    const QPixmap *pPixmap;
+    bool valid;
+  };
+  QList<PageCache*> pageCache_;
+  SlidingStackedWidget *stackedWidget_;
+  QScrollArea *currentScrollArea_;
 };
 
 #endif

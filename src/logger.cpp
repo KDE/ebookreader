@@ -32,58 +32,56 @@ Logger *Logger::instance_ = NULL;
 
 Logger* Logger::instance(const QString &fileLogName)
 {
-    if (NULL == instance_)
-    {
-        instance_ = new Logger(fileLogName);
-    }
-    return instance_;
+  if(NULL == instance_) {
+    instance_ = new Logger(fileLogName);
+  }
+  return instance_;
 }
 
 Logger::Logger(const QString &fileLogName)
 {
-    pOutFile_ = new QFile(QDir::homePath()+QDir::separator()+
-                          QDir::toNativeSeparators(fileLogName));
-    if (false == pOutFile_->open(QIODevice::WriteOnly | QIODevice::Append))
-    {
-        std::cerr << "Cannot open log file " << std::endl;
-    }
-    ts_.setDevice(pOutFile_);
-    loggerMutex_ = new QMutex;
-    qInstallMsgHandler(debugMessageHandler);
-    qDebug() << "\n\nSTART" << QDateTime::currentDateTime().toString(Qt::ISODate)
-             << "START\n";
+  pOutFile_ = new QFile(QDir::homePath() + QDir::separator() +
+                        QDir::toNativeSeparators(fileLogName));
+  if(false == pOutFile_->open(QIODevice::WriteOnly | QIODevice::Append)) {
+    std::cerr << "Cannot open log file " << std::endl;
+  }
+  ts_.setDevice(pOutFile_);
+  loggerMutex_ = new QMutex;
+  qInstallMsgHandler(debugMessageHandler);
+  qDebug() << "\n\nSTART" << QDateTime::currentDateTime().toString(Qt::ISODate)
+           << "START\n";
 }
 
 Logger::~Logger()
 {
-    delete pOutFile_;
-    pOutFile_ = NULL;
-    delete loggerMutex_;
-    loggerMutex_ = NULL;
-    delete instance_;
-    instance_ = NULL;
+  delete pOutFile_;
+  pOutFile_ = NULL;
+  delete loggerMutex_;
+  loggerMutex_ = NULL;
+  delete instance_;
+  instance_ = NULL;
 }
 
 void Logger::debugMessageHandler(QtMsgType type, const char *msg)
 {
-    loggerMutex_->lock();
-    QString txt;
-    switch (type) {
-    case QtDebugMsg:
-        txt = QString("Debug: %1").arg(msg);
-        break;
-    case QtWarningMsg:
-        txt = QString("Warning: %1").arg(msg);
-        break;
-    case QtCriticalMsg:
-        txt = QString("Critical: %1").arg(msg);
-        break;
-    case QtFatalMsg:
-        txt = QString("Fatal: %1").arg(msg);
-        abort();
-    }
-    ts_ << QDateTime::currentDateTime().toMSecsSinceEpoch()
-        << "\tTID:" << QThread::currentThreadId()
-       << " " << txt << endl;
-    loggerMutex_->unlock();
+  loggerMutex_->lock();
+  QString txt;
+  switch(type) {
+  case QtDebugMsg:
+    txt = QString("Debug: %1").arg(msg);
+    break;
+  case QtWarningMsg:
+    txt = QString("Warning: %1").arg(msg);
+    break;
+  case QtCriticalMsg:
+    txt = QString("Critical: %1").arg(msg);
+    break;
+  case QtFatalMsg:
+    txt = QString("Fatal: %1").arg(msg);
+    abort();
+  }
+  ts_ << QDateTime::currentDateTime().toMSecsSinceEpoch()
+      << "\tTID:" << QThread::currentThreadId()
+      << " " << txt << endl;
+  loggerMutex_->unlock();
 }

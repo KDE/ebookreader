@@ -31,28 +31,28 @@
 class CHMDocument : public Document
 {
 public:
-    CHMDocument();
-    virtual int load(const QString &fileName);
-    virtual const QPixmap* getPixmap(int page, qreal scaleFactor);
-    virtual ~CHMDocument();
+  CHMDocument();
+  virtual int load(const QString &fileName);
+  virtual const QPixmap* getPixmap(int page, qreal scaleFactor);
+  virtual ~CHMDocument();
 private:
-    LCHMFile *doc_;
-    QVector<LCHMParsedEntry> toc_;
-    //internal class used to handle requests
-    class RequestHandler : public QNetworkAccessManager
-    {
-    public:
-        explicit RequestHandler(CHMDocument *chmDoc) :
-            chmDoc_(chmDoc)
-        {}
-    private:        
-        QNetworkReply* createRequest(Operation op, const QNetworkRequest &req,
-                                     QIODevice *outgoingData = NULL);
-        CHMDocument *chmDoc_;
-    };    
-    RequestHandler *req_;
-    QEventLoop eventLoop_;
-    friend class RequestHandler;
+  LCHMFile *doc_;
+  QVector<LCHMParsedEntry> toc_;
+  //internal class used to handle requests
+  class RequestHandler : public QNetworkAccessManager
+  {
+  public:
+    explicit RequestHandler(CHMDocument *chmDoc) :
+      chmDoc_(chmDoc)
+    {}
+  private:
+    QNetworkReply* createRequest(Operation op, const QNetworkRequest &req,
+                                 QIODevice *outgoingData = NULL);
+    CHMDocument *chmDoc_;
+  };
+  RequestHandler *req_;
+  QEventLoop eventLoop_;
+  friend class RequestHandler;
 };
 
 #endif // CHMDOCUMENT_H

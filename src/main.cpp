@@ -24,34 +24,31 @@
 
 int main(int argc, char *argv[])
 {
-    QApplication app(argc, argv);
-    SingleApp single;
+  QApplication app(argc, argv);
+  SingleApp single;
 
-    QStringList args = app.arguments();
-    if ((1 >= args.length()) || (0 != args[1].compare("-f")))
-    {
-    	if (true == single.isRunning())
-    	{
-	    qDebug() << "already running";
-	    return EXIT_SUCCESS;
-    	}
+  QStringList args = app.arguments();
+  if((1 >= args.length()) || (0 != args[1].compare("-f"))) {
+    if(true == single.isRunning()) {
+      qDebug() << "already running";
+      return EXIT_SUCCESS;
     }
+  }
 #ifdef QT_DEBUG_ENABLE_LOG
-    //in release mode the log file is not created
-    Logger::instance("tabletReader.log");
+  //in release mode the log file is not created
+  Logger::instance("tabletReader.log");
 #endif
-    //translation object
-    QTranslator translator;
-    if (false == translator.load(":/translations/tabletReader_" + QLocale::system().name().left(2)))
-    {
-        qDebug() << "cannot load translation file" << QLocale::system().name().left(2);
-    } else
-    {
-        qDebug() << "loaded translation file" << QLocale::system().name().left(2);
-    }
-    app.installTranslator(&translator);
-    //main window
-    Window wnd;
-    wnd.show();    
-    return app.exec();
+  //translation object
+  QTranslator translator;
+  if(false == translator.load(":/translations/tabletReader_" + QLocale::system().name().left(2))) {
+    qDebug() << "cannot load translation file" << QLocale::system().name().left(2);
+  }
+  else {
+    qDebug() << "loaded translation file" << QLocale::system().name().left(2);
+  }
+  app.installTranslator(&translator);
+  //main window
+  Window wnd;
+  wnd.show();
+  return app.exec();
 }

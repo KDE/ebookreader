@@ -6,16 +6,14 @@
 class SingleApp
 {
 public:
-	SingleApp()
-	{
-		shm_.setKey("19111977_tabletReader");
-	}
-	bool isRunning(void)
-	{
-		return !shm_.create(1);
-	}
+  SingleApp() {
+    shm_.setKey("19111977_tabletReader");
+  }
+  bool isRunning(void) {
+    return !shm_.create(1);
+  }
 private:
-	QSharedMemory shm_;
+  QSharedMemory shm_;
 };
 
 #endif

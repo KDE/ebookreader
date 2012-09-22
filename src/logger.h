@@ -27,17 +27,17 @@ class QMutex;
 class Logger
 {
 public:
-    static Logger* instance(const QString &fileLogName);
+  static Logger* instance(const QString &fileLogName);
 private:
-    Logger(const QString &fileLogName);
-    ~Logger();
-    Logger(const Logger&);//copy constructor
-    const Logger& operator=(const Logger&);//copy assignment operator
-    static void debugMessageHandler(QtMsgType type, const char *msg);
-    static QTextStream ts_;
-    static QFile *pOutFile_;
-    static QMutex *loggerMutex_;
-    static Logger *instance_;
+  Logger(const QString &fileLogName);
+  ~Logger();
+  Logger(const Logger&);//copy constructor
+  const Logger& operator=(const Logger&);//copy assignment operator
+  static void debugMessageHandler(QtMsgType type, const char *msg);
+  static QTextStream ts_;
+  static QFile *pOutFile_;
+  static QMutex *loggerMutex_;
+  static Logger *instance_;
 };
 
 #endif // LOGGER_H

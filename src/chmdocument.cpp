@@ -32,68 +32,63 @@
 #include "screen_size.h"
 
 CHMDocument::CHMDocument() :
-    Document(),
-    doc_(new LCHMFile()),
-    req_(new RequestHandler(this))
+  Document(),
+  doc_(new LCHMFile()),
+  req_(new RequestHandler(this))
 {
 }
 
 CHMDocument::~CHMDocument()
 {
-    delete doc_;
-    delete req_;
+  delete doc_;
+  delete req_;
 }
 
 int CHMDocument::load(const QString &fileName)
 {
-    if ((NULL != doc_) && (true == doc_->loadFile(fileName)))
-    {
-        //get the table of contents
-        if (true == doc_->parseTableOfContents(&toc_))
-        {
-            numPages_ = toc_.size();
-            return EXIT_SUCCESS;
-        }
+  if((NULL != doc_) && (true == doc_->loadFile(fileName))) {
+    //get the table of contents
+    if(true == doc_->parseTableOfContents(&toc_)) {
+      numPages_ = toc_.size();
+      return EXIT_SUCCESS;
     }
-    return EXIT_FAILURE;
+  }
+  return EXIT_FAILURE;
 }
 
 const QPixmap* CHMDocument::getPixmap(int page, qreal scaleFactor)
 {
-    if ((NULL == doc_) || (NULL == req_) || (0 == numPages_) || (0 >= scaleFactor))
-    {
-        return NULL;
-    }
+  if((NULL == doc_) || (NULL == req_) || (0 == numPages_) || (0 >= scaleFactor)) {
+    return NULL;
+  }
 
-    QWebView webView;//we need to recreate the view at each page
-    QObject::connect(&webView, SIGNAL(loadFinished(bool)), &eventLoop_, SLOT(quit()));
-    webView.page()->setNetworkAccessManager(req_);
-    QStringList urls = toc_.at(page).urls;//there must be only one URL for the TOC
-    webView.load(QUrl::fromLocalFile(urls.at(0)));
-    eventLoop_.exec();//wait for load to complete
-    webView.setZoomFactor(scaleFactor);
-    QWebFrame *webFrame = webView.page()->mainFrame();
-    webFrame->setScrollBarPolicy(Qt::Vertical, Qt::ScrollBarAlwaysOff);
-    webFrame->setScrollBarPolicy(Qt::Horizontal, Qt::ScrollBarAlwaysOff);
-    QSize size = webFrame->contentsSize();
-    int preferredWidth = int(MIN_SCREEN_WIDTH*0.9);
-    if (size.width() < preferredWidth)
-    {
-        size = QSize(preferredWidth, size.height());//adjust page width
-    }
-    webView.setGeometry(QRect(QPoint(0, 0), size));
-    return new QPixmap(QPixmap::grabWidget(&webView));
+  QWebView webView;//we need to recreate the view at each page
+  QObject::connect(&webView, SIGNAL(loadFinished(bool)), &eventLoop_, SLOT(quit()));
+  webView.page()->setNetworkAccessManager(req_);
+  QStringList urls = toc_.at(page).urls;//there must be only one URL for the TOC
+  webView.load(QUrl::fromLocalFile(urls.at(0)));
+  eventLoop_.exec();//wait for load to complete
+  webView.setZoomFactor(scaleFactor);
+  QWebFrame *webFrame = webView.page()->mainFrame();
+  webFrame->setScrollBarPolicy(Qt::Vertical, Qt::ScrollBarAlwaysOff);
+  webFrame->setScrollBarPolicy(Qt::Horizontal, Qt::ScrollBarAlwaysOff);
+  QSize size = webFrame->contentsSize();
+  int preferredWidth = int(MIN_SCREEN_WIDTH * 0.9);
+  if(size.width() < preferredWidth) {
+    size = QSize(preferredWidth, size.height());//adjust page width
+  }
+  webView.setGeometry(QRect(QPoint(0, 0), size));
+  return new QPixmap(QPixmap::grabWidget(&webView));
 }
 
 //this method is used by QWebView to load an HTML page
 QNetworkReply* CHMDocument::RequestHandler::createRequest(Operation op, const QNetworkRequest &req,
-                             QIODevice *outgoingData)
+    QIODevice *outgoingData)
 {
-    if (req.url().scheme()=="file")
-    {
-        return new CHMReply(this, req, req.url(), chmDoc_->doc_);
-    } else
-    {
-        return QNetworkAccessManager::createRequest(op, req, outgoingData);
-    }
+  if(req.url().scheme() == "file") {
+    return new CHMReply(this, req, req.url(), chmDoc_->doc_);
+  }
+  else {
+    return QNetworkAccessManager::createRequest(op, req, outgoingData);
+  }
 }

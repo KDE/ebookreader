@@ -24,30 +24,29 @@
 
 class FileBrowserModel : public QAbstractListModel
 {
-Q_OBJECT
+  Q_OBJECT
 public:
-    explicit FileBrowserModel(QObject *parent = 0);
-    QVariant data(const QModelIndex &index, int role) const;
-    int rowCount(const QModelIndex &parent) const;
-    void addDirToSearch(QString& dir);
-    void removeDirToSearch(QString& dir);
-    void searchPdfFiles();
-    void setCurrentDir(const QString &filePath);
-    static QString closeFileBrowserText()
-    {
-        return tr("Close File Browser");
-    }
+  explicit FileBrowserModel(QObject *parent = 0);
+  QVariant data(const QModelIndex &index, int role) const;
+  int rowCount(const QModelIndex &parent) const;
+  void addDirToSearch(QString& dir);
+  void removeDirToSearch(QString& dir);
+  void searchPdfFiles();
+  void setCurrentDir(const QString &filePath);
+  static QString closeFileBrowserText() {
+    return tr("Close File Browser");
+  }
 
 public slots:
-    void changeCurrentDir(int index);
+  void changeCurrentDir(int index);
 
 private:
-    Q_DISABLE_COPY(FileBrowserModel);
-    enum PdfPreviewRoles { TITLE, PAGES, IMAGE, IS_FILE, PATH };
-    QString _currentDir;
-    QVector<QString> _files;
-    QVector<QString> _dirs;
-    QObject *_parent;
+  Q_DISABLE_COPY(FileBrowserModel);
+  enum PdfPreviewRoles { TITLE, PAGES, IMAGE, IS_FILE, PATH };
+  QString _currentDir;
+  QVector<QString> _files;
+  QVector<QString> _dirs;
+  QObject *_parent;
 
 };
 

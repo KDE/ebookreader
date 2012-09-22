@@ -6,18 +6,18 @@ class DocumentWidget;
 
 class LoadPages : public QThread
 {
-    Q_OBJECT
+  Q_OBJECT
 
 public:
-    LoadPages(DocumentWidget* doc = NULL);
-    void preloadPage(unsigned int page);
-    void run();
+  LoadPages(DocumentWidget* doc = NULL);
+  void preloadPage(unsigned int page);
+  void run();
 
 public slots:
-    void loadPages(int currentPage);
+  void loadPages(int currentPage);
 
 private:
-    DocumentWidget *doc_;
+  DocumentWidget *doc_;
 };
 
 #endif // LOADPAGES_H

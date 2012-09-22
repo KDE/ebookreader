@@ -28,23 +28,20 @@ class QPixmap;
 class Document
 {
 public:
-    Document() : numPages_(0) {}
-    virtual int load(const QString &fileName) = 0;
-    virtual const QPixmap* getPixmap(int page, qreal scaleFactor) = 0;
-    virtual void deletePixmap(const QPixmap *pixmap)
-    {
-	    delete pixmap;
-    }
-    int numPages() const
-    {
-        return numPages_;
-    }
-    virtual ~Document()
-    {
-        numPages_ = 0;
-    }
+  Document() : numPages_(0) {}
+  virtual int load(const QString &fileName) = 0;
+  virtual const QPixmap* getPixmap(int page, qreal scaleFactor) = 0;
+  virtual void deletePixmap(const QPixmap *pixmap) {
+    delete pixmap;
+  }
+  int numPages() const {
+    return numPages_;
+  }
+  virtual ~Document() {
+    numPages_ = 0;
+  }
 protected:
-    int numPages_;
+  int numPages_;
 };
 
 #endif // DOCUMENT_H

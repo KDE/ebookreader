@@ -25,30 +25,30 @@
 #include <QDeclarativeEngine>
 
 Worker::Worker(DocumentWidget *doc, Window *win) :
-    doc_(doc), win_(win)
-{      
+  doc_(doc), win_(win)
+{
 }
 
 void Worker::onUpdateCache(int page)
 {
-    qDebug() << "Worker::onUpdateCache begin page" << page;
-    //mutex lock might be needed
-    if (false == doc_->pageCache_[page%DocumentWidget::CACHE_SIZE]->valid) {
-        doc_->loadImage(page);
-    } else {
-        qDebug() << "Worker::onUpdateCache: nothing to do";
-    }
-    qDebug() << "Worker::onUpdateCache end";
+  qDebug() << "Worker::onUpdateCache begin page" << page;
+  //mutex lock might be needed
+  if(false == doc_->pageCache_[page % DocumentWidget::CACHE_SIZE]->valid) {
+    doc_->loadImage(page);
+  }
+  else {
+    qDebug() << "Worker::onUpdateCache: nothing to do";
+  }
+  qDebug() << "Worker::onUpdateCache end";
 }
 
 #ifndef NO_MOBILITY
 void Worker::onBatteryStatusChanged(QSystemBatteryInfo::BatteryStatus status)
 {
-    if ((QSystemBatteryInfo::BatteryEmpty == status) ||
-            (QSystemBatteryInfo::BatteryCritical == status))
-    {
-        win_->saveSettings();
-        qDebug() << "battery empty or critical, settings saved";
-    }
+  if((QSystemBatteryInfo::BatteryEmpty == status) ||
+      (QSystemBatteryInfo::BatteryCritical == status)) {
+    win_->saveSettings();
+    qDebug() << "battery empty or critical, settings saved";
+  }
 }
 #endif

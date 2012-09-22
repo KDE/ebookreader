@@ -24,8 +24,8 @@
 
 namespace Okular
 {
-	class Document;
-	class Page;
+class Document;
+class Page;
 }
 class OkularObserver;
 class PagePainter;
@@ -33,17 +33,17 @@ class PagePainter;
 class OkularDocument : public Document
 {
 public:
-    OkularDocument();
-    virtual int load(const QString &fileName);
-    virtual const QPixmap* getPixmap(int page, qreal scaleFactor);
-    virtual ~OkularDocument();
+  OkularDocument();
+  virtual int load(const QString &fileName);
+  virtual const QPixmap* getPixmap(int page, qreal scaleFactor);
+  virtual ~OkularDocument();
 private:
-    void adjustSize(int &width, int &height);
-    QPixmap* setWhiteBackground(const QPixmap *pixmap);
-    Okular::Document *doc_;
-    OkularObserver *obs_;
-    PagePainter *painter_;
-    KMimeType::Ptr mimeType_;
+  void adjustSize(int &width, int &height);
+  QPixmap* setWhiteBackground(const QPixmap *pixmap);
+  Okular::Document *doc_;
+  OkularObserver *obs_;
+  PagePainter *painter_;
+  KMimeType::Ptr mimeType_;
 };
 
 #endif // OKULAR_DOCUMENT_H

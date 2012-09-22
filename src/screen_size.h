@@ -15,7 +15,7 @@
 ** Street - Fifth Floor, Boston, MA 02110-1301, USA.
 **
 ****************************************************************************/
- 
+
 #ifndef SCREEN_SIZE_H
 #define SCREEN_SIZE_H
 

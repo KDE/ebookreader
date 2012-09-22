@@ -31,19 +31,19 @@ class QWidget;
 
 class Flickable: public QObject
 {
-    Q_OBJECT
+  Q_OBJECT
 public:
-    Flickable(QObject *parent = 0);
-    ~Flickable();
-    void activateOn(QWidget *widget);
-    void deactivateFrom(QWidget *widget);
-    bool eventFilter(QObject *object, QEvent *event);
+  Flickable(QObject *parent = 0);
+  ~Flickable();
+  void activateOn(QWidget *widget);
+  void deactivateFrom(QWidget *widget);
+  bool eventFilter(QObject *object, QEvent *event);
 
 protected:
-    void timerEvent(QTimerEvent *event);
+  void timerEvent(QTimerEvent *event);
 
 private:
-    FlickablePrivate *d;
+  FlickablePrivate *d;
 };
 
 #endif // FLICKABLE_H

@@ -33,19 +33,19 @@ QTM_USE_NAMESPACE
 
 class Worker : public QObject
 {
-    Q_OBJECT
+  Q_OBJECT
 public:
-    Worker(DocumentWidget *doc = NULL, Window *win = NULL);
-    void onUpdateCache(int page);
+  Worker(DocumentWidget *doc = NULL, Window *win = NULL);
+  void onUpdateCache(int page);
 
 #ifndef NO_MOBILITY
 public slots:
-    void onBatteryStatusChanged(QSystemBatteryInfo::BatteryStatus status);
+  void onBatteryStatusChanged(QSystemBatteryInfo::BatteryStatus status);
 #endif
 
 private:
-    DocumentWidget *doc_;
-    Window *win_;
+  DocumentWidget *doc_;
+  Window *win_;
 };
 
 #endif // WORKER_H
