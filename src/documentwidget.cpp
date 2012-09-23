@@ -111,7 +111,6 @@ void DocumentWidget::showPage(int page)
   qDebug() << "DocumentWidget::showPage: end setPixmap";
 }
 
-//factory method
 bool DocumentWidget::setDocument(const QString &filePath)
 {
   Document *oldDoc = doc_;//keep old document

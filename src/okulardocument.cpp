@@ -26,6 +26,9 @@
 #include "okulardocument.h"
 #include "screen_size.h"
 
+static
+volatile bool pixmapReady = false;
+
 #define OKULAR_OBSERVER_ID 6
 class OkularObserver : public Okular::DocumentObserver
 {
@@ -33,31 +36,31 @@ public:
   virtual uint observerId() const {
     return OKULAR_OBSERVER_ID;
   }
-  virtual void notifyPageChanged(int page, int type) {
-    switch (type) {
-      case DocumentObserver::Pixmap:
-        qDebug() << "DocumentObserver::Pixmap" << page;
-        break;
-      case DocumentObserver::Bookmark:
-        qDebug() << "DocumentObserver::Bookmark" << page;
-        break;
-      case DocumentObserver::Highlights:
-        qDebug() << "DocumentObserver::Highlights" << page;
-        break;
-      case DocumentObserver::TextSelection:
-        qDebug() << "DocumentObserver::TextSelection" << page;
-        break;
-      case DocumentObserver::Annotations:
-        qDebug() << "DocumentObserver::Annotations" << page;
-        break;
-      case DocumentObserver::BoundingBox:
-        qDebug() << "DocumentObserver::BoundingBox" << page;
-        break;
-      case DocumentObserver::NeedSaveAs:
-        qDebug() << "DocumentObserver::NeedSaveAs" << page;
-        break;
-      default:
-        qDebug() << "Unknown notification type" << type << " for page" << page;
+  virtual void notifyPageChanged(int page, int flags) {
+    if(flags & DocumentObserver::Pixmap) {
+      qDebug() << "DocumentObserver::Pixmap" << page;
+      pixmapReady = true;
+    }
+    else if(flags & DocumentObserver::Bookmark) {
+      qDebug() << "DocumentObserver::Bookmark" << page;
+    }
+    else if(flags & DocumentObserver::Highlights) {
+      qDebug() << "DocumentObserver::Highlights" << page;
+    }
+    else if(flags & DocumentObserver::TextSelection) {
+      qDebug() << "DocumentObserver::TextSelection" << page;
+    }
+    else if(flags & DocumentObserver::Annotations) {
+      qDebug() << "DocumentObserver::Annotations" << page;
+    }
+    else if(flags & DocumentObserver::BoundingBox) {
+      qDebug() << "DocumentObserver::BoundingBox" << page;
+    }
+    else if(flags & DocumentObserver::NeedSaveAs) {
+      qDebug() << "DocumentObserver::NeedSaveAs" << page;
+    }
+    else {
+      qDebug() << "Unknown notification" << flags << " for page" << page;
     }
   }
 };
@@ -75,7 +78,9 @@ public:
       Okular::PixmapRequest *pr = new Okular::PixmapRequest(OKULAR_OBSERVER_ID, page->number(), width, height, 0, false);
       QLinkedList<Okular::PixmapRequest*> req;
       req.push_back(pr);
+      pixmapReady = false;
       doc_->requestPixmaps(req);
+      while(false == pixmapReady);
     }
     return page->_o_nearestPixmap(OKULAR_OBSERVER_ID, -1, -1);
   }
@@ -113,7 +118,6 @@ int OkularDocument::load(const QString &fileName)
   return res;
 }
 
-
 void OkularDocument::adjustSize(int &width, int &height)
 {
   if(mimeType_->is("image/vnd.djvu")) {
@@ -141,7 +145,7 @@ QPixmap* OkularDocument::setWhiteBackground(const QPixmap *pixmap)
     }
   }
   else {
-    //alreay has white background
+    //already has white background
     out = new QPixmap(*pixmap);
   }
   return out;
