@@ -30,7 +30,36 @@
 class OkularObserver : public Okular::DocumentObserver
 {
 public:
-  virtual uint observerId() const {return OKULAR_OBSERVER_ID;}
+  virtual uint observerId() const {
+    return OKULAR_OBSERVER_ID;
+  }
+  virtual void notifyPageChanged(int page, int type) {
+    switch (type) {
+      case DocumentObserver::Pixmap:
+        qDebug() << "DocumentObserver::Pixmap" << page;
+        break;
+      case DocumentObserver::Bookmark:
+        qDebug() << "DocumentObserver::Bookmark" << page;
+        break;
+      case DocumentObserver::Highlights:
+        qDebug() << "DocumentObserver::Highlights" << page;
+        break;
+      case DocumentObserver::TextSelection:
+        qDebug() << "DocumentObserver::TextSelection" << page;
+        break;
+      case DocumentObserver::Annotations:
+        qDebug() << "DocumentObserver::Annotations" << page;
+        break;
+      case DocumentObserver::BoundingBox:
+        qDebug() << "DocumentObserver::BoundingBox" << page;
+        break;
+      case DocumentObserver::NeedSaveAs:
+        qDebug() << "DocumentObserver::NeedSaveAs" << page;
+        break;
+      default:
+        qDebug() << "Unknown notification type" << type << " for page" << page;
+    }
+  }
 };
 
 //main entry point into okular core libray
@@ -119,6 +148,7 @@ QPixmap* OkularDocument::setWhiteBackground(const QPixmap *pixmap)
 }
 
 //get Pixmap from okular core library and immediately create a copy of it
+//TODO: remove unneeded copy
 const QPixmap* OkularDocument::getPixmap(int pageNb, qreal scaleFactor)
 {
   if((NULL == doc_) || (NULL == painter_) || (0 >= scaleFactor)) {
