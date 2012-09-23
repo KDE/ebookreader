@@ -26,9 +26,6 @@
 #include "okulardocument.h"
 #include "screen_size.h"
 
-static
-volatile bool pixmapReady = false;
-
 #define OKULAR_OBSERVER_ID 6
 class OkularObserver : public Okular::DocumentObserver
 {
@@ -39,7 +36,6 @@ public:
   virtual void notifyPageChanged(int page, int flags) {
     if(flags & DocumentObserver::Pixmap) {
       qDebug() << "DocumentObserver::Pixmap" << page;
-      pixmapReady = true;
     }
     else if(flags & DocumentObserver::Bookmark) {
       qDebug() << "DocumentObserver::Bookmark" << page;
@@ -78,9 +74,7 @@ public:
       Okular::PixmapRequest *pr = new Okular::PixmapRequest(OKULAR_OBSERVER_ID, page->number(), width, height, 0, false);
       QLinkedList<Okular::PixmapRequest*> req;
       req.push_back(pr);
-      pixmapReady = false;
       doc_->requestPixmaps(req);
-      while(false == pixmapReady);
     }
     return page->_o_nearestPixmap(OKULAR_OBSERVER_ID, -1, -1);
   }
