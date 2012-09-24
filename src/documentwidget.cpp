@@ -111,9 +111,10 @@ void DocumentWidget::showPage(int page)
   qDebug() << "DocumentWidget::showPage: end setPixmap";
 }
 
+//TODO: use a single instance of OkularDocument
 bool DocumentWidget::setDocument(const QString &filePath)
 {
-  Document *oldDoc = doc_;//keep old document
+  OkularDocument *oldDoc = doc_;//keep old document
 
   KMimeType::Ptr ptr = KMimeType::findByPath(filePath);
   Okular::SettingsCore::instance("");

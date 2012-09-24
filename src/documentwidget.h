@@ -25,7 +25,7 @@
 #include <QScrollBar>
 #include <QMutex>
 #include <QDebug>
-#include "document.h"
+#include "okulardocument.h"
 
 class SlidingStackedWidget;
 class Window;
@@ -94,7 +94,7 @@ public slots:
   }
 
 private:
-  Document *doc_;
+  OkularDocument *doc_;
   int currentPage_;
   int currentIndex_;
   int maxNumPages_;

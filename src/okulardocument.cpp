@@ -17,49 +17,12 @@
 ****************************************************************************/
 
 #include <QDebug>
-#include <core/document.h>
 #include <core/page.h>
 #include <QPixmap>
 #include <QPainter>
 #include <core/generator.h>
-#include <core/observer.h>
 #include "okulardocument.h"
 #include "screen_size.h"
-
-#define OKULAR_OBSERVER_ID 6
-class OkularObserver : public Okular::DocumentObserver
-{
-public:
-  virtual uint observerId() const {
-    return OKULAR_OBSERVER_ID;
-  }
-  virtual void notifyPageChanged(int page, int flags) {
-    if(flags & DocumentObserver::Pixmap) {
-      qDebug() << "DocumentObserver::Pixmap" << page;
-    }
-    else if(flags & DocumentObserver::Bookmark) {
-      qDebug() << "DocumentObserver::Bookmark" << page;
-    }
-    else if(flags & DocumentObserver::Highlights) {
-      qDebug() << "DocumentObserver::Highlights" << page;
-    }
-    else if(flags & DocumentObserver::TextSelection) {
-      qDebug() << "DocumentObserver::TextSelection" << page;
-    }
-    else if(flags & DocumentObserver::Annotations) {
-      qDebug() << "DocumentObserver::Annotations" << page;
-    }
-    else if(flags & DocumentObserver::BoundingBox) {
-      qDebug() << "DocumentObserver::BoundingBox" << page;
-    }
-    else if(flags & DocumentObserver::NeedSaveAs) {
-      qDebug() << "DocumentObserver::NeedSaveAs" << page;
-    }
-    else {
-      qDebug() << "Unknown notification" << flags << " for page" << page;
-    }
-  }
-};
 
 //main entry point into okular core libray
 class PagePainter
@@ -69,36 +32,43 @@ public:
     doc_(doc)
   {}
   const QPixmap* getPagePixmap(const Okular::Page *page, int width, int height) const {
-    if(false == page->hasPixmap(OKULAR_OBSERVER_ID)) {
+    if(false == page->hasPixmap(OkularDocument::OKULAR_OBSERVER_ID)) {
       qDebug() << "making pixmap request";
-      Okular::PixmapRequest *pr = new Okular::PixmapRequest(OKULAR_OBSERVER_ID, page->number(), width, height, 0, false);
+      Okular::PixmapRequest *pr = new Okular::PixmapRequest(OkularDocument::OKULAR_OBSERVER_ID, page->number(), width, height, 0, true);
       QLinkedList<Okular::PixmapRequest*> req;
       req.push_back(pr);
       doc_->requestPixmaps(req);
     }
-    return page->_o_nearestPixmap(OKULAR_OBSERVER_ID, -1, -1);
+    //get pixmap in notifyPageChanged
+    return NULL;
+  }
+  const QPixmap* getPagePixmap(int page) {
+    const QPixmap *pix = NULL;
+    if (NULL != doc_) {
+      const Okular::Page *p = doc_->page(page);
+      if (NULL != p) {
+        pix = p->_o_nearestPixmap(OkularDocument::OKULAR_OBSERVER_ID, -1, -1);
+      }
+    }
+    return pix;
   }
 private:
   Okular::Document *doc_;
 };
 
 OkularDocument::OkularDocument() :
-  Document(),
   doc_(new Okular::Document(NULL)),
-  obs_(new OkularObserver()),
   painter_(new PagePainter(doc_))
 {
   if(NULL != doc_) {
-    doc_->addObserver(obs_);
+    doc_->addObserver(this);
   }
 }
 
 OkularDocument::~OkularDocument()
 {
   delete doc_;
-  delete obs_;
   delete painter_;
-
 }
 
 int OkularDocument::load(const QString &fileName)
@@ -106,7 +76,6 @@ int OkularDocument::load(const QString &fileName)
   int res = EXIT_FAILURE;
   mimeType_ = KMimeType::findByPath(fileName);
   if((NULL != doc_) && (true == doc_->openDocument(fileName, KUrl::fromPath(fileName), mimeType_))) {
-    numPages_ = doc_->pages();
     res = EXIT_SUCCESS;
   }
   return res;
@@ -171,3 +140,31 @@ const QPixmap* OkularDocument::getPixmap(int pageNb, qreal scaleFactor)
   return out;
 }
 
+void OkularDocument::notifyPageChanged(int page, int flags)
+{
+  if(flags & DocumentObserver::Pixmap) {
+    qDebug() << "DocumentObserver::Pixmap" << page;
+    const QPixmap *pix = painter_->getPagePixmap(page);
+  }
+  else if(flags & DocumentObserver::Bookmark) {
+    qDebug() << "DocumentObserver::Bookmark" << page;
+  }
+  else if(flags & DocumentObserver::Highlights) {
+    qDebug() << "DocumentObserver::Highlights" << page;
+  }
+  else if(flags & DocumentObserver::TextSelection) {
+    qDebug() << "DocumentObserver::TextSelection" << page;
+  }
+  else if(flags & DocumentObserver::Annotations) {
+    qDebug() << "DocumentObserver::Annotations" << page;
+  }
+  else if(flags & DocumentObserver::BoundingBox) {
+    qDebug() << "DocumentObserver::BoundingBox" << page;
+  }
+  else if(flags & DocumentObserver::NeedSaveAs) {
+    qDebug() << "DocumentObserver::NeedSaveAs" << page;
+  }
+  else {
+    qDebug() << "Unknown notification" << flags << " for page" << page;
+  }
+}
