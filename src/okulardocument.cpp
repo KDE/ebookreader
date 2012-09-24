@@ -144,7 +144,7 @@ void OkularDocument::notifyPageChanged(int page, int flags)
 {
   if(flags & DocumentObserver::Pixmap) {
     qDebug() << "DocumentObserver::Pixmap" << page;
-    const QPixmap *pix = painter_->getPagePixmap(page);
+    //const QPixmap *pix = painter_->getPagePixmap(page);
   }
   else if(flags & DocumentObserver::Bookmark) {
     qDebug() << "DocumentObserver::Bookmark" << page;
