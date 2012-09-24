@@ -126,6 +126,7 @@ Window::Window(QWidget *parent)
           this, SLOT(onAnimationFinished()));
   connect(increaseScaleAction, SIGNAL(triggered()), this, SLOT(increaseScale()));
   connect(decreaseScaleAction, SIGNAL(triggered()), this, SLOT(decreaseScale()));
+  connect(this, SIGNAL(requestPage(int)), document_, SIGNAL(requestPage(int)));
 
   statusBar()->hide();
 
@@ -640,8 +641,8 @@ bool Window::showNextPage()
     //load a new page
     document_->setPage(currentPage_);
     document_->showCurrentPageUpper();
-    //emit signal to update the cache after the page has been displayed
-    preloadPage(currentPage_);
+    //update the cache after the page has been displayed
+    emit requestPage(currentPage_);
     //make sure that the next page is ready
     animationFinished_ = false;
     slidingStacked_->slideInNext();
@@ -665,8 +666,8 @@ bool Window::showPrevPage()
     //load a new page
     document_->setPage(currentPage_);
     document_->showCurrentPageLower();
-    //emit signal to update the cache after the page has been displayed
-    preloadPage(currentPage_ - 2);
+    //update the cache after the page has been displayed
+    emit requestPage(currentPage_ - 2);
     //make sure that the prev page is ready
     animationFinished_ = false;
     slidingStacked_->slideInPrev();
@@ -746,7 +747,7 @@ void Window::setZoomFactor(int index)
   int pageNb = document_->currentPage() + 1;
   int numPages = document_->numPages();
   if(true == document_->invalidatePageCache(pageNb - 1)) {
-    document_->showPage(pageNb);
+    document_->setPage(pageNb);
   }
   //update view
   document_->showCurrentPageUpper();

@@ -40,6 +40,7 @@ set ( tabletReader_TRS
 QT4_ADD_TRANSLATION(TRS ${tabletReader_TRS})
 
 set ( tabletReader_MOCS
+  okulardocument.h
 	documentwidget.h
 	window.h
 	SlidingStackedWidget.h

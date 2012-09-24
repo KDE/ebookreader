@@ -29,19 +29,7 @@ Worker::Worker(DocumentWidget *doc, Window *win) :
 {
 }
 
-void Worker::onUpdateCache(int page)
-{
-  qDebug() << "Worker::onUpdateCache begin page" << page;
-  //mutex lock might be needed
-  if(false == doc_->pageCache_[page % DocumentWidget::CACHE_SIZE]->valid) {
-    doc_->loadImage(page);
-  }
-  else {
-    qDebug() << "Worker::onUpdateCache: nothing to do";
-  }
-  qDebug() << "Worker::onUpdateCache end";
-}
-
+//TODO: is this class still needed
 #ifndef NO_MOBILITY
 void Worker::onBatteryStatusChanged(QSystemBatteryInfo::BatteryStatus status)
 {

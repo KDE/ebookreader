@@ -49,6 +49,9 @@ class Window : public QMainWindow
 
   friend class Worker;
 
+signals:
+  void requestPage(int);
+
 public:
   Window(QWidget *parent = NULL);
   ~Window();
@@ -110,7 +113,7 @@ private:
       int page = pageToLoadNo_.dequeue();
       if(true == document_->invalidatePageCache(page)) {
         qDebug() << "Window::preloadPageSingleThreaded";
-        worker_->onUpdateCache(page);
+        //worker_->onUpdateCache(page);
       }
     }
   }

@@ -19,39 +19,47 @@
 #ifndef OKULAR_DOCUMENT_H
 #define OKULAR_DOCUMENT_H
 
+#include <QPixmap>
 #include <kmimetype.h>
 #include <core/document.h>
 #include <core/observer.h>
 
 namespace Okular
 {
-class Document;
-class Page;
-class DocumentObserver;
+  class Document;
+  class Page;
+  class DocumentObserver;
 }
 class PagePainter;
 
-class OkularDocument : public Okular::DocumentObserver
+class OkularDocument : public QObject, private Okular::DocumentObserver
 {
+  Q_OBJECT
+
+public slots:
+  void pageRequest(int page, qreal factor);
+
+signals:
+  void pageChanged(int page, const QPixmap *pix);
+
 public:
   OkularDocument();
-  virtual int load(const QString &fileName);
-  virtual const QPixmap* getPixmap(int page, qreal scaleFactor);
+  bool load(const QString &fileName);
   uint numPages() const {
     return (NULL != doc_)?doc_->pages():0;
   }
   void deletePixmap(const QPixmap *p) {
-    delete p;//TODO: remove this methis
+    delete p;//TODO: remove this method
   }
-  virtual ~OkularDocument();
+  ~OkularDocument();
   enum {OKULAR_OBSERVER_ID = 6};
-  virtual uint observerId() const {
+  uint observerId() const {
     return OKULAR_OBSERVER_ID;
   }
   void notifyPageChanged(int page, int flags);
 private:
   void adjustSize(int &width, int &height);
-  QPixmap* setWhiteBackground(const QPixmap *pixmap);
+  const QPixmap* setWhiteBackground(const QPixmap *pixmap);
   Okular::Document *doc_;
   PagePainter *painter_;
   KMimeType::Ptr mimeType_;

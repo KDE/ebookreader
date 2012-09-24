@@ -26,7 +26,7 @@
 
 DocumentWidget::DocumentWidget(Window *parent)
   : QObject(parent),
-    doc_(NULL),
+    doc_(new OkularDocument()),
     currentPage_(-1),
     currentIndex_(-1),
     maxNumPages_(0),
@@ -39,6 +39,9 @@ DocumentWidget::DocumentWidget(Window *parent)
     pageCache_[n]->pPixmap = NULL;
     pageCache_[n]->valid = false;
   }
+  Okular::SettingsCore::instance("");
+  connect(this, SIGNAL(pageRequest(int, qreal)), doc_, SLOT(pageRequest(int, qreal)));
+  connect(doc_, SIGNAL(pageChanged(int, const QPixmap*)), this, SLOT(pageChanged(int, const QPixmap*)));
 }
 
 DocumentWidget::~DocumentWidget()
@@ -49,25 +52,24 @@ DocumentWidget::~DocumentWidget()
   delete doc_;
 }
 
-void DocumentWidget::loadImage(int page)
+void DocumentWidget::pageChanged(int page, const QPixmap *pix)
 {
-  qDebug() << "DocumentWidget::loadImage begin";
-  if((0 > page) || (maxNumPages_ <= page)) {
-    qDebug() << "DocumentWidget::loadImage: nothing to do";
-    return;
-  }
+  qDebug() << "DocumentWidget::pageChanged";
 
   doc_->deletePixmap(pageCache_[page % CACHE_SIZE]->pPixmap);
-  pageCache_[page % CACHE_SIZE]->pPixmap = doc_->
-      getPixmap(page, scaleFactor_);
+  pageCache_[page % CACHE_SIZE]->pPixmap = pix;
   pageCache_[page % CACHE_SIZE]->valid = true;
-  qDebug() << "DocumentWidget::loadImage end" << page % CACHE_SIZE;
 }
 
-void DocumentWidget::showPage(int page)
+void DocumentWidget::setPage(int page)
 {
-  qDebug() << "DocumentWidget::showPage" << page;
-  if(page != -1) { //if we show the same page nothing should be done, but this verification is done by the routines above
+  qDebug() << "DocumentWidget::setPage" << page;
+
+  if(page != currentPage_ + 1) { //same page
+    return;//do nothing
+  }
+
+  if(page != -1) {
     currentIndex_ = stackedWidget_->currentIndex();
     if(NULL != currentScrollArea_) {  //do nothing if no page has been loaded
       if(currentPage_ <= (page - 1)) {
@@ -89,55 +91,36 @@ void DocumentWidget::showPage(int page)
   //set image on the scroll area
   currentScrollArea_ = (QScrollArea*)stackedWidget_->widget(currentIndex_);//get next/prev widget
   QLabel *label = (QLabel*)currentScrollArea_->widget();
-  //mutex lock might be needed
   if(false == pageCache_[currentPage_ % CACHE_SIZE]->valid) {
     qDebug() << "DocumentWidget::showPage: invalid cache";
-    loadImage(currentPage_);//load image into memory
-    pageCache_[currentPage_ % CACHE_SIZE]->valid = true;
+    emit pageRequest(currentPage_, scaleFactor_);
+    //TODO: how to make sure that the page is set ?
   }
   else {
-    qDebug() << "DocumentWidget::showPage: valid cache" << currentPage_ % CACHE_SIZE;
+    const QPixmap *pPix = pageCache_[currentPage_ % CACHE_SIZE]->pPixmap;
+    if((NULL != pPix) && (false == pPix->isNull())) {
+      qDebug() << "setPixmap" << pPix;
+      label->setPixmap(*pPix);
+      label->adjustSize();
+    }
   }
-  qDebug() << "DocumentWidget::showPage: begin setPixmap";
-  const QPixmap *pPix = pageCache_[currentPage_ % CACHE_SIZE]->pPixmap;
-  if((NULL != pPix) && (false == pPix->isNull())) {
-    qDebug() << "setPixmap" << pPix;
-    label->setPixmap(*pPix);
-    label->adjustSize();
-  }
-  else {
-    qDebug() << "pixmap is NULL or empty" << pPix;
-  }
-  qDebug() << "DocumentWidget::showPage: end setPixmap";
 }
 
-//TODO: use a single instance of OkularDocument
 bool DocumentWidget::setDocument(const QString &filePath)
 {
-  OkularDocument *oldDoc = doc_;//keep old document
+  bool out = false;
 
-  KMimeType::Ptr ptr = KMimeType::findByPath(filePath);
-  Okular::SettingsCore::instance("");
-  doc_ = new OkularDocument();
-
-  if((NULL != doc_) && (EXIT_SUCCESS == doc_->load(filePath))) {
-    maxNumPages_ = doc_->numPages();
-    currentPage_ = -1;
-    delete oldDoc;//previous Document must be deleted
-    return true;
+  if (NULL != doc_) {
+    if(EXIT_SUCCESS == doc_->load(filePath)) {
+      maxNumPages_ = doc_->numPages();
+      currentPage_ = -1;
+      filePath_ = filePath;
+      out = true;
+    }
+    else if (false == filePath_.isEmpty()) {
+      //an error occured -> restore previous document
+      out = (EXIT_SUCCESS == doc_->load(filePath_));
+    }
   }
-  else {
-    //an error occured
-    delete doc_;
-    //restore old document
-    doc_ = oldDoc;
-  }
-  return false;
-}
-
-void DocumentWidget::setPage(int page)
-{
-  if(page != currentPage_ + 1) {
-    showPage(page);
-  }
+  return out;
 }

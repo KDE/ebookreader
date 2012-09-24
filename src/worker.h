@@ -36,7 +36,6 @@ class Worker : public QObject
   Q_OBJECT
 public:
   Worker(DocumentWidget *doc = NULL, Window *win = NULL);
-  void onUpdateCache(int page);
 
 #ifndef NO_MOBILITY
 public slots:

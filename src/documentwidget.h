@@ -36,6 +36,17 @@ class DocumentWidget : public QObject
 
   friend class Worker;
 
+signals:
+  void pageRequest(int page, qreal factor);
+
+public slots:
+  void pageChanged(int page, const QPixmap *pix);
+  bool setDocument(const QString &filePath);
+  void setPage(int page = -1);
+  void setScale(qreal scale) {
+    scaleFactor_ = scale;
+  }
+
 public:
   DocumentWidget(Window *parent = 0);
   ~DocumentWidget();
@@ -80,18 +91,7 @@ public:
     return true;//operation successful
   }
 
-  void loadImage(int page);
-
   enum {CACHE_SIZE = 3};
-
-  void showPage(int page = -1);
-
-public slots:
-  bool setDocument(const QString &filePath);
-  void setPage(int page = -1);
-  void setScale(qreal scale) {
-    scaleFactor_ = scale;
-  }
 
 private:
   OkularDocument *doc_;
@@ -106,6 +106,7 @@ private:
   QList<PageCache*> pageCache_;
   SlidingStackedWidget *stackedWidget_;
   QScrollArea *currentScrollArea_;
+  QString filePath_;
 };
 
 #endif
