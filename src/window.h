@@ -94,53 +94,37 @@ private:
   bool showNextPage();
   bool showPrevPage();
   void showPageNumber(int currentPage, int nbPages);
-  void setupDocDisplay(unsigned int pageNumber);
+  void setupDocDisplay(unsigned int pageNumber, qreal factor);
   void gotoPage(int pageNb, int numPages);
-  void setZoomFactor(int index);
+  void setScale(qreal factor);
   QString elapsedTime();
   void saveSettings();
-  void preloadPage(int page) {
-    //the single threaded version of this function is called from onAnimationFinished slot
-    qDebug() << "Window::preloadPage: enqueue" << page;
-    pageToLoadNo_.enqueue(page);//put into queue the page number
-  }
-  //should be called only from onAnimationFinished slot
-  void preloadPageSingleThreaded() {
-    while(false == pageToLoadNo_.isEmpty()) {
-      int page = pageToLoadNo_.dequeue();
-      if(true == document_->invalidatePageCache(page)) {
-        qDebug() << "Window::preloadPageSingleThreaded";
-        //worker_->onUpdateCache(page);
-      }
-    }
-  }
 
   SlidingStackedWidget *slidingStacked_;
   DocumentWidget *document_;
-  QDeclarativeView *toolBar_;
   QVector<qreal> scaleFactors_;
-  int currentZoomIndex_;
   QPoint startPoint_;
   QPoint endPoint_;
   bool animationFinished_;
+  //TODO: one declarative view
+  QDeclarativeView *toolBar_;
   QDeclarativeView *fileBrowser_;
   QDeclarativeView *gotoPage_;
   QDeclarativeView *zoomPage_;
   QDeclarativeView *commandPopupMenu_;
   QDeclarativeView *aboutDialog_;
+  QDeclarativeView *waitDialog_;
   QElapsedTimer pressTimer_;
   Worker *worker_;
   QThread *thread_;
   Flickable *flickable_;
   FileBrowserModel* fileBrowserModel_;
   QTimer *waitTimer_;
-  QDeclarativeView *waitDialog_;
 #ifndef NO_MOBILITY
   QTM_NAMESPACE::QSystemBatteryInfo *batteryInfo_;
 #endif
   int currentPage_;
   QElapsedTimer eTime_;
-  QQueue<int> pageToLoadNo_;
 };
 
 #endif

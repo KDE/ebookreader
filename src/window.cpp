@@ -51,16 +51,15 @@ Window::Window(QWidget *parent)
     zoomPage_(NULL),
     commandPopupMenu_(NULL),
     aboutDialog_(NULL),
+    waitDialog_(NULL),
     worker_(NULL),
     thread_(NULL),
     flickable_(NULL),
     fileBrowserModel_(new FileBrowserModel(this)),
     waitTimer_(NULL),
-    waitDialog_(NULL),
 #ifndef NO_MOBILITY
-    batteryInfo_(NULL),
+    batteryInfo_(NULL)
 #endif
-    pageToLoadNo_(QQueue<int>())
 {
   eTime_.start();//used to measure the elapsed time since the app is started
 
@@ -82,7 +81,6 @@ Window::Window(QWidget *parent)
   //zoom scale factors
   scaleFactors_ << 0.25 << 0.5 << 0.75 << 1.
                 << 1.25 << 1.5 << 2. << 3. << 4.;
-  currentZoomIndex_ = 3;//zoom 100%
 
   //create main document
   document_ = new DocumentWidget(this);
@@ -154,8 +152,8 @@ Window::Window(QWidget *parent)
   if(NULL != (filePath = settings.value(KEY_FILE_PATH).toString())) {
     qDebug() << "Found document " << filePath;
     if(document_->setDocument(filePath)) {
-      currentZoomIndex_ = settings.value(KEY_ZOOM_LEVEL, 3).toInt();
-      setupDocDisplay(settings.value(KEY_PAGE, 0).toInt() + 1);
+      setupDocDisplay(settings.value(KEY_PAGE, 0).toInt() + 1, 
+          settings.value(KEY_ZOOM_LEVEL, 1.0).toFloat());
       //simulate an onAnimationFinished
       onAnimationFinished();
       fileBrowserModel_->setCurrentDir(filePath);
@@ -379,7 +377,7 @@ void Window::showZoomPage()
       pRoot->setProperty("width", width());
       QObject *pZoomReel = pRoot->findChild<QObject*>("zoomreel");
       if(NULL != pZoomReel) {
-        if(false == pZoomReel->setProperty("zoomIndex", currentZoomIndex_)) {
+        if(false == pZoomReel->setProperty("zoomIndex", scaleFactors_.indexOf(document_->scale()))) {
           qDebug() << "cannot set property";
         }
         connect(pZoomReel, SIGNAL(setZoomFactor(int)), this, SLOT(closeZoomPage(int)));
@@ -405,7 +403,7 @@ void Window::closeZoomPage(int index)
   if((NULL != zoomPage_) && (true == zoomPage_->close())) {
     qDebug() << "widget closed";
     zoomPage_ = NULL;
-    setZoomFactor(index);
+    setScale(scaleFactors_[index]);
   }
 }
 
@@ -482,10 +480,8 @@ void Window::openFile(const QString &filePath)
   //open document
   waitTimer_->start();
   if(document_->setDocument(filePath)) {
-    //reset queue
-    pageToLoadNo_.clear();
     //load document
-    setupDocDisplay(1);
+    setupDocDisplay(1, document_->scale());
     slidingStacked_->slideInNext();
   }
   else {
@@ -698,16 +694,15 @@ void Window::onAnimationFinished()
 {
   qDebug() << "Window::onAnimationFinished";
   closeWaitDialog();
-  //preload page
-  preloadPageSingleThreaded();
+  //TODO: preload page ?
   animationFinished_ = true;//must be the last statement
 }
 
-void Window::setupDocDisplay(unsigned int pageNumber)
+void Window::setupDocDisplay(unsigned int pageNumber, qreal factor)
 {
   qDebug() << "Window::setupDocDisplay" << pageNumber;
   //set document zoom factor
-  document_->setScale(scaleFactors_[currentZoomIndex_]);
+  document_->setScale(factor);
   //set current page
   gotoPage(pageNumber, document_->numPages());
 }
@@ -721,53 +716,38 @@ void Window::gotoPage(int pageNb, int numPages)
   }
   //preload next page
   if((numPages - pageNb) > 0) {
-    qDebug() << "Window::gotoPage: preload next page";
-    preloadPage(pageNb);//next page (index starts from 0)
+    qDebug() << "next page";
+    document_->sendPageRequest(pageNb);//next page (index starts from 0)
   }
   //preload previous page
   if(pageNb > 1) {
-    qDebug() << "Window::gotoPage: preload previous page";
-    preloadPage(pageNb - 2); //previous page (index starts from 0)
+    qDebug() << "previous page";
+    document_->sendPageRequest(pageNb - 2); //previous page (index starts from 0)
   }
 }
 
-void Window::setZoomFactor(int index)
+void Window::setScale(qreal factor)
 {
-  qDebug() << "Window::setZoomFactor" << index;
+  qDebug() << "Window::setScale";
   //set zoom factor
-  if((currentZoomIndex_ == index) || ((0 > index) || (scaleFactors_.count() <= index))) {
-    qDebug() << "nothing to do";
+  if (document_->scale() == factor) {
     return;//nothing to do
   }
-  qDebug() << "selected zoom factor" << scaleFactors_[index];
-  currentZoomIndex_ = index;
-  document_->setScale(scaleFactors_[currentZoomIndex_]);
+  document_->setScale(factor);
+
   //update all pages from circular buffer
-  int pageNb = document_->currentPage() + 1;
-  int numPages = document_->numPages();
-  if(true == document_->invalidatePageCache(pageNb - 1)) {
-    document_->setPage(pageNb);
-  }
+  gotoPage(document_->currentPage()+1, document_->numPages());
+
   //update view
   document_->showCurrentPageUpper();
   slidingStacked_->slideInNext();
-  //preload next page
-  if((numPages - pageNb) > 0) {
-    qDebug() << "Window::gotoPage: preload next page";
-    preloadPage(pageNb);//next page (index starts from 0)
-  }
-  //preload previous page
-  if(pageNb > 1) {
-    qDebug() << "Window::gotoPage: preload previous page";
-    preloadPage(pageNb - 2); //previous page (index starts from 0)
-  }
 }
 
 void Window::showHelp(bool slideNext)
 {
   qDebug() << "Window::showHelp";
   if(document_->setDocument(HELP_FILE)) {
-    setupDocDisplay(1);
+    setupDocDisplay(1, document_->scale());
     document_->showCurrentPageUpper();
     if(true == slideNext) {
       slidingStacked_->slideInNext();
@@ -1040,6 +1020,6 @@ void Window::saveSettings()
     QSettings settings(ORGANIZATION, APPLICATION);
     settings.setValue(KEY_PAGE, document_->currentPage());
     settings.setValue(KEY_FILE_PATH, document_->filePath());
-    settings.setValue(KEY_ZOOM_LEVEL, currentZoomIndex_);
+    settings.setValue(KEY_ZOOM_LEVEL, document_->scale());
   }
 }
