@@ -41,15 +41,15 @@ signals:
 
 public slots:
   void onPageChanged(int page, const QPixmap *pix);
-  void setPage(int page = -1);
-  void setScale(qreal scale) {
-    scaleFactor_ = scale;
-  }
 
 public:
   DocumentWidget(Window *parent = 0);
   ~DocumentWidget();
   bool setDocument(const QString &filePath);
+  void setPage(int page = -1);
+  void setScale(qreal scale) {
+    scaleFactor_ = scale;
+  }
   qreal scale() const {
     return scaleFactor_;
   }
