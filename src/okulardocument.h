@@ -36,11 +36,11 @@ class OkularDocument : public QObject, private Okular::DocumentObserver
 {
   Q_OBJECT
 
-public slots:
-  void pageRequest(int page, qreal factor);
-
 signals:
   void pageChanged(int page, const QPixmap *pix);
+
+public slots:
+  void onPageRequest(int page, qreal factor);
 
 public:
   OkularDocument();

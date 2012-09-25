@@ -40,7 +40,7 @@ DocumentWidget::DocumentWidget(Window *parent)
     pageCache_[n]->valid = false;
   }
   Okular::SettingsCore::instance("");
-  connect(this, SIGNAL(pageRequest(int, qreal)), doc_, SLOT(pageRequest(int, qreal)));
+  connect(this, SIGNAL(pageRequest(int, qreal)), doc_, SLOT(onPageRequest(int, qreal)));
   connect(doc_, SIGNAL(pageChanged(int, const QPixmap*)), this, SLOT(onPageChanged(int, const QPixmap*)));
 }
 

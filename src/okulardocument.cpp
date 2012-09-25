@@ -117,9 +117,9 @@ const QPixmap* OkularDocument::setWhiteBackground(const QPixmap *pixmap)
 }
 
 //send Pixmap request to okular core library
-void OkularDocument::pageRequest(int page, qreal factor)
+void OkularDocument::onPageRequest(int page, qreal factor)
 {
-  qDebug() << "OkularDocument::pageRequest: pageNb" << page << ", scaleFactor" << factor;
+  qDebug() << "OkularDocument::onPageRequest: pageNb" << page << ", scaleFactor" << factor;
 
   if((NULL == doc_) || (NULL == painter_) || (0 >= factor)) {
     return;
