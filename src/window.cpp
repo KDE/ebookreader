@@ -155,7 +155,7 @@ Window::Window(QWidget *parent)
     qDebug() << "Found document " << filePath;
     if(document_->setDocument(filePath)) {
       currentZoomIndex_ = settings.value(KEY_ZOOM_LEVEL, 3).toInt();
-      setupDocDisplay(settings.value(KEY_PAGE, 0).toInt() + 1, filePath);
+      setupDocDisplay(settings.value(KEY_PAGE, 0).toInt() + 1);
       //simulate an onAnimationFinished
       onAnimationFinished();
       fileBrowserModel_->setCurrentDir(filePath);
@@ -485,7 +485,7 @@ void Window::openFile(const QString &filePath)
     //reset queue
     pageToLoadNo_.clear();
     //load document
-    setupDocDisplay(1, filePath);
+    setupDocDisplay(1);
     slidingStacked_->slideInNext();
   }
   else {
@@ -703,7 +703,7 @@ void Window::onAnimationFinished()
   animationFinished_ = true;//must be the last statement
 }
 
-void Window::setupDocDisplay(unsigned int pageNumber, const QString &filePath)
+void Window::setupDocDisplay(unsigned int pageNumber)
 {
   qDebug() << "Window::setupDocDisplay" << pageNumber;
   //set document zoom factor
@@ -767,7 +767,7 @@ void Window::showHelp(bool slideNext)
 {
   qDebug() << "Window::showHelp";
   if(document_->setDocument(HELP_FILE)) {
-    setupDocDisplay(1, HELP_FILE);
+    setupDocDisplay(1);
     document_->showCurrentPageUpper();
     if(true == slideNext) {
       slidingStacked_->slideInNext();
