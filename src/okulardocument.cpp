@@ -37,7 +37,7 @@ public:
     qDebug() << "PagePainter::sendRequest";
     if(false == page->hasPixmap(OkularDocument::OKULAR_OBSERVER_ID)) {
       qDebug() << "making pixmap request";
-      Okular::PixmapRequest *pr = new Okular::PixmapRequest(OkularDocument::OKULAR_OBSERVER_ID, page->number(), width, height, 0, true);
+      Okular::PixmapRequest *pr = new Okular::PixmapRequest(OkularDocument::OKULAR_OBSERVER_ID, page->number(), width, height, 0, true);//asynchronous request
       QLinkedList<Okular::PixmapRequest*> req;
       req.push_back(pr);
       doc_->requestPixmaps(req);

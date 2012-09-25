@@ -694,7 +694,6 @@ void Window::onAnimationFinished()
 {
   qDebug() << "Window::onAnimationFinished";
   closeWaitDialog();
-  //TODO: preload page ?
   animationFinished_ = true;//must be the last statement
 }
 
