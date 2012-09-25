@@ -40,7 +40,7 @@ signals:
   void pageRequest(int page, qreal factor);
 
 public slots:
-  void pageChanged(int page, const QPixmap *pix);
+  void onPageChanged(int page, const QPixmap *pix);
   bool setDocument(const QString &filePath);
   void setPage(int page = -1);
   void setScale(qreal scale) {

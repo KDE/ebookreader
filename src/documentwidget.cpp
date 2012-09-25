@@ -41,7 +41,7 @@ DocumentWidget::DocumentWidget(Window *parent)
   }
   Okular::SettingsCore::instance("");
   connect(this, SIGNAL(pageRequest(int, qreal)), doc_, SLOT(pageRequest(int, qreal)));
-  connect(doc_, SIGNAL(pageChanged(int, const QPixmap*)), this, SLOT(pageChanged(int, const QPixmap*)));
+  connect(doc_, SIGNAL(pageChanged(int, const QPixmap*)), this, SLOT(onPageChanged(int, const QPixmap*)));
 }
 
 DocumentWidget::~DocumentWidget()
@@ -52,9 +52,9 @@ DocumentWidget::~DocumentWidget()
   delete doc_;
 }
 
-void DocumentWidget::pageChanged(int page, const QPixmap *pix)
+void DocumentWidget::onPageChanged(int page, const QPixmap *pix)
 {
-  qDebug() << "DocumentWidget::pageChanged";
+  qDebug() << "DocumentWidget::onPageChanged";
 
   doc_->deletePixmap(pageCache_[page % CACHE_SIZE]->pPixmap);
   pageCache_[page % CACHE_SIZE]->pPixmap = pix;
