@@ -90,6 +90,12 @@ public:
     pageCache_[page % CACHE_SIZE]->valid = false;
     return true;//operation successful
   }
+  void sendPageRequest(int page) {
+    emit pageRequest(page, scaleFactor_);
+  }
+  const QString& filePath() {
+    return filePath_;
+  }
 
   enum {CACHE_SIZE = 3};
 

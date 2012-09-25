@@ -49,9 +49,6 @@ class Window : public QMainWindow
 
   friend class Worker;
 
-signals:
-  void requestPage(int);
-
 public:
   Window(QWidget *parent = NULL);
   ~Window();
@@ -121,7 +118,6 @@ private:
   SlidingStackedWidget *slidingStacked_;
   DocumentWidget *document_;
   QDeclarativeView *toolBar_;
-  QString lastFilePath_;
   QVector<qreal> scaleFactors_;
   int currentZoomIndex_;
   QPoint startPoint_;

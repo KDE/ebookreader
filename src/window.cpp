@@ -126,10 +126,10 @@ Window::Window(QWidget *parent)
           this, SLOT(onAnimationFinished()));
   connect(increaseScaleAction, SIGNAL(triggered()), this, SLOT(increaseScale()));
   connect(decreaseScaleAction, SIGNAL(triggered()), this, SLOT(decreaseScale()));
-  connect(this, SIGNAL(requestPage(int)), document_, SIGNAL(requestPage(int)));
 
   statusBar()->hide();
 
+#ifndef NO_MOBILITY
   //start worker thread
   thread_ = new QThread(this);
   worker_->moveToThread(thread_);
@@ -141,9 +141,9 @@ Window::Window(QWidget *parent)
   else {
     qDebug() << "worker thread is NOT running";
   }
+#endif
 
-
-  //wait timer initialisation (used to handle too long actions: document openings, page changes)
+  //wait timer initialisation (used to handle long actions: document openings, page changes)
   waitTimer_ = new QTimer(this);
   waitTimer_->setInterval(WAIT_TIMER_INTERVAL_MS);
   connect(waitTimer_, SIGNAL(timeout()), this, SLOT(showWaitDialog()));
@@ -480,17 +480,16 @@ void Window::openFile(const QString &filePath)
 {
   qDebug() << "Window::openFile";
   //open document
+  waitTimer_->start();
   if(document_->setDocument(filePath)) {
-    //show wait dialog
-    showWaitDialog();
     //reset queue
     pageToLoadNo_.clear();
     //load document
     setupDocDisplay(1, filePath);
-    qDebug() << "slide in next";
     slidingStacked_->slideInNext();
   }
   else {
+    closeWaitDialog();
     showWarningMessage(QString(APPLICATION " - ") + tr("Failed to open file"),
                        tr("%1 cannot be opened").arg(filePath));
   }
@@ -629,57 +628,58 @@ bool Window::eventFilter(QObject *, QEvent *event)
 bool Window::showNextPage()
 {
   qDebug() << "Window::showNextPage";
-  if(false == document_->isLoaded() || false == animationFinished_) {
-    return false;
+
+  bool out = false;
+
+  if(true == document_->isLoaded() && true == animationFinished_) {
+    currentPage_ = document_->currentPage() + 2;
+    if(currentPage_ <= document_->numPages()) {
+      //start timer
+      waitTimer_->start();
+      //load a new page
+      document_->setPage(currentPage_);
+      document_->showCurrentPageUpper();
+      //update the cache after the page has been displayed
+      document_->sendPageRequest(currentPage_);
+      //make sure that the next page is ready
+      animationFinished_ = false;
+      slidingStacked_->slideInNext();
+      out = true;
+    }
   }
 
-  currentPage_ = document_->currentPage() + 2;
-  int nbPages = document_->numPages();
-  if(currentPage_ <= nbPages) {
-    //start timer
-    waitTimer_->start();
-    //load a new page
-    document_->setPage(currentPage_);
-    document_->showCurrentPageUpper();
-    //update the cache after the page has been displayed
-    emit requestPage(currentPage_);
-    //make sure that the next page is ready
-    animationFinished_ = false;
-    slidingStacked_->slideInNext();
-    return true;
-  }
-
-  return false;
+  return out;
 }
 
 bool Window::showPrevPage()
 {
   qDebug() << "Window::showPrevPage";
-  if(false == document_->isLoaded() || false == animationFinished_) {
-    return false;
+
+  bool out = false;
+
+  if(true == document_->isLoaded() && true == animationFinished_) {
+    currentPage_ = document_->currentPage();
+    if(0 < currentPage_) {
+      //start timer
+      waitTimer_->start();
+      //load a new page
+      document_->setPage(currentPage_);
+      document_->showCurrentPageLower();
+      //update the cache after the page has been displayed
+      document_->sendPageRequest(currentPage_ - 2);
+      //make sure that the prev page is ready
+      animationFinished_ = false;
+      slidingStacked_->slideInPrev();
+      out = true;
+    }
   }
 
-  currentPage_ = document_->currentPage();
-  if(0 < currentPage_) {
-    //start timer
-    waitTimer_->start();
-    //load a new page
-    document_->setPage(currentPage_);
-    document_->showCurrentPageLower();
-    //update the cache after the page has been displayed
-    emit requestPage(currentPage_ - 2);
-    //make sure that the prev page is ready
-    animationFinished_ = false;
-    slidingStacked_->slideInPrev();
-    return true;
-  }
-
-  return false;
+  return out;
 }
 
 void Window::closeEvent(QCloseEvent *evt)
 {
-  qDebug() << "Window::closeEvent" << lastFilePath_ << document_->currentPage();
+  qDebug() << "Window::closeEvent" << document_->currentPage();
 
   saveSettings();
   //terminate worker thread
@@ -706,7 +706,6 @@ void Window::onAnimationFinished()
 void Window::setupDocDisplay(unsigned int pageNumber, const QString &filePath)
 {
   qDebug() << "Window::setupDocDisplay" << pageNumber;
-  lastFilePath_ = filePath;
   //set document zoom factor
   document_->setScale(scaleFactors_[currentZoomIndex_]);
   //set current page
@@ -927,7 +926,7 @@ void Window::showPropertiesDialog()
       QObject *pAboutDlg = pAbout->findChild<QObject*>("aboutDialog");
       if(NULL != pAboutDlg) {
         //document path
-        QString msg = tr("<H3>Document path:<br><i>%1</i></H3>").arg(lastFilePath_);
+        QString msg = tr("<H3>Document path:<br><i>%1</i></H3>").arg(document_->filePath());
         //current page / page number
         msg += tr("<H3>Current page / Number of pages:<br><b>%1 / %2</b></H3>").arg(document_->currentPage() + 1).arg(document_->numPages());
         //time since the application was started
@@ -1036,11 +1035,11 @@ QString Window::elapsedTime()
 
 void Window::saveSettings()
 {
-  if((NULL != document_) && (QString(HELP_FILE) != lastFilePath_)) {
+  if((NULL != document_) && (QString(HELP_FILE) != document_->filePath())) {
     //the current settings are not saved if the last file is the help file
     QSettings settings(ORGANIZATION, APPLICATION);
     settings.setValue(KEY_PAGE, document_->currentPage());
-    settings.setValue(KEY_FILE_PATH, lastFilePath_);
+    settings.setValue(KEY_FILE_PATH, document_->filePath());
     settings.setValue(KEY_ZOOM_LEVEL, currentZoomIndex_);
   }
 }
