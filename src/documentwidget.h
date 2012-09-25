@@ -41,7 +41,6 @@ signals:
 
 public slots:
   void onPageChanged(int page, const QPixmap *pix);
-  bool setDocument(const QString &filePath);
   void setPage(int page = -1);
   void setScale(qreal scale) {
     scaleFactor_ = scale;
@@ -50,6 +49,7 @@ public slots:
 public:
   DocumentWidget(Window *parent = 0);
   ~DocumentWidget();
+  bool setDocument(const QString &filePath);
   qreal scale() const {
     return scaleFactor_;
   }
