@@ -113,7 +113,7 @@ bool DocumentWidget::setDocument(const QString &filePath)
   bool out = false;
 
   if (NULL != doc_) {
-    if(EXIT_SUCCESS == doc_->load(filePath)) {
+    if(true == doc_->load(filePath)) {
       maxNumPages_ = doc_->numPages();
       currentPage_ = -1;
       filePath_ = filePath;
