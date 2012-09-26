@@ -25,6 +25,7 @@
 #include <QScrollBar>
 #include <QMutex>
 #include <QDebug>
+#include <QEventLoop>
 #include "okulardocument.h"
 
 class SlidingStackedWidget;
@@ -82,16 +83,20 @@ public:
   }
   bool invalidatePageCache(int page) {
     qDebug() << "DocumentWidget::invalidatePageCache" << page;
+
     if(0 > page || maxNumPages_ <= page) {
       qDebug() << "DocumentWidget::invalidatePageCache: nothing to do";
       return false;//operation failed
     }
+    doc_->deletePixmap(pageCache_[page % CACHE_SIZE]->pPixmap);
     pageCache_[page % CACHE_SIZE]->pPixmap = NULL;
     pageCache_[page % CACHE_SIZE]->valid = false;
     return true;//operation successful
   }
   void sendPageRequest(int page) {
-    emit pageRequest(page, scaleFactor_);
+    if (true == invalidatePageCache(page)) {
+      emit pageRequest(page, scaleFactor_);
+    }
   }
   const QString& filePath() {
     return filePath_;
@@ -113,6 +118,8 @@ private:
   SlidingStackedWidget *stackedWidget_;
   QScrollArea *currentScrollArea_;
   QString filePath_;
+  QEventLoop evtLoop_;
+  int evtPage_;
 };
 
 #endif

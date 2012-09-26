@@ -32,7 +32,8 @@ DocumentWidget::DocumentWidget(Window *parent)
     maxNumPages_(0),
     scaleFactor_(1.0),
     stackedWidget_(NULL),
-    currentScrollArea_(NULL)
+    currentScrollArea_(NULL),
+    evtPage_(-1)
 {
   for(int n = 0; n < CACHE_SIZE; ++n) {
     pageCache_.append(new PageCache);
@@ -56,9 +57,12 @@ void DocumentWidget::onPageChanged(int page, const QPixmap *pix)
 {
   qDebug() << "DocumentWidget::onPageChanged";
 
-  doc_->deletePixmap(pageCache_[page % CACHE_SIZE]->pPixmap);
   pageCache_[page % CACHE_SIZE]->pPixmap = pix;
   pageCache_[page % CACHE_SIZE]->valid = true;
+  if (page == evtPage_) {
+    evtLoop_.quit();//used for synchronous page requests
+    evtPage_ = -1;
+  }
 }
 
 void DocumentWidget::setPage(int page)
@@ -94,15 +98,15 @@ void DocumentWidget::setPage(int page)
   if(false == pageCache_[currentPage_ % CACHE_SIZE]->valid) {
     qDebug() << "DocumentWidget::showPage: invalid cache";
     emit pageRequest(currentPage_, scaleFactor_);
-    //TODO: how to make sure that the page is set ?
+    //wait to receive the page pixmap
+    evtPage_ = currentPage_;
+    evtLoop_.exec();
   }
-  else {
-    const QPixmap *pPix = pageCache_[currentPage_ % CACHE_SIZE]->pPixmap;
-    if((NULL != pPix) && (false == pPix->isNull())) {
-      qDebug() << "setPixmap" << pPix;
-      label->setPixmap(*pPix);
-      label->adjustSize();
-    }
+  const QPixmap *pPix = pageCache_[currentPage_ % CACHE_SIZE]->pPixmap;
+  if((NULL != pPix) && (false == pPix->isNull())) {
+    qDebug() << "setPixmap" << pPix;
+    label->setPixmap(*pPix);
+    label->adjustSize();
   }
 }
 

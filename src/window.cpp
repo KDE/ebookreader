@@ -163,7 +163,6 @@ Window::Window(QWidget *parent)
     qDebug() << "no document found";
     showHelp(false);
   }
-  animationFinished_ = true;
 
   normalScreen();
 
