@@ -146,6 +146,8 @@ Window::Window(QWidget *parent)
   waitTimer_->setInterval(WAIT_TIMER_INTERVAL_MS);
   connect(waitTimer_, SIGNAL(timeout()), this, SLOT(showWaitDialog()));
 
+  normalScreen();
+
   //set document if one has been previously open
   QSettings settings(ORGANIZATION, APPLICATION);
   QString filePath;
@@ -163,8 +165,6 @@ Window::Window(QWidget *parent)
     qDebug() << "no document found";
     showHelp(false);
   }
-
-  normalScreen();
 
   //main toolbar
   if(NULL != (toolBar_ = new QDeclarativeView(this))) {
@@ -526,10 +526,7 @@ void Window::normalScreen()
       }
     }
   }
-
-  if(NULL != toolBar_) {
-    toolBar_->show();
-  }
+  qDebug() << "width" << width() << ", height" << height();
 }
 
 void Window::increaseScale()
@@ -818,8 +815,12 @@ void Window::showWarningMessage(const QString &title, const QString &explanation
     connect(aboutDialog_->engine(), SIGNAL(quit()), this, SLOT(closeAboutDialog()));
     QObject *pRoot = aboutDialog_->rootObject();
     if(NULL != pRoot) {
-      pRoot->setProperty("height", height());
-      pRoot->setProperty("width", width());
+      if (false  == pRoot->setProperty("height", height())) {
+        qDebug() << "cannot set height";
+      }
+      if (false == pRoot->setProperty("width", width())) {
+        qDebug() << "cannot set width";
+      }
       QObject *pAbout = pRoot->findChild<QObject*>("aboutDialog");
       if(NULL != pAbout) {
         pAbout->setProperty("text", "<H3 style=\"color:red\">" + title +
@@ -933,7 +934,7 @@ bool Window::hasTouchScreen()
   return ((flags & (QSystemDeviceInfo::SingleTouch |
                     QSystemDeviceInfo::MultiTouch)) != 0) ? true : false;
 #else
-  return true;
+  return false;
 #endif
 }
 

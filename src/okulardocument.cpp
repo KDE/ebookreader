@@ -30,18 +30,23 @@ class PagePainter
 {
 public:
   explicit PagePainter(Okular::Document *doc):
-    doc_(doc)
+    doc_(doc),
+    pixmapRequest_(NULL)
   {}
+  ~PagePainter() {
+    delete pixmapRequest_;
+  }
   //send request for page pixmap
-  void sendRequest(const Okular::Page *page, int width, int height) const 
+  void sendRequest(const Okular::Page *page, int width, int height)
   {
     qDebug() << "PagePainter::sendRequest";
     if(false == page->hasPixmap(OkularDocument::OKULAR_OBSERVER_ID)) {
       qDebug() << "making pixmap request";
-      Okular::PixmapRequest *pr = new Okular::PixmapRequest(OkularDocument::OKULAR_OBSERVER_ID, page->number(), width, height, 0, true);//asynchronous request
-      QLinkedList<Okular::PixmapRequest*> req;
-      req.push_back(pr);
-      doc_->requestPixmaps(req);
+      delete pixmapRequest_;
+      pixmapRequest_ = new Okular::PixmapRequest(OkularDocument::OKULAR_OBSERVER_ID, page->number(), width, height, 0, true);//asynchronous request
+      req_.clear();
+      req_.push_back(pixmapRequest_);
+      doc_->requestPixmaps(req_);
     }
   }
   //get page pixmap when notifyPageChanged() is called
@@ -59,6 +64,8 @@ public:
   }
 private:
   Okular::Document *doc_;
+  Okular::PixmapRequest *pixmapRequest_;
+  QLinkedList<Okular::PixmapRequest*> req_;
 };
 
 OkularDocument::OkularDocument() :
@@ -81,8 +88,9 @@ OkularDocument::~OkularDocument()
 bool OkularDocument::load(const QString &fileName)
 {
   bool res = false;
+  mimeType_ = KMimeType::findByPath(fileName);
   if (NULL != doc_) {
-    res = doc_->openDocument(fileName, KUrl::fromPath(fileName), KMimeType::findByPath(fileName));
+    res = doc_->openDocument(fileName, KUrl::fromPath(fileName), mimeType_);
   }
   return res;
 }
@@ -132,8 +140,8 @@ void OkularDocument::onPageRequest(int page, qreal factor)
   const Okular::Page *p = doc_->page(page);
   if(NULL != p) {
 
-    int width = int(factor*p->width());
-    int height = int(factor*p->height());
+    int width = int(factor*(p->width()));
+    int height = int(factor*(p->height()));
     adjustSize(width, height);
     painter_->sendRequest(p, width, height);
   }

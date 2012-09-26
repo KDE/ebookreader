@@ -67,7 +67,7 @@ void DocumentWidget::setPage(int page)
 {
   qDebug() << "DocumentWidget::setPage" << page;
 
-  if(page != currentPage_ + 1) { //same page
+  if(page == currentPage_ + 1) { //same page
     return;//do nothing
   }
 
