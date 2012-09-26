@@ -20,6 +20,7 @@
 #include <QPixmap>
 #include <QPainter>
 #include <core/generator.h>
+#include <core/settings_core.h>
 #include <core/page.h>
 #include "okulardocument.h"
 #include "screen_size.h"
@@ -46,6 +47,7 @@ public:
   //get page pixmap when notifyPageChanged() is called
   const QPixmap* getPagePixmap(int page) const 
   {
+    qDebug() << "PagePainter::getPagePixmap";
     const QPixmap *pix = NULL;
     if (NULL != doc_) {
       const Okular::Page *p = doc_->page(page);
@@ -60,9 +62,11 @@ private:
 };
 
 OkularDocument::OkularDocument() :
-  doc_(new Okular::Document(NULL)),
+  doc_(NULL),
   painter_(new PagePainter(doc_))
 {
+  Okular::SettingsCore::instance("");//need to call this before creating the documnent
+  doc_ = new Okular::Document(NULL);
   if(NULL != doc_) {
     doc_->addObserver(this);
   }

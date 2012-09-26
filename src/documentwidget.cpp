@@ -18,7 +18,6 @@
 
 #include <QtGui>
 #include <kmimetype.h>
-#include <core/settings_core.h>
 #include "documentwidget.h"
 #include "SlidingStackedWidget.h"
 #include "okulardocument.h"
@@ -40,7 +39,6 @@ DocumentWidget::DocumentWidget(Window *parent)
     pageCache_[n]->pPixmap = NULL;
     pageCache_[n]->valid = false;
   }
-  Okular::SettingsCore::instance("");
   connect(this, SIGNAL(pageRequest(int, qreal)), doc_, SLOT(onPageRequest(int, qreal)));
   connect(doc_, SIGNAL(pageChanged(int, const QPixmap*)), this, SLOT(onPageChanged(int, const QPixmap*)));
 }

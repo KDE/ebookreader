@@ -637,7 +637,6 @@ bool Window::showNextPage()
       //update the cache after the page has been displayed
       document_->sendPageRequest(currentPage_);
       //make sure that the next page is ready
-      animationFinished_ = false;
       slidingStacked_->slideInNext();
       out = true;
     }
@@ -663,7 +662,6 @@ bool Window::showPrevPage()
       //update the cache after the page has been displayed
       document_->sendPageRequest(currentPage_ - 2);
       //make sure that the prev page is ready
-      animationFinished_ = false;
       slidingStacked_->slideInPrev();
       out = true;
     }
