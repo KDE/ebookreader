@@ -30,8 +30,7 @@ class PagePainter
 {
 public:
   explicit PagePainter(Okular::Document *doc):
-    doc_(doc),
-    pixmapRequest_(NULL)
+    doc_(doc)
   {}
   ~PagePainter() {
   }
@@ -41,9 +40,9 @@ public:
     qDebug() << "PagePainter::sendRequest";
     if(false == page->hasPixmap(OkularDocument::OKULAR_OBSERVER_ID)) {
       qDebug() << "making pixmap request";
-      pixmapRequest_ = new Okular::PixmapRequest(OkularDocument::OKULAR_OBSERVER_ID, page->number(), width, height, 0, true);//asynchronous request (request is deleted by okular core library)
+    Okular::PixmapRequest *pixmapRequest = new Okular::PixmapRequest(OkularDocument::OKULAR_OBSERVER_ID, page->number(), width, height, 0, true);//asynchronous request (the request is deleted by okular core library)
       req_.clear();
-      req_.push_back(pixmapRequest_);
+      req_.push_back(pixmapRequest);
       doc_->requestPixmaps(req_);
     }
   }
@@ -62,7 +61,6 @@ public:
   }
 private:
   Okular::Document *doc_;
-  Okular::PixmapRequest *pixmapRequest_;
   QLinkedList<Okular::PixmapRequest*> req_;
 };
 
@@ -89,6 +87,7 @@ bool OkularDocument::load(const QString &fileName)
   bool res = false;
   mimeType_ = KMimeType::findByPath(fileName);
   if (NULL != doc_) {
+    doc_->closeDocument();//close previous document if any
     res = doc_->openDocument(fileName, KUrl::fromPath(fileName), mimeType_);
   }
   return res;
