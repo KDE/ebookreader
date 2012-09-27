@@ -34,7 +34,6 @@ public:
     pixmapRequest_(NULL)
   {}
   ~PagePainter() {
-    delete pixmapRequest_;
   }
   //send request for page pixmap
   void sendRequest(const Okular::Page *page, int width, int height)
@@ -42,8 +41,7 @@ public:
     qDebug() << "PagePainter::sendRequest";
     if(false == page->hasPixmap(OkularDocument::OKULAR_OBSERVER_ID)) {
       qDebug() << "making pixmap request";
-      delete pixmapRequest_;
-      pixmapRequest_ = new Okular::PixmapRequest(OkularDocument::OKULAR_OBSERVER_ID, page->number(), width, height, 0, true);//asynchronous request
+      pixmapRequest_ = new Okular::PixmapRequest(OkularDocument::OKULAR_OBSERVER_ID, page->number(), width, height, 0, true);//asynchronous request (request is deleted by okular core library)
       req_.clear();
       req_.push_back(pixmapRequest_);
       doc_->requestPixmaps(req_);
@@ -70,10 +68,11 @@ private:
 
 OkularDocument::OkularDocument() :
   doc_(NULL),
-  painter_(new PagePainter(doc_))
+  painter_(NULL)
 {
   Okular::SettingsCore::instance("");//need to call this before creating the documnent
   doc_ = new Okular::Document(NULL);
+  painter_ = new PagePainter(doc_);
   if(NULL != doc_) {
     doc_->addObserver(this);
   }
