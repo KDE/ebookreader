@@ -19,6 +19,7 @@
 #include <QDebug>
 #include <QPixmap>
 #include <QPainter>
+#include <QtCore/qmath.h>
 #include <core/generator.h>
 #include <core/settings_core.h>
 #include <core/page.h>
@@ -102,6 +103,12 @@ void OkularDocument::adjustSize(int &width, int &height)
       width = int(MIN_SCREEN_WIDTH * 0.9);
       height = int(height * double(width) / old_width);
     }
+  }
+  if((long)width*(long)height > 20000000L) {
+    //adjust width and height in order to stay below this threshold (used by okular core library)
+    qreal factor = qSqrt(20000000L)/qSqrt((long)width*(long)height);
+    width = int(width*factor);
+    height = int(height*factor);
   }
 }
 
