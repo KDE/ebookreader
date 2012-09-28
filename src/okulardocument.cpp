@@ -96,14 +96,6 @@ bool OkularDocument::load(const QString &fileName)
 
 void OkularDocument::adjustSize(int &width, int &height)
 {
-  if(mimeType_->is("image/vnd.djvu")) {
-    //ajust page size for djvu documents if needed
-    if(width > MIN_SCREEN_WIDTH) {
-      int old_width = width;
-      width = int(MIN_SCREEN_WIDTH * 0.9);
-      height = int(height * double(width) / old_width);
-    }
-  }
   if((long)width*(long)height > 20000000L) {
     qDebug() << "adjust width and height in order to stay below threshold";
     //adjust width and height in order to stay below this threshold (used by okular core library)
