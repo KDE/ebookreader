@@ -22,7 +22,6 @@ set ( tabletReader_SRCS
 	window.cpp
 	SlidingStackedWidget.cpp
 	flickable.cpp
-	worker.cpp
 	logger.cpp
 	filebrowsermodel.cpp
 	okulardocument.cpp
@@ -45,7 +44,6 @@ set ( tabletReader_MOCS
 	window.h
 	SlidingStackedWidget.h
 	flickable.h
-	worker.h
 	filebrowsermodel.h
 	)
 if (QT_MOBILITY_FOUND)

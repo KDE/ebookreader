@@ -27,7 +27,6 @@
 #include <qmobilityglobal.h>
 #endif
 #include "documentwidget.h"
-#include "worker.h"
 
 class QScrollArea;
 class QSpinBox;
@@ -46,8 +45,6 @@ QTM_END_NAMESPACE
 class Window : public QMainWindow
 {
   Q_OBJECT
-
-  friend class Worker;
 
 public:
   Window(QWidget *parent = NULL);
@@ -115,8 +112,6 @@ private:
   QDeclarativeView *aboutDialog_;
   QDeclarativeView *waitDialog_;
   QElapsedTimer pressTimer_;
-  Worker *worker_;
-  QThread *thread_;
   Flickable *flickable_;
   FileBrowserModel* fileBrowserModel_;
   QTimer *waitTimer_;

@@ -26,7 +26,6 @@
 #include "window.h"
 #include "SlidingStackedWidget.h"
 #include "filebrowsermodel.h"
-#include "worker.h"
 #include "flickable.h"
 #include "screen_size.h"
 
@@ -52,8 +51,6 @@ Window::Window(QWidget *parent)
     commandPopupMenu_(NULL),
     aboutDialog_(NULL),
     waitDialog_(NULL),
-    worker_(NULL),
-    thread_(NULL),
     flickable_(NULL),
     fileBrowserModel_(new FileBrowserModel(this)),
     waitTimer_(NULL),
@@ -84,9 +81,6 @@ Window::Window(QWidget *parent)
 
   //create main document
   document_ = new DocumentWidget(this);
-
-  //worker thread
-  worker_ = new Worker(document_, this);
 
   //create sliding animation
   slidingStacked_ = new SlidingStackedWidget(this);
@@ -127,44 +121,12 @@ Window::Window(QWidget *parent)
 
   statusBar()->hide();
 
-#ifndef NO_MOBILITY
-  //start worker thread
-  thread_ = new QThread(this);
-  worker_->moveToThread(thread_);
-  thread_->start();
-  if(true == thread_->isRunning()) {
-    qDebug() << "worker thread is running";
-    thread_->setPriority(QThread::IdlePriority);
-  }
-  else {
-    qDebug() << "worker thread is NOT running";
-  }
-#endif
-
   //wait timer initialisation (used to handle long actions: document openings, page changes)
   waitTimer_ = new QTimer(this);
   waitTimer_->setInterval(WAIT_TIMER_INTERVAL_MS);
   connect(waitTimer_, SIGNAL(timeout()), this, SLOT(showWaitDialog()));
 
   normalScreen();
-
-  //set document if one has been previously open
-  QSettings settings(ORGANIZATION, APPLICATION);
-  QString filePath;
-  if(NULL != (filePath = settings.value(KEY_FILE_PATH).toString())) {
-    qDebug() << "Found document " << filePath;
-    if(document_->setDocument(filePath)) {
-      setupDocDisplay(settings.value(KEY_PAGE, 0).toInt() + 1, 
-          settings.value(KEY_ZOOM_LEVEL, 1.0).toFloat());
-      //simulate an onAnimationFinished
-      onAnimationFinished();
-      fileBrowserModel_->setCurrentDir(filePath);
-    }
-  }
-  else {
-    qDebug() << "no document found";
-    showHelp(false);
-  }
 
   //main toolbar
   if(NULL != (toolBar_ = new QDeclarativeView(this))) {
@@ -186,13 +148,29 @@ Window::Window(QWidget *parent)
 #ifndef NO_MOBILITY
   //battery status
   batteryInfo_ = new QSystemBatteryInfo(this);
-  connect(batteryInfo_, SIGNAL(batteryStatusChanged(QSystemBatteryInfo::BatteryStatus)),
-          worker_, SLOT(onBatteryStatusChanged(QSystemBatteryInfo::BatteryStatus)));
 #endif
 
 #ifndef DESKTOP_APP
   setWindowFlags(Qt::X11BypassWindowManagerHint);
 #endif
+
+  //set document if one has been previously open
+  QSettings settings(ORGANIZATION, APPLICATION);
+  QString filePath;
+  if(NULL != (filePath = settings.value(KEY_FILE_PATH).toString())) {
+    qDebug() << "Found document " << filePath;
+    if(document_->setDocument(filePath)) {
+      setupDocDisplay(settings.value(KEY_PAGE, 0).toInt() + 1, 
+          settings.value(KEY_ZOOM_LEVEL, 1.0).toFloat());
+      //simulate an onAnimationFinished
+      onAnimationFinished();
+      fileBrowserModel_->setCurrentDir(filePath);
+    }
+  }
+  else {
+    qDebug() << "no document found";
+    showHelp(false);
+  }
 }
 
 Window::~Window()
@@ -671,17 +649,9 @@ bool Window::showPrevPage()
 
 void Window::closeEvent(QCloseEvent *evt)
 {
-  qDebug() << "Window::closeEvent" << document_->currentPage();
+  qDebug() << "Window::closeEvent";
 
   saveSettings();
-  //terminate worker thread
-  if(NULL != thread_) {
-    thread_->quit();
-    while(false == thread_->isFinished()); //wait for the thread to finish
-    qDebug() << "worker finished";
-    delete worker_;//delete worker object
-    worker_ = NULL;
-  }
 
   QWidget::closeEvent(evt);
 }
