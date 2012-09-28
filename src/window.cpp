@@ -737,7 +737,7 @@ void Window::showAboutDialog()
       pAbout->setProperty("width", width());
       QObject *pAboutDlg = pAbout->findChild<QObject*>("aboutDialog");
       if(NULL != pAboutDlg) {
-        pAboutDlg->setProperty("text", tr("<H2>tabletReader v2.0</H2>"
+        pAboutDlg->setProperty("text", tr("<H2>tabletReader v2.1</H2>"
                                           "<H3>e-book reader for touch-enabled devices</H3>"
                                           "<H4>Supported formats: PDF, CHM, DJVU, EPUB, etc.</H4>"
                                           "<H4>(all Okular supported formats)</H4><br>"
