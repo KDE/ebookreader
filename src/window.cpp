@@ -328,12 +328,6 @@ void Window::closeGotoPage(const QString &pageNb)
           slidingStacked_->slideInPrev();
         }
       }
-      else {
-        qDebug() << "nothing to do";
-      }
-    }
-    else {
-      qDebug() << "cannot convert input or empty input";
     }
   }
 }

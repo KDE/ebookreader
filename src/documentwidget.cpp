@@ -69,10 +69,6 @@ void DocumentWidget::setPage(int page)
 {
   qDebug() << "DocumentWidget::setPage" << page;
 
-  if(page == currentPage_ + 1) { //same page
-    return;//do nothing
-  }
-
   if(page != -1) {
     currentIndex_ = stackedWidget_->currentIndex();
     if(NULL != currentScrollArea_) {  //do nothing if no page has been loaded
