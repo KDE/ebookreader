@@ -31,7 +31,7 @@ Item {
     }
 
     width: 240
-    height:  60
+    height: 60
 
     Component {
         id: zoomDelegate

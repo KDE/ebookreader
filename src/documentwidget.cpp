@@ -58,7 +58,9 @@ void DocumentWidget::onPageChanged(int page, const QPixmap *pix)
   pageCache_[page % CACHE_SIZE]->pPixmap = pix;
   pageCache_[page % CACHE_SIZE]->valid = true;
   if (page == evtPage_) {
-    evtLoop_.quit();//used for synchronous page requests
+    if (true == evtLoop_.isRunning()) {
+      evtLoop_.quit();//used for synchronous page requests
+    }
     evtPage_ = -1;
   }
 }
@@ -94,11 +96,12 @@ void DocumentWidget::setPage(int page)
   currentScrollArea_ = (QScrollArea*)stackedWidget_->widget(currentIndex_);//get next/prev widget
   QLabel *label = (QLabel*)currentScrollArea_->widget();
   if(false == pageCache_[currentPage_ % CACHE_SIZE]->valid) {
-    qDebug() << "DocumentWidget::showPage: invalid cache";
+    qDebug() << "DocumentWidget::showPage: invalid cache"; 
+    evtPage_ = currentPage_;//prepare to wait synchronously this page
     emit pageRequest(currentPage_, scaleFactor_);
-    //wait to receive the page pixmap
-    evtPage_ = currentPage_;
-    evtLoop_.exec();
+    if (-1 != evtPage_) {
+      evtLoop_.exec();//wait to receive the page pixmap
+    }
   }
   const QPixmap *pPix = pageCache_[currentPage_ % CACHE_SIZE]->pPixmap;
   if((NULL != pPix) && (false == pPix->isNull())) {

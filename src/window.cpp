@@ -402,7 +402,9 @@ void Window::closeZoomPage(int index)
   if((NULL != zoomPage_) && (true == zoomPage_->close())) {
     qDebug() << "widget closed";
     zoomPage_ = NULL;
-    setScale(scaleFactors_[index]);
+    if((0 <= index) && (index < scaleFactors_.size())) {
+      setScale(scaleFactors_[index]);
+    }
   }
 }
 
