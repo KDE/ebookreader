@@ -66,6 +66,7 @@ Item {
 
     ListModel{
         id: zoomfactors
+        ListElement { number: "Fit Width" }
         ListElement { number: "25%" }
         ListElement { number: "50%" }
         ListElement { number: "75%" }

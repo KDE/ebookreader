@@ -101,6 +101,11 @@ public:
   const QString& filePath() {
     return filePath_;
   }
+  void setWinWidth(int width) {
+    if (NULL != doc_) {
+      doc_->setWinWidth(width);
+    }
+  }
 
   enum {CACHE_SIZE = 3};
 

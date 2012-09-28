@@ -93,7 +93,13 @@ private:
   void showPageNumber(int currentPage, int nbPages);
   void setupDocDisplay(unsigned int pageNumber, qreal factor);
   void gotoPage(int pageNb, int numPages);
-  void setScale(qreal factor);
+  void updateView(qreal factor);
+  void setScale(qreal factor) {
+    if (-1 == factor) { //need to set window width for fit width
+      document_->setWinWidth(width());
+    }
+    document_->setScale(factor);
+  }
   QString elapsedTime();
   void saveSettings();
 

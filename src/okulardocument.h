@@ -51,6 +51,9 @@ public:
   void deletePixmap(const QPixmap *p) {
     delete p;//TODO: remove this method
   }
+  void setWinWidth(int width) {
+    winWidth_ = width;
+  }
   ~OkularDocument();
   enum {OKULAR_OBSERVER_ID = 6};
   uint observerId() const {
@@ -63,6 +66,7 @@ private:
   Okular::Document *doc_;
   PagePainter *painter_;
   KMimeType::Ptr mimeType_;
+  int winWidth_;
 };
 
 #endif // OKULAR_DOCUMENT_H

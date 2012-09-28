@@ -76,7 +76,8 @@ Window::Window(QWidget *parent)
   addAction(decreaseScaleAction);
 
   //zoom scale factors
-  scaleFactors_ << 0.25 << 0.5 << 0.75 << 1.
+  //-1 used for fit width scaling factor
+  scaleFactors_ << -1 << 0.25 << 0.5 << 0.75 << 1.
                 << 1.25 << 1.5 << 2. << 3. << 4.;
 
   //create main document
@@ -381,7 +382,7 @@ void Window::closeZoomPage(int index)
     qDebug() << "widget closed";
     zoomPage_ = NULL;
     if((0 <= index) && (index < scaleFactors_.size())) {
-      setScale(scaleFactors_[index]);
+      updateView(scaleFactors_[index]);
     }
   }
 }
@@ -667,7 +668,7 @@ void Window::setupDocDisplay(unsigned int pageNumber, qreal factor)
 {
   qDebug() << "Window::setupDocDisplay" << pageNumber;
   //set document zoom factor
-  document_->setScale(factor);
+  setScale(factor);
   //set current page
   gotoPage(pageNumber, document_->numPages());
 }
@@ -691,14 +692,15 @@ void Window::gotoPage(int pageNb, int numPages)
   }
 }
 
-void Window::setScale(qreal factor)
+void Window::updateView(qreal factor)
 {
-  qDebug() << "Window::setScale";
+  qDebug() << "Window::updateView";
+
   //set zoom factor
   if (document_->scale() == factor) {
     return;//nothing to do
   }
-  document_->setScale(factor);
+  setScale(factor);
 
   //update all pages from circular buffer
   gotoPage(document_->currentPage()+1, document_->numPages());

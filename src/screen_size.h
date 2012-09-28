@@ -24,4 +24,6 @@
 #define MIN_SCREEN_WIDTH 800
 #define MIN_SCREEN_HEIGHT 600
 
+#define MAX_ZOOM_FACTOR 4.0
+
 #endif

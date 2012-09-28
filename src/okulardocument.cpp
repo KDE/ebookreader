@@ -139,13 +139,15 @@ void OkularDocument::onPageRequest(int page, qreal factor)
 {
   qDebug() << "OkularDocument::onPageRequest: pageNb" << page << ", scaleFactor" << factor;
 
-  if((NULL == doc_) || (NULL == painter_) || (0 >= factor)) {
+  if((NULL == doc_) || (NULL == painter_)) {
     return;
   }
 
   const Okular::Page *p = doc_->page(page);
   if(NULL != p) {
-
+    if (-1 == factor) {
+      factor = winWidth_/p->width();//adjust scale factor to occupy the entire window width
+    }
     int width = int(factor*(p->width()));
     int height = int(factor*(p->height()));
     adjustSize(width, height);
