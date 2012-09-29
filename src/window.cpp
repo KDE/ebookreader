@@ -156,7 +156,7 @@ Window::Window(QWidget *parent)
 #endif
 
   waitTimer_->start();
-  repaint();
+  update();
   QTimer::singleShot(0, this, SLOT(showDocument()));
 }
 
