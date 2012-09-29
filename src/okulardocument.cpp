@@ -100,8 +100,8 @@ void OkularDocument::adjustSize(int &width, int &height)
     qDebug() << "adjust width and height in order to stay below threshold";
     //adjust width and height in order to stay below this threshold (used by okular core library)
     qreal factor = qSqrt(20000000L)/qSqrt((long)width*(long)height);
-    width = int(width*factor);
-    height = int(height*factor);
+    width = int(width);
+    height = int(height*factor*factor);
   }
 }
 
