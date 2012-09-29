@@ -127,7 +127,7 @@ private:
 #endif
   int currentPage_;
   QElapsedTimer eTime_;
-  const Qstring helpFile_;
+  const QString helpFile_;
 };
 
 #endif

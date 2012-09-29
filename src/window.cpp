@@ -54,10 +54,10 @@ Window::Window(QWidget *parent)
     flickable_(NULL),
     fileBrowserModel_(new FileBrowserModel(this)),
     waitTimer_(NULL),
-    helpFile_(QCoreApplication::applicationDirPath()+QString(HELP_FILE)),
 #ifndef NO_MOBILITY
-    batteryInfo_(NULL)
+    batteryInfo_(NULL),
 #endif
+    helpFile_(QCoreApplication::applicationDirPath()+QString(HELP_FILE))
 {
   eTime_.start();//used to measure the elapsed time since the app is started
 
@@ -986,7 +986,7 @@ QString Window::elapsedTime()
 
 void Window::saveSettings()
 {
-  if(NULL != document_) {
+  if((NULL != document_) && (true == document_->isLoaded())) {
     QSettings settings(ORGANIZATION, APPLICATION);
     settings.setValue(KEY_PAGE, document_->currentPage());
     settings.setValue(KEY_FILE_PATH, document_->filePath());
