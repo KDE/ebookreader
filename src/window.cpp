@@ -1011,9 +1011,12 @@ QString Window::elapsedTime()
 void Window::saveSettings()
 {
   if((NULL != document_) && (true == document_->isLoaded())) {
-    QSettings settings(ORGANIZATION, APPLICATION);
-    settings.setValue(KEY_PAGE, document_->currentPage());
-    settings.setValue(KEY_FILE_PATH, document_->filePath());
-    settings.setValue(KEY_ZOOM_LEVEL, document_->scale());
+    const QString &fileName = document_->filePath();
+    if (fileName != helpFile_) {
+      QSettings settings(ORGANIZATION, APPLICATION);
+      settings.setValue(KEY_PAGE, document_->currentPage());
+      settings.setValue(KEY_FILE_PATH, fileName);
+      settings.setValue(KEY_ZOOM_LEVEL, document_->scale());
+    }
   }
 }

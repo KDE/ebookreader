@@ -63,7 +63,7 @@ public:
   int numPages() const {
     return (NULL != doc_) ? doc_->numPages() : 0;
   }
-  bool isLoaded() {
+  bool isLoaded() const {
     return (doc_ != NULL);
   }
   void setStackedWidget(SlidingStackedWidget *stackedWidget) {
@@ -98,7 +98,7 @@ public:
       emit pageRequest(page, scaleFactor_);
     }
   }
-  const QString& filePath() {
+  const QString& filePath() const {
     return filePath_;
   }
   void setWinWidth(int width) {
