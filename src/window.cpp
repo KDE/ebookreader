@@ -34,7 +34,7 @@
 #define KEY_PAGE "current_page"
 #define KEY_FILE_PATH "current_file_path"
 #define KEY_ZOOM_LEVEL "current_zoom_level"
-#define HELP_FILE "tabletReader.pdf"
+#define HELP_FILE "/../share/doc/tabletReaderHelp.pdf"
 
 #ifndef NO_MOBILITY
 QTM_USE_NAMESPACE
@@ -54,6 +54,7 @@ Window::Window(QWidget *parent)
     flickable_(NULL),
     fileBrowserModel_(new FileBrowserModel(this)),
     waitTimer_(NULL),
+    helpFile_(QCoreApplication::applicationDirPath()+QString(HELP_FILE)),
 #ifndef NO_MOBILITY
     batteryInfo_(NULL)
 #endif
@@ -712,7 +713,7 @@ void Window::updateView(qreal factor)
 void Window::showHelp(bool slideNext)
 {
   qDebug() << "Window::showHelp";
-  if(document_->setDocument(HELP_FILE)) {
+  if(document_->setDocument(helpFile_)) {
     setupDocDisplay(1, document_->scale());
     document_->showCurrentPageUpper();
     if(true == slideNext) {
@@ -985,8 +986,7 @@ QString Window::elapsedTime()
 
 void Window::saveSettings()
 {
-  if((NULL != document_) && (QString(HELP_FILE) != document_->filePath())) {
-    //the current settings are not saved if the last file is the help file
+  if(NULL != document_) {
     QSettings settings(ORGANIZATION, APPLICATION);
     settings.setValue(KEY_PAGE, document_->currentPage());
     settings.setValue(KEY_FILE_PATH, document_->filePath());
