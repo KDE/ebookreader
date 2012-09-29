@@ -165,6 +165,7 @@ void Window::showDocument()
   //set document if one has been previously open
   QSettings settings(ORGANIZATION, APPLICATION);
   QString filePath;
+  waitTimer_->start();
   if(NULL != (filePath = settings.value(KEY_FILE_PATH).toString())) {
     qDebug() << "Found document " << filePath;
     if(document_->setDocument(filePath)) {
