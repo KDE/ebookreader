@@ -109,6 +109,8 @@ void DocumentWidget::setPage(int page)
 
 bool DocumentWidget::setDocument(const QString &filePath)
 {
+  qDebug() << "DocumentWidget::setDocument";
+
   bool out = false;
 
   if (NULL != doc_) {

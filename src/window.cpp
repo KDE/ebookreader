@@ -270,9 +270,6 @@ void Window::closeFileBrowser(const QString &doc)
     if(FileBrowserModel::closeFileBrowserText() != doc) {
       openFile(doc);
     }
-    else {
-      qDebug() << "closing file browser";
-    }
   }
 }
 
