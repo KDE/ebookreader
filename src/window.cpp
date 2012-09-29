@@ -155,7 +155,7 @@ Window::Window(QWidget *parent)
   setWindowFlags(Qt::X11BypassWindowManagerHint);
 #endif
 
-  QTimer::singleShot(0, this, SLOT(showDocument()));
+  QTimer::singleShot(10, this, SLOT(showDocument()));
 }
 
 void Window::showDocument()
