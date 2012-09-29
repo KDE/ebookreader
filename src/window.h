@@ -23,6 +23,7 @@
 #include <QPoint>
 #include <QElapsedTimer>
 #include <QQueue>
+#include <QtDeclarative>
 #ifndef NO_MOBILITY
 #include <qmobilityglobal.h>
 #endif
@@ -103,6 +104,17 @@ private:
   }
   QString elapsedTime();
   void saveSettings();
+  void setHelpIcon(bool flag, bool flipFlop = true) {
+    if (true == flipFlop || (0 != prev_.page)) {
+      QObject *pDisp = toolBar_->rootObject();
+      if (NULL != pDisp) {
+        pDisp->setProperty("hlpBck", flag);
+      }
+      if (false == flipFlop) {
+        prev_.page = 0;
+      }
+    }
+  }
 
   SlidingStackedWidget *slidingStacked_;
   DocumentWidget *document_;

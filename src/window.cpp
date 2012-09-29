@@ -18,7 +18,6 @@
 
 #include <QtGui>
 #include <QScrollArea>
-#include <QtDeclarative>
 #ifndef NO_MOBILITY
 #include <QtSystemInfo/QSystemDeviceInfo>
 #include <QtSystemInfo/QSystemBatteryInfo>
@@ -466,7 +465,7 @@ void Window::openFile(const QString &filePath)
     //load document
     setupDocDisplay(1, document_->scale());
     slidingStacked_->slideInNext();
-    prev_.page = 0;//reset previous document for showHelp
+    setHelpIcon(true, false);
   }
   else {
     closeWaitDialog();
@@ -739,10 +738,7 @@ void Window::showHelp(bool slideNext)
     if(true == slideNext) {
       slidingStacked_->slideInNext();
     }
-    QObject *pDisp = toolBar_->rootObject();
-    if (NULL != pDisp) {
-      pDisp->setProperty("hlpBck", helpFile_ != *curFileName);
-    }
+    setHelpIcon(helpFile_ != *curFileName);
   }
   else {
     qDebug() << "cannot open help file";
@@ -1020,3 +1016,4 @@ void Window::saveSettings()
     }
   }
 }
+
