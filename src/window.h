@@ -85,6 +85,7 @@ private slots:
   void closeWaitDialog();
   void onAppUpAuthCheckError();
   void showPropertiesDialog();
+  void showDocument();
 
 private:
   bool eventFilter(QObject *, QEvent *);

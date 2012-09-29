@@ -155,6 +155,13 @@ Window::Window(QWidget *parent)
   setWindowFlags(Qt::X11BypassWindowManagerHint);
 #endif
 
+  QTimer::singleShot(0, this, SLOT(showDocument()));
+}
+
+void Window::showDocument()
+{
+  qDebug() << "Window::showDocument";
+
   //set document if one has been previously open
   QSettings settings(ORGANIZATION, APPLICATION);
   QString filePath;
