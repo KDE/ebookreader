@@ -59,6 +59,9 @@ Window::Window(QWidget *parent)
 #endif
     helpFile_(QCoreApplication::applicationDirPath()+QString(HELP_FILE))
 {
+  prev_.fileName = "";
+  prev_.page = 0;
+
   eTime_.start();//used to measure the elapsed time since the app is started
 
   //main window
@@ -207,7 +210,7 @@ void Window::onSendCommand(const QString &cmd)
   else if(tr("Properties") == cmd) {
     showPropertiesDialog();
   }
-  else if(tr("Help") == cmd) {
+  else if((tr("Help") == cmd) || (tr("Back") == cmd)) {
     showHelp();
   }
   else if(tr("About") == cmd) {
@@ -463,6 +466,7 @@ void Window::openFile(const QString &filePath)
     //load document
     setupDocDisplay(1, document_->scale());
     slidingStacked_->slideInNext();
+    prev_.page = 0;//reset previous document for showHelp
   }
   else {
     closeWaitDialog();
@@ -713,11 +717,31 @@ void Window::updateView(qreal factor)
 void Window::showHelp(bool slideNext)
 {
   qDebug() << "Window::showHelp";
-  if(document_->setDocument(helpFile_)) {
-    setupDocDisplay(1, document_->scale());
+
+  const QString *curFileName = &helpFile_;
+  int curPage = 1;
+
+  if (0 == prev_.page) {
+    //store the current file name and page number
+    prev_.fileName = document_->filePath();
+    prev_.page = document_->currentPage()+1;
+  }
+  else {
+    //restore previous file name and page number
+    curFileName = &(prev_.fileName);
+    curPage = prev_.page;
+    prev_.page = 0;
+  }
+
+  if(document_->setDocument(*curFileName)) {
+    setupDocDisplay(curPage, document_->scale());
     document_->showCurrentPageUpper();
     if(true == slideNext) {
       slidingStacked_->slideInNext();
+    }
+    QObject *pDisp = toolBar_->rootObject();
+    if (NULL != pDisp) {
+      pDisp->setProperty("hlpBck", helpFile_ != *curFileName);
     }
   }
   else {

@@ -128,6 +128,10 @@ private:
   int currentPage_;
   QElapsedTimer eTime_;
   const QString helpFile_;
+  struct {
+    QString fileName;
+    int page;
+  } prev_;//used by showHelp to restore the previous document
 };
 
 #endif
