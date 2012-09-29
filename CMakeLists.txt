@@ -1,4 +1,6 @@
-cmake_minimum_required ( VERSION 2.6 )
+cmake_minimum_required ( VERSION 2.8.6 )
+
+project(tabletReader)
 
 IF ( NOT CMAKE_BUILD_TYPE )
 	set ( CMAKE_BUILD_TYPE Release )
@@ -29,6 +31,7 @@ include_directories (
 	${QT_QTCORE_INCLUDE_DIR} ${QT_QTGUI_INCLUDE_DIR} )
 
 add_subdirectory ( src )
+add_subdirectory ( help )
 IF ( "Debug" STREQUAL "${CMAKE_BUILD_TYPE}" )
   #	add_subdirectory ( test )
   message(STATUS "Add unit tests")
