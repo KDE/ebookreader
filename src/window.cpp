@@ -43,6 +43,7 @@ Window::Window(QWidget *parent)
   : QMainWindow(parent),
     slidingStacked_(NULL),
     document_(NULL),
+    animationFinished_(true),
     toolBar_(NULL),
     fileBrowser_(NULL),
     gotoPage_(NULL),
@@ -226,6 +227,12 @@ void Window::onSendCommand(const QString &cmd)
 void Window::showFileBrowser()
 {
   qDebug() << "Window::showFileBrowser";
+
+  if (false == animationFinished_) {
+    qDebug() << "unfinished animation";
+    return;
+  }
+
   if(NULL == fileBrowser_) {
     if(NULL == (fileBrowser_ = new QDeclarativeView(this))) {
       showWarningMessage(tr("Cannot create fileBrowser object"),
@@ -267,6 +274,7 @@ void Window::showFileBrowser()
 void Window::closeFileBrowser(const QString &doc)
 {
   qDebug() << "Window::closeFileBrowser" << doc;
+
   if((NULL != fileBrowser_) && (true == fileBrowser_->close())) {
     qDebug() << "widget closed";
     fileBrowser_ = NULL;
@@ -313,7 +321,8 @@ void Window::showGotoPage()
 void Window::closeGotoPage(const QString &pageNb)
 {
   qDebug() << "Window::closeGotoPage: " << pageNb;
-  if((NULL != gotoPage_) && (true == gotoPage_->close())) {
+
+  if((NULL != gotoPage_) && (true == gotoPage_->close()) && (true == animationFinished_)) {
     qDebug() << "widget closed";
     gotoPage_ = NULL;
     //set current page
@@ -326,6 +335,7 @@ void Window::closeGotoPage(const QString &pageNb)
         //start timer
         waitTimer_->start();
         //change page
+        animationFinished_ = false;
         gotoPage(newPageNb, numPages);
         if(currentPage < newPageNb) {
           document_->showCurrentPageUpper();
@@ -459,10 +469,17 @@ void Window::closeCommandPopupMenu(const QString &cmd)
 void Window::openFile(const QString &filePath)
 {
   qDebug() << "Window::openFile";
+
+  if (false == animationFinished_) {
+    qDebug() << "unfinished animation";
+    return;
+  }
+
   //open document
   waitTimer_->start();
   if(document_->setDocument(filePath)) {
     //load document
+    animationFinished_ = false;
     setupDocDisplay(1, document_->scale());
     slidingStacked_->slideInNext();
     setHelpIcon(true, false);
@@ -582,16 +599,18 @@ bool Window::eventFilter(QObject *, QEvent *event)
       showPrevPage();
     }
     if(Qt::Key_Home == keyEvent->key()) {
-      if(0 != document_->currentPage()) {
+      if((0 != document_->currentPage()) && (true == animationFinished_)) {
         //not at the beginning of the document
+        animationFinished_ = false;
         gotoPage(1, document_->numPages());
         slidingStacked_->slideInPrev();
       }
     }
     if(Qt::Key_End == keyEvent->key()) {
       int numPages = document_->numPages();
-      if((numPages - 1) != document_->currentPage()) {
+      if(((numPages - 1) != document_->currentPage()) && (true == animationFinished_)) {
         //not at the end of the document
+        animationFinished_ = false;
         gotoPage(numPages, numPages);
         slidingStacked_->slideInNext();
       }
@@ -613,6 +632,7 @@ bool Window::showNextPage()
       //start timer
       waitTimer_->start();
       //load a new page
+      animationFinished_ = false;
       document_->setPage(currentPage_);
       document_->showCurrentPageUpper();
       //update the cache after the page has been displayed
@@ -638,6 +658,7 @@ bool Window::showPrevPage()
       //start timer
       waitTimer_->start();
       //load a new page
+      animationFinished_ = false;
       document_->setPage(currentPage_);
       document_->showCurrentPageLower();
       //update the cache after the page has been displayed
@@ -679,6 +700,7 @@ void Window::setupDocDisplay(unsigned int pageNumber, qreal factor)
 void Window::gotoPage(int pageNb, int numPages)
 {
   qDebug() << "Window::gotoPage: page nb" << pageNb << ", numPages" << numPages;
+
   //set current page
   if(true == document_->invalidatePageCache(pageNb - 1)) {
     document_->setPage(pageNb);
@@ -699,6 +721,11 @@ void Window::updateView(qreal factor)
 {
   qDebug() << "Window::updateView";
 
+  if (false == animationFinished_) {
+    qDebug() << "unfinished animation";
+    return;
+  }
+
   //set zoom factor
   if (document_->scale() == factor) {
     return;//nothing to do
@@ -706,6 +733,7 @@ void Window::updateView(qreal factor)
   setScale(factor);
 
   //update all pages from circular buffer
+  animationFinished_ = false;
   gotoPage(document_->currentPage()+1, document_->numPages());
 
   //update view
@@ -716,6 +744,11 @@ void Window::updateView(qreal factor)
 void Window::showHelp(bool slideNext)
 {
   qDebug() << "Window::showHelp";
+
+  if (false == animationFinished_) {
+    qDebug() << "unfinished animation";
+    return;
+  }
 
   const QString *curFileName = &helpFile_;
   int curPage = 1;
@@ -733,6 +766,7 @@ void Window::showHelp(bool slideNext)
   }
 
   if(document_->setDocument(*curFileName)) {
+    animationFinished_ = false;
     setupDocDisplay(curPage, document_->scale());
     document_->showCurrentPageUpper();
     if(true == slideNext) {
@@ -742,6 +776,7 @@ void Window::showHelp(bool slideNext)
   }
   else {
     qDebug() << "cannot open help file";
+    prev_.page = 0;
     showWarningMessage(tr("Cannot open help file"));
   }
 }

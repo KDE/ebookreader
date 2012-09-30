@@ -41,7 +41,7 @@ signals:
   void pageRequest(int page, qreal factor);
 
 public slots:
-  void onPageChanged(int page, const QPixmap *pix);
+  void onPixmapReady(int page, const QPixmap *pix);
 
 public:
   DocumentWidget(Window *parent = 0);

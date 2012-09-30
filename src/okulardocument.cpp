@@ -158,7 +158,7 @@ void OkularDocument::notifyPageChanged(int page, int flags)
       if (NULL != p) {
         p->deletePixmap(OKULAR_OBSERVER_ID);
       }
-      emit pageChanged(page, pix);
+      emit pixmapReady(page, pix);
     }
   }
   else if(flags & DocumentObserver::Bookmark) {

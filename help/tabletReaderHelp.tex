@@ -73,11 +73,11 @@ The following commands are available:
 Thus, the command popup menu allows to handle an e-book in a so called ``advanced user mode" by providing only the essential commands.
 
 \section{Implementation details}
-TabletReader has been written in C++ using Qt application framework, QML for the graphical user interface and okular core library for handling e-book document formats. Note that okular core library depends on other 3rd party libraries (e.g. poppler library ,libchm, etc.) which need to be available too (see for further details http://okular.kde.org/).
+TabletReader has been written in C++ using Qt application framework, QML for the graphical user interface and okular core library for handling e-book document formats. Note that okular core library depends on other 3rd party libraries (e.g. poppler library, libchm, etc.) which need to be available too (see for further details http://okular.kde.org/).
 
 The application is build around a circular buffer holding three pages which allows to display the e-book pages using the \textrm{SlidingStackedWidget} class. In general, the circular buffer will hold the currently displayed page, the previous page and the next one so that when the user switches between adjacent pages this is done as fast as possible. 
 
-In general, when loading a new document, only the current page is synchronously loaded, while the previous and the next pages are loaded asynchronously in the background. Similarly, when changing between adjacent pages, the page from the circular buffer is displayed and then a new page is loaded asynchronously so that, with respect to the currently displayed page, the previous and the next page are always ready to be displayed in the circular buffer.
+When loading a new document, only the current page is synchronously loaded, while the previous and the next pages are loaded asynchronously in the background. Similarly, when changing between adjacent pages, the page from the circular buffer is displayed and then a new page is loaded asynchronously so that, with respect to the currently displayed page, the previous and the next page are always ready to be displayed in the circular buffer.
 
 The current application settings (current document, current page, zoom factor) are stored using the \textrm{QSettings} class in a portable format between operating systems. However, in order to save the current settings the application must be closed using the \textit{Exit} command. If the device is powered off while using the application the current settings are not saved because there is no way to catch the termination signal. If no settings are available, when the application is started, this help document is displayed.
 

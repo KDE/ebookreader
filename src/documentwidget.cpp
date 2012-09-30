@@ -40,7 +40,7 @@ DocumentWidget::DocumentWidget(Window *parent)
     pageCache_[n]->valid = false;
   }
   connect(this, SIGNAL(pageRequest(int, qreal)), doc_, SLOT(onPageRequest(int, qreal)));
-  connect(doc_, SIGNAL(pageChanged(int, const QPixmap*)), this, SLOT(onPageChanged(int, const QPixmap*)));
+  connect(doc_, SIGNAL(pixmapReady(int, const QPixmap*)), this, SLOT(onPixmapReady(int, const QPixmap*)));
 }
 
 DocumentWidget::~DocumentWidget()
@@ -51,14 +51,14 @@ DocumentWidget::~DocumentWidget()
   delete doc_;
 }
 
-void DocumentWidget::onPageChanged(int page, const QPixmap *pix)
+void DocumentWidget::onPixmapReady(int page, const QPixmap *pix)
 {
-  qDebug() << "DocumentWidget::onPageChanged";
+  qDebug() << "DocumentWidget::onPixmapReady";
 
   pageCache_[page % CACHE_SIZE]->pPixmap = pix;
   pageCache_[page % CACHE_SIZE]->valid = true;
   if (page == evtPage_) {
-    if (true == evtLoop_.isRunning()) {
+    if (true == evtLoop_.isRunning()) {//racing conditions should be managed by the upper layers
       evtLoop_.quit();//used for synchronous page requests
     }
     evtPage_ = -1;
