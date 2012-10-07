@@ -527,7 +527,6 @@ void Window::normalScreen()
       }
     }
   }
-  qDebug() << "width" << width() << ", height" << height();
 }
 
 void Window::increaseScale()
