@@ -39,7 +39,9 @@ int main(int argc, char *argv[])
   }
   app.installTranslator(&translator);
   //main window
-  Window wnd;
-  wnd.show();
+  QDeclarativeView view;
+  qmlRegisterType<Window>("Window", 1, 0, "WindowItem");
+  view.setSource(QUrl("qrc:/qml/qml/window.qml"));
+  view.show();
   return app.exec();
 }

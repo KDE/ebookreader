@@ -19,7 +19,6 @@
 #ifndef WINDOW_H
 #define WINDOW_H
 
-#include <QMainWindow>
 #include <QPoint>
 #include <QElapsedTimer>
 #include <QQueue>
@@ -46,7 +45,7 @@ class QSystemBatteryInfo;
 QTM_END_NAMESPACE
 #endif
 
-class Window : public QMainWindow
+class Window : public QDeclarativeItem
 {
   Q_OBJECT
 
@@ -107,8 +106,8 @@ private:
   }
   QString elapsedTime();
   void saveSettings();
-  void setHelpIcon(bool flag, bool flipFlop = true) {
-    if (true == flipFlop || (0 != prev_.page)) {
+  void setHelpIcon(bool /*flag*/, bool /*flipFlop = true*/) {
+    /*if (true == flipFlop || (0 != prev_.page)) {
       QObject *pDisp = toolBar_->rootObject();
       if (NULL != pDisp) {
         pDisp->setProperty("hlpBck", flag);
@@ -116,23 +115,16 @@ private:
       if (false == flipFlop) {
         prev_.page = 0;
       }
-    }
+    }*/
   }
 
+  QGraphicsProxyWidget *proxy_;
   SlidingStackedWidget *slidingStacked_;
   DocumentWidget *document_;
   QVector<qreal> scaleFactors_;
   QPoint startPoint_;
   QPoint endPoint_;
   bool animationFinished_;
-  //TODO: one declarative view
-  QDeclarativeView *toolBar_;
-  QDeclarativeView *fileBrowser_;
-  QDeclarativeView *gotoPage_;
-  QDeclarativeView *zoomPage_;
-  QDeclarativeView *commandPopupMenu_;
-  QDeclarativeView *aboutDialog_;
-  QDeclarativeView *waitDialog_;
   QElapsedTimer pressTimer_;
   Flickable *flickable_;
   FileBrowserModel* fileBrowserModel_;

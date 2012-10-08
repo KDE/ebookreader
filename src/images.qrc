@@ -23,6 +23,7 @@
         <file>icons/Document-icon.png</file>
     </qresource>
     <qresource prefix="/qml">
+        <file>qml/window.qml</file>
         <file>qml/gotopage.qml</file>
         <file>qml/Core/Button.qml</file>
         <file>qml/Core/calculator.js</file>
