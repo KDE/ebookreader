@@ -60,6 +60,10 @@ Window::Window(QWidget* /*parent*/)
 
   //main window
   QWidget *centralWidget = new QWidget();//TODO: delete this on exit
+  centralWidget->resize(MIN_SCREEN_WIDTH, MIN_SCREEN_HEIGHT);
+  proxy_ = new QGraphicsProxyWidget(this);
+  proxy_->setWidget(centralWidget);
+  proxy_->setPos(-MIN_SCREEN_WIDTH/2, -MIN_SCREEN_HEIGHT/2);
   //setCentralWidget(centralWidget);
   //setWindowTitle(tr(APPLICATION));
   //setStyleSheet("background-color: black");
@@ -82,7 +86,7 @@ Window::Window(QWidget* /*parent*/)
   document_ = new DocumentWidget();//TODO: delete all three objects
 
   //create sliding animation
-  slidingStacked_ = new SlidingStackedWidget(NULL);
+  slidingStacked_ = new SlidingStackedWidget(centralWidget);
 
   //create flickable object
   flickable_ = new Flickable();
@@ -142,11 +146,6 @@ Window::Window(QWidget* /*parent*/)
     }
     gridLayout->addWidget(toolBar_, 0, 0, 1, 1);
   }*/
-
-  //add sliding stacked widget
-  proxy_ = new QGraphicsProxyWidget(this);
-  proxy_->setWidget(slidingStacked_);
-  proxy_->setPos(0, 0);
 
 #ifndef NO_QTMOBILITY
   //battery status
