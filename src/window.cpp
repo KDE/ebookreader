@@ -59,13 +59,14 @@ Window::Window(QWidget* /*parent*/)
   eTime_.start();//used to measure the elapsed time since the app is started
 
   //main window
-  QWidget *centralWidget = new QWidget();//TODO: delete this on exit
-  centralWidget->resize(MIN_SCREEN_WIDTH, MIN_SCREEN_HEIGHT);
+  QWidget *centralWidget = new QWidget();
+  QGridLayout *gridLayout = new QGridLayout(centralWidget);
+
   proxy_ = new QGraphicsProxyWidget(this);
-  proxy_->setWidget(centralWidget);
   proxy_->setPos(-MIN_SCREEN_WIDTH/2, -MIN_SCREEN_HEIGHT/2);
   //setCentralWidget(centralWidget);
   proxy_->setWindowTitle(tr(APPLICATION));
+  proxy_->setWidget(centralWidget);
 
   //actions for zoom in/out
   //TODO: add actions from QML
@@ -96,7 +97,7 @@ Window::Window(QWidget* /*parent*/)
   register int n = 0;
   for(n = 0; n < DocumentWidget::CACHE_SIZE; ++n) {
     //scroll areas (one for each page)
-    scroll = new QScrollArea(centralWidget);
+    scroll = new QScrollArea();
     scroll->setFrameShape(QFrame::NoFrame);
     scroll->setWidgetResizable(true);
     scroll->setAlignment(Qt::AlignCenter);
@@ -114,6 +115,7 @@ Window::Window(QWidget* /*parent*/)
   slidingStacked_->setVerticalMode(false);
   slidingStacked_->setStyleSheet("background:black");
   slidingStacked_->setAttribute(Qt::WA_DeleteOnClose);
+  gridLayout->addWidget(slidingStacked_, 1, 0, 1, 1);
 
   connect(slidingStacked_, SIGNAL(animationFinished()),
           this, SLOT(onAnimationFinished()));
