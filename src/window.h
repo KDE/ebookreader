@@ -24,7 +24,10 @@
 #include <QElapsedTimer>
 #include <QQueue>
 #include <QtDeclarative>
-#ifndef NO_MOBILITY
+
+#include "config.h"
+
+#ifndef NO_QTMOBILITY
 #include <qmobilityglobal.h>
 #endif
 #include "documentwidget.h"
@@ -37,7 +40,7 @@ class FileBrowserModel;
 class QDeclarativeView;
 class Flickable;
 class QTimer;
-#ifndef NO_MOBILITY
+#ifndef NO_QTMOBILITY
 QTM_BEGIN_NAMESPACE
 class QSystemBatteryInfo;
 QTM_END_NAMESPACE
@@ -134,7 +137,7 @@ private:
   Flickable *flickable_;
   FileBrowserModel* fileBrowserModel_;
   QTimer *waitTimer_;
-#ifndef NO_MOBILITY
+#ifndef NO_QTMOBILITY
   QTM_NAMESPACE::QSystemBatteryInfo *batteryInfo_;
 #endif
   int currentPage_;
