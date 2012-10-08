@@ -65,8 +65,7 @@ Window::Window(QWidget* /*parent*/)
   proxy_->setWidget(centralWidget);
   proxy_->setPos(-MIN_SCREEN_WIDTH/2, -MIN_SCREEN_HEIGHT/2);
   //setCentralWidget(centralWidget);
-  //setWindowTitle(tr(APPLICATION));
-  //setStyleSheet("background-color: black");
+  proxy_->setWindowTitle(tr(APPLICATION));
 
   //actions for zoom in/out
   //TODO: add actions from QML
@@ -83,7 +82,7 @@ Window::Window(QWidget* /*parent*/)
                 << 1.25 << 1.5 << 2. << 3. << 4.;
 
   //create main document
-  document_ = new DocumentWidget();//TODO: delete all three objects
+  document_ = new DocumentWidget(this);//TODO: delete all three objects
 
   //create sliding animation
   slidingStacked_ = new SlidingStackedWidget(centralWidget);
@@ -128,7 +127,7 @@ Window::Window(QWidget* /*parent*/)
   waitTimer_->setInterval(WAIT_TIMER_INTERVAL_MS);
   connect(waitTimer_, SIGNAL(timeout()), this, SLOT(showWaitDialog()));
 
-  //normalScreen();
+  normalScreen();
 
   //main toolbar
   /*if(NULL != (toolBar_ = new QDeclarativeView(this))) {
@@ -508,7 +507,7 @@ void Window::normalScreen()
     int height = pDesktop->height();
     if((FULL_SCREEN_WIDTH >= width) || (FULL_SCREEN_HEIGHT >= height)) {
       qDebug() << "using full screen mode with toolbar";
-      //setFixedSize(width, height);
+      //resize(width, height);
       //showFullScreen();
       if(true == hasTouchScreen()) {
         QApplication::setOverrideCursor(QCursor(Qt::BlankCursor));
@@ -517,8 +516,9 @@ void Window::normalScreen()
     else {
       qDebug() << "using normal mode";
       //showNormal();
-      //resize((MIN_SCREEN_WIDTH < width) ? MIN_SCREEN_WIDTH : width,
-      //       (MIN_SCREEN_HEIGHT < height) ? MIN_SCREEN_HEIGHT : height);
+      width = (MIN_SCREEN_WIDTH < width) ? MIN_SCREEN_WIDTH : width;
+      height = (MIN_SCREEN_HEIGHT < height) ? MIN_SCREEN_HEIGHT : height;
+      //resize(width, height);
       if(true == hasTouchScreen()) {
         QApplication::restoreOverrideCursor();
       }

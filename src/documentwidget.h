@@ -35,8 +35,6 @@ class DocumentWidget : public QObject
 {
   Q_OBJECT
 
-  friend class Worker;
-
 signals:
   void pageRequest(int page, qreal factor);
 
