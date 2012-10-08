@@ -3,8 +3,8 @@ import Window 1.0
  
  
 Rectangle {
-        width: 300
-        height: 300
+        width: 800
+        height: 600
         color: "black"
         WindowItem {
                 anchors.centerIn: parent
