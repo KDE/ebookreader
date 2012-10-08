@@ -27,14 +27,16 @@ else ()
 endif()
 
 #generate an automatic build/release number if available
-#release numbers are generated from latest tag of the form [a-zA-Z_]X.Y
+#release numbers are generated from latest tag of the form [a-zA-Z_.]M.m
 if( EXISTS "${CMAKE_SOURCE_DIR}/.git" )
   execute_process(COMMAND git describe --abbrev=4 HEAD
     COMMAND sed -e "s/-/./g"
     OUTPUT_VARIABLE TR_VERSION
     OUTPUT_STRIP_TRAILING_WHITESPACE)
   # remove leading alphanumeric characters
-  string(REGEX REPLACE "^[a-zA-Z_]+(.*)" "\\1" TR_VERSION ${TR_VERSION})
+  string(REGEX REPLACE "^[a-zA-Z_.]+(.*)" "\\1" TR_VERSION ${TR_VERSION})
+else()
+  message (WARNING "Cannot generate build/release number. Please set manually.")
 endif()
 
 CONFIGURE_FILE ( ${CMAKE_SOURCE_DIR}/src/config.h.in ${CMAKE_BINARY_DIR}/src/config.h )
