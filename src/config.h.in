@@ -1,0 +1,14 @@
+#ifndef _CONFIG_H_
+#define _CONFIG_H_
+
+//use to disable the use of functions from Qt Mobility
+#cmakedefine NO_QTMOBILITY
+
+//compile application as desktop application
+#cmakedefine DESKTOP_APP
+
+//version number
+#define TR_VERSION_MAJOR 2
+#define TR_VERSION_MINOR 1
+
+#endif

@@ -14,16 +14,17 @@ find_package ( LibChm REQUIRED )
 find_package ( QtMobility 1.2.0 )
 
 if (NOT QT_MOBILITY_FOUND)
-  set (CMAKE_CXX_FLAGS "-DNO_MOBILITY ${CMAKE_CXX_FLAGS}")
+  set (NO_MOBILITY)
   message(WARNING "Cannot find QtMobility.")
 endif()
 set ( CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -DQT_NO_DEBUG_OUTPUT" )
 set ( CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -DQT_DEBUG_ENABLE_LOG" )
 set ( MSG "Build type: ${CMAKE_BUILD_TYPE}" )
 if (DESKTOP_APP)
-  set ( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DDESKTOP_APP" )
   set ( MSG "${MSG} for desktop" )
 endif()
+
+CONFIGURE_FILE ( ${CMAKE_SOURCE_DIR}/src/config.h.in ${CMAKE_BINARY_DIR}/src/config.h )
 
 include ( ${QT_USE_FILE} )
 include_directories (

@@ -18,7 +18,7 @@
 
 #include <QtGui>
 #include <QScrollArea>
-#ifndef NO_MOBILITY
+#ifndef NO_QTMOBILITY
 #include <QtSystemInfo/QSystemDeviceInfo>
 #include <QtSystemInfo/QSystemBatteryInfo>
 #endif
@@ -35,7 +35,7 @@
 #define KEY_ZOOM_LEVEL "current_zoom_level"
 #define HELP_FILE "/../share/doc/tabletReaderHelp.pdf"
 
-#ifndef NO_MOBILITY
+#ifndef NO_QTMOBILITY
 QTM_USE_NAMESPACE
 #endif
 
@@ -54,7 +54,7 @@ Window::Window(QWidget *parent)
     flickable_(NULL),
     fileBrowserModel_(new FileBrowserModel(this)),
     waitTimer_(NULL),
-#ifndef NO_MOBILITY
+#ifndef NO_QTMOBILITY
     batteryInfo_(NULL),
 #endif
     helpFile_(QCoreApplication::applicationDirPath()+QString(HELP_FILE))
@@ -150,7 +150,7 @@ Window::Window(QWidget *parent)
     gridLayout->addWidget(toolBar_, 0, 0, 1, 1);
   }
 
-#ifndef NO_MOBILITY
+#ifndef NO_QTMOBILITY
   //battery status
   batteryInfo_ = new QSystemBatteryInfo(this);
 #endif
@@ -797,7 +797,7 @@ void Window::showAboutDialog()
       pAbout->setProperty("width", width());
       QObject *pAboutDlg = pAbout->findChild<QObject*>("aboutDialog");
       if(NULL != pAboutDlg) {
-        pAboutDlg->setProperty("text", tr("<H2>tabletReader v2.1</H2>"
+        pAboutDlg->setProperty("text", tr("<H2>tabletReader v%1.%2</H2>"
                                           "<H3>e-book reader for touch-enabled devices</H3>"
                                           "<H4>Supported formats: all Okular supported formats.</H4>"
                                           "<H4>(e.g. PDF, CHM, DJVU, EPUB, etc)</H4><br>"
@@ -806,7 +806,8 @@ void Window::showAboutDialog()
                                           "This program is distributed in the hope that it will be useful, "
                                           "but WITHOUT ANY WARRANTY; without even the implied warranty of "
                                           "MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the "
-                                          "GNU General Public License for more details.<br><br>"));
+                                          "GNU General Public License for more details.<br><br>")\
+            .arg(TR_VERSION_MAJOR).arg(TR_VERSION_MINOR));
       }
       else {
         qDebug() << "cannot get aboutDialog object";
@@ -956,7 +957,7 @@ void Window::showPropertiesDialog()
 
 bool Window::hasTouchScreen()
 {
-#ifndef NO_MOBILITY
+#ifndef NO_QTMOBILITY
   QSystemDeviceInfo systemInfo;
   QSystemDeviceInfo::InputMethodFlags flags = systemInfo.inputMethodType();
   return ((flags & (QSystemDeviceInfo::SingleTouch |
@@ -969,7 +970,7 @@ bool Window::hasTouchScreen()
 QString Window::batteryStatus()
 {
   QString msg("N/A");
-#ifndef NO_MOBILITY
+#ifndef NO_QTMOBILITY
   switch(batteryInfo_->chargerType()) {
   case QSystemBatteryInfo::NoCharger:
     msg = tr("no charger");
