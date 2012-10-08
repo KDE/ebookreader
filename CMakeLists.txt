@@ -19,9 +19,22 @@ if (NOT QT_MOBILITY_FOUND)
 endif()
 set ( CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -DQT_NO_DEBUG_OUTPUT" )
 set ( CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -DQT_DEBUG_ENABLE_LOG" )
-set ( MSG "Build type: ${CMAKE_BUILD_TYPE}" )
+set ( MSG ${CMAKE_BUILD_TYPE} )
 if (DESKTOP_APP)
   set ( MSG "${MSG} for desktop" )
+else ()
+  set ( MSG "${MSG} for tablet" )
+endif()
+
+#generate an automatic build/release number if available
+#release numbers are generated from latest tag of the form [a-zA-Z_]X.Y
+if( EXISTS "${CMAKE_SOURCE_DIR}/.git" )
+  execute_process(COMMAND git describe --abbrev=4 HEAD
+    COMMAND sed -e "s/-/./g"
+    OUTPUT_VARIABLE TR_VERSION
+    OUTPUT_STRIP_TRAILING_WHITESPACE)
+  # remove leading alphanumeric characters
+  string(REGEX REPLACE "^[a-zA-Z_]+(.*)" "\\1" TR_VERSION ${TR_VERSION})
 endif()
 
 CONFIGURE_FILE ( ${CMAKE_SOURCE_DIR}/src/config.h.in ${CMAKE_BINARY_DIR}/src/config.h )
@@ -38,4 +51,7 @@ IF ( "Debug" STREQUAL "${CMAKE_BUILD_TYPE}" )
   message(STATUS "Add unit tests")
 ENDIF()
 
-message (STATUS ${MSG})
+message (STATUS "Build type: ${MSG}")
+if (TR_VERSION)
+  message (STATUS "Version: ${TR_VERSION}")
+endif()

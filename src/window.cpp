@@ -797,7 +797,7 @@ void Window::showAboutDialog()
       pAbout->setProperty("width", width());
       QObject *pAboutDlg = pAbout->findChild<QObject*>("aboutDialog");
       if(NULL != pAboutDlg) {
-        pAboutDlg->setProperty("text", tr("<H2>tabletReader v%1.%2</H2>"
+        pAboutDlg->setProperty("text", tr("<H2>tabletReader v%1</H2>"
                                           "<H3>e-book reader for touch-enabled devices</H3>"
                                           "<H4>Supported formats: all Okular supported formats.</H4>"
                                           "<H4>(e.g. PDF, CHM, DJVU, EPUB, etc)</H4><br>"
@@ -806,8 +806,7 @@ void Window::showAboutDialog()
                                           "This program is distributed in the hope that it will be useful, "
                                           "but WITHOUT ANY WARRANTY; without even the implied warranty of "
                                           "MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the "
-                                          "GNU General Public License for more details.<br><br>")\
-            .arg(TR_VERSION_MAJOR).arg(TR_VERSION_MINOR));
+                                          "GNU General Public License for more details.<br><br>").arg(TR_VERSION));
       }
       else {
         qDebug() << "cannot get aboutDialog object";
