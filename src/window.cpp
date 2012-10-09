@@ -58,16 +58,6 @@ Window::Window(QWidget* /*parent*/)
 
   eTime_.start();//used to measure the elapsed time since the app is started
 
-  //main window
-  QWidget *centralWidget = new QWidget();
-  QGridLayout *gridLayout = new QGridLayout(centralWidget);
-
-  proxy_ = new QGraphicsProxyWidget(this);
-  proxy_->setPos(-MIN_SCREEN_WIDTH/2, -MIN_SCREEN_HEIGHT/2);
-  //setCentralWidget(centralWidget);
-  proxy_->setWindowTitle(tr(APPLICATION));
-  proxy_->setWidget(centralWidget);
-
   //actions for zoom in/out
   //TODO: add actions from QML
   /*QAction *increaseScaleAction = new QAction(this);
@@ -86,10 +76,11 @@ Window::Window(QWidget* /*parent*/)
   document_ = new DocumentWidget(this);//TODO: delete all three objects
 
   //create sliding animation
+  QWidget *centralWidget = new QWidget();
   slidingStacked_ = new SlidingStackedWidget(centralWidget);
 
   //create flickable object
-  flickable_ = new Flickable();
+  flickable_ = new Flickable(this);
 
   //init document pages and the sliding animation
   QScrollArea *scroll = NULL;
@@ -97,7 +88,7 @@ Window::Window(QWidget* /*parent*/)
   register int n = 0;
   for(n = 0; n < DocumentWidget::CACHE_SIZE; ++n) {
     //scroll areas (one for each page)
-    scroll = new QScrollArea();
+    scroll = new QScrollArea(centralWidget);
     scroll->setFrameShape(QFrame::NoFrame);
     scroll->setWidgetResizable(true);
     scroll->setAlignment(Qt::AlignCenter);
@@ -115,7 +106,17 @@ Window::Window(QWidget* /*parent*/)
   slidingStacked_->setVerticalMode(false);
   slidingStacked_->setStyleSheet("background:black");
   slidingStacked_->setAttribute(Qt::WA_DeleteOnClose);
+
+  //put widget onto layout
+  QGridLayout *gridLayout = new QGridLayout();
   gridLayout->addWidget(slidingStacked_, 1, 0, 1, 1);
+
+  //proxy
+  proxy_ = new QGraphicsProxyWidget(this);
+  proxy_->setPos(-MIN_SCREEN_WIDTH/2, -MIN_SCREEN_HEIGHT/2);
+  //setCentralWidget(centralWidget);
+  proxy_->setWindowTitle(tr(APPLICATION));
+  proxy_->setWidget(centralWidget);
 
   connect(slidingStacked_, SIGNAL(animationFinished()),
           this, SLOT(onAnimationFinished()));
