@@ -107,7 +107,9 @@ void OkularDocument::adjustSize(int &width, int &height)
 const QPixmap* OkularDocument::setWhiteBackground(const QPixmap *pixmap)
 {
   QPixmap *out = NULL;
-  if(mimeType_->is("application/epub+zip")) {
+  if(mimeType_->is("application/epub+zip") ||
+      mimeType_->is("application/vnd.oasis.opendocument.text")) {
+    //TODO: check if this can be done from okular core library
     out = new QPixmap(pixmap->width(), pixmap->height());
     if(NULL != out) {
       out->fill(Qt::white);
