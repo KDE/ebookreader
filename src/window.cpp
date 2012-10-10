@@ -71,14 +71,6 @@ Window::Window(QWidget *parent)
   setWindowTitle(tr(APPLICATION));
   setStyleSheet("background-color: black");
 
-  //actions for zoom in/out
-  QAction *increaseScaleAction = new QAction(this);
-  increaseScaleAction->setShortcut(tr("Ctrl++"));
-  QAction *decreaseScaleAction = new QAction(this);
-  decreaseScaleAction->setShortcut(tr("Ctrl+-"));
-  addAction(increaseScaleAction);
-  addAction(decreaseScaleAction);
-
   //zoom scale factors
   //-1 used for fit width scaling factor
   scaleFactors_ << -1 << 0.25 << 0.5 << 0.75 << 1.
@@ -121,15 +113,13 @@ Window::Window(QWidget *parent)
 
   connect(slidingStacked_, SIGNAL(animationFinished()),
           this, SLOT(onAnimationFinished()));
-  connect(increaseScaleAction, SIGNAL(triggered()), this, SLOT(increaseScale()));
-  connect(decreaseScaleAction, SIGNAL(triggered()), this, SLOT(decreaseScale()));
 
   statusBar()->hide();
 
   //wait timer initialisation (used to handle long actions: document openings, page changes)
   waitTimer_ = new QTimer(this);
   waitTimer_->setInterval(WAIT_TIMER_INTERVAL_MS);
-  connect(waitTimer_, SIGNAL(timeout()), this, SLOT(showWaitDialog()));
+  connect(waitTimer_, SIGNAL(timeout()), this, SLOT(showWaitPage()));
 
   normalScreen();
 
@@ -149,6 +139,8 @@ Window::Window(QWidget *parent)
     }
     gridLayout->addWidget(toolBar_, 0, 0, 1, 1);
   }
+
+  addShortcutKeys();
 
 #ifndef NO_QTMOBILITY
   //battery status
@@ -208,13 +200,13 @@ void Window::onSendCommand(const QString &cmd)
     showZoomPage();
   }
   else if(tr("Properties") == cmd) {
-    showPropertiesDialog();
+    showPropertiesPage();
   }
   else if((tr("Help") == cmd) || (tr("Back") == cmd)) {
     showHelp();
   }
   else if(tr("About") == cmd) {
-    showAboutDialog();
+    showAboutPage();
   }
   else if(tr("Exit") == cmd) {
     close();
@@ -450,7 +442,7 @@ void Window::closeCommandPopupMenu(const QString &cmd)
       showGotoPage();
     }
     else if(tr("Properties") == cmd) {
-      showPropertiesDialog();
+      showPropertiesPage();
     }
     else if(tr("Zoom") == cmd) {
       showZoomPage();
@@ -486,7 +478,7 @@ void Window::openFile(const QString &filePath)
     setHelpIcon(true, false);
   }
   else {
-    closeWaitDialog();
+    closeWaitPage();
     showWarningMessage(QString(APPLICATION " - ") + tr("Failed to open file"),
                        tr("%1 cannot be opened").arg(filePath));
   }
@@ -495,6 +487,7 @@ void Window::openFile(const QString &filePath)
 void Window::fullScreen()
 {
   qDebug() << "Window::fullScreen";
+
   toolBar_->hide();
   showFullScreen();
   if(true == hasTouchScreen()) {
@@ -506,6 +499,9 @@ void Window::normalScreen()
 {
   qDebug() << "Window::normalScreen";
 
+  if (NULL != toolBar_) {
+    toolBar_->show();
+  }
   QDesktopWidget *pDesktop = QApplication::desktop();
   if(NULL != pDesktop) {
     int width = pDesktop->width();
@@ -528,16 +524,6 @@ void Window::normalScreen()
       }
     }
   }
-}
-
-void Window::increaseScale()
-{
-  qDebug() << "Window::increaseScale";
-}
-
-void Window::decreaseScale()
-{
-  qDebug() << "Window::decreaseScale";
 }
 
 bool Window::eventFilter(QObject *, QEvent *event)
@@ -589,31 +575,58 @@ bool Window::eventFilter(QObject *, QEvent *event)
   else if(QEvent::KeyPress == event->type()) {
     // * handle key events
     QKeyEvent *keyEvent = static_cast<QKeyEvent*>(event);
-    if(Qt::Key_Escape == keyEvent->key() && isFullScreen()) {
-      normalScreen();
-    }
-    if(Qt::Key_Right == keyEvent->key()) {
-      showNextPage();
-    }
-    if(Qt::Key_Left == keyEvent->key()) {
-      showPrevPage();
-    }
-    if(Qt::Key_Home == keyEvent->key()) {
-      if((0 != document_->currentPage()) && (true == animationFinished_)) {
-        //not at the beginning of the document
-        animationFinished_ = false;
-        gotoPage(1, document_->numPages());
-        slidingStacked_->slideInPrev();
-      }
-    }
-    if(Qt::Key_End == keyEvent->key()) {
-      int numPages = document_->numPages();
-      if(((numPages - 1) != document_->currentPage()) && (true == animationFinished_)) {
-        //not at the end of the document
-        animationFinished_ = false;
-        gotoPage(numPages, numPages);
-        slidingStacked_->slideInNext();
-      }
+    switch(keyEvent->key()) {
+      case Qt::Key_Escape:
+        if (NULL != fileBrowser_) {
+          fileBrowser_->close();
+          fileBrowser_ = NULL;
+        }
+        else if (NULL != gotoPage_) {
+          gotoPage_->close();
+          gotoPage_ = NULL;
+        }
+        else if (NULL != zoomPage_) {
+          zoomPage_->close();
+          zoomPage_ = NULL;
+        }
+        else if (NULL != commandPopupMenu_) {
+          commandPopupMenu_->close();
+          commandPopupMenu_ = NULL;
+        }
+        else if (NULL != aboutDialog_) {
+          aboutDialog_->close();
+          aboutDialog_ = NULL;
+        }
+        else if (isFullScreen()) {
+          //all other utilisations of ESC key should be handled by the above code
+          normalScreen();
+        }
+        break;
+      case Qt::Key_Right:
+        showNextPage();
+        break;
+      case Qt::Key_Left:
+        showPrevPage();
+        break;
+      case Qt::Key_Home:
+        if((0 != document_->currentPage()) && (true == animationFinished_)) {
+          //not at the beginning of the document
+          animationFinished_ = false;
+          gotoPage(1, document_->numPages());
+          slidingStacked_->slideInPrev();
+        }
+        break;
+      case Qt::Key_End:
+        {
+          int numPages = document_->numPages();
+          if(((numPages - 1) != document_->currentPage()) && (true == animationFinished_)) {
+            //not at the end of the document
+            animationFinished_ = false;
+            gotoPage(numPages, numPages);
+            slidingStacked_->slideInNext();
+          }
+        }
+        break;
     }
   }
 
@@ -684,7 +697,7 @@ void Window::closeEvent(QCloseEvent *evt)
 void Window::onAnimationFinished()
 {
   qDebug() << "Window::onAnimationFinished";
-  closeWaitDialog();
+  closeWaitPage();
   animationFinished_ = true;//must be the last statement
 }
 
@@ -781,9 +794,9 @@ void Window::showHelp(bool slideNext)
   }
 }
 
-void Window::showAboutDialog()
+void Window::showAboutPage()
 {
-  qDebug() << "Window::showAboutDialog";
+  qDebug() << "Window::showAboutPage";
   if(NULL == aboutDialog_) {
     aboutDialog_ = new QDeclarativeView(this);
     aboutDialog_->setSource(QUrl("qrc:/qml/qml/aboutdialog.qml"));
@@ -791,7 +804,7 @@ void Window::showAboutDialog()
     aboutDialog_->setAttribute(Qt::WA_TranslucentBackground);
     aboutDialog_->setAttribute(Qt::WA_DeleteOnClose);
     aboutDialog_->setWindowFlags(Qt::FramelessWindowHint);
-    connect(aboutDialog_->engine(), SIGNAL(quit()), this, SLOT(closeAboutDialog()));
+    connect(aboutDialog_->engine(), SIGNAL(quit()), this, SLOT(closeAboutPage()));
     QObject *pAbout = aboutDialog_->rootObject();
     if(NULL != pAbout) {
       pAbout->setProperty("height", height());
@@ -822,9 +835,9 @@ void Window::showAboutDialog()
   }
 }
 
-void Window::closeAboutDialog()
+void Window::closeAboutPage()
 {
-  qDebug() << "Window::closeAboutDialog";
+  qDebug() << "Window::closeAboutPage";
   if((NULL != aboutDialog_) && (true == aboutDialog_->close())) {
     qDebug() << "widget closed";
     aboutDialog_ = NULL;
@@ -841,7 +854,7 @@ void Window::showWarningMessage(const QString &title, const QString &explanation
     aboutDialog_->setAttribute(Qt::WA_TranslucentBackground);
     aboutDialog_->setAttribute(Qt::WA_DeleteOnClose);
     aboutDialog_->setWindowFlags(Qt::FramelessWindowHint);
-    connect(aboutDialog_->engine(), SIGNAL(quit()), this, SLOT(closeAboutDialog()));
+    connect(aboutDialog_->engine(), SIGNAL(quit()), this, SLOT(closeAboutPage()));
     QObject *pRoot = aboutDialog_->rootObject();
     if(NULL != pRoot) {
       if (false  == pRoot->setProperty("height", height())) {
@@ -868,9 +881,9 @@ void Window::showWarningMessage(const QString &title, const QString &explanation
   }
 }
 
-void Window::showWaitDialog()
+void Window::showWaitPage()
 {
-  qDebug() << "Window::showWaitDialog";
+  qDebug() << "Window::showWaitPage";
   waitTimer_->stop();
   if(NULL == waitDialog_) {
     waitDialog_ = new QDeclarativeView(this);
@@ -893,9 +906,9 @@ void Window::showWaitDialog()
   }
 }
 
-void Window::closeWaitDialog()
+void Window::closeWaitPage()
 {
-  qDebug() << "Window::closeWaitDialog";
+  qDebug() << "Window::closeWaitPage";
   waitTimer_->stop();
   if((NULL != waitDialog_) && (true == waitDialog_->close())) {
     qDebug() << "widget closed";
@@ -914,9 +927,9 @@ void Window::onAppUpAuthCheckError()
   //connect(aboutDialog_->engine(), SIGNAL(quit()), this, SLOT(close()));
 }
 
-void Window::showPropertiesDialog()
+void Window::showPropertiesPage()
 {
-  qDebug() << "Window::showPropertiesDialog";
+  qDebug() << "Window::showPropertiesPage";
   if(NULL == aboutDialog_) {
     aboutDialog_ = new QDeclarativeView(this);
     aboutDialog_->setSource(QUrl("qrc:/qml/qml/aboutdialog.qml"));
@@ -924,7 +937,7 @@ void Window::showPropertiesDialog()
     aboutDialog_->setAttribute(Qt::WA_TranslucentBackground);
     aboutDialog_->setAttribute(Qt::WA_DeleteOnClose);
     aboutDialog_->setWindowFlags(Qt::FramelessWindowHint);
-    connect(aboutDialog_->engine(), SIGNAL(quit()), this, SLOT(closeAboutDialog()));
+    connect(aboutDialog_->engine(), SIGNAL(quit()), this, SLOT(closeAboutPage()));
     QObject *pAbout = aboutDialog_->rootObject();
     if(NULL != pAbout) {
       pAbout->setProperty("height", height());
@@ -1052,3 +1065,68 @@ void Window::saveSettings()
   }
 }
 
+void Window::addShortcutKeys()
+{
+  //open file
+  QAction *openAction = new QAction(this);
+  openAction->setShortcut(Qt::CTRL+Qt::Key_O);
+  addAction(openAction);
+  connect(openAction, SIGNAL(triggered()), this, SLOT(showFileBrowser()));
+
+  //full screen
+  QAction *fullScreenAction = new QAction(this);
+  fullScreenAction->setShortcut(Qt::CTRL+Qt::Key_U);
+  addAction(fullScreenAction);
+  connect(fullScreenAction, SIGNAL(triggered()), this, SLOT(fullScreen()));
+
+  //go to page
+  QAction *gotoAction = new QAction(this);
+  gotoAction->setShortcut(Qt::CTRL+Qt::Key_G);
+  addAction(gotoAction);
+  connect(gotoAction, SIGNAL(triggered()), this, SLOT(showGotoPage()));
+
+  //zoom
+  QAction *zoomAction = new QAction(this);
+  zoomAction->setShortcut(Qt::CTRL+Qt::Key_Z);
+  addAction(zoomAction);
+  connect(zoomAction, SIGNAL(triggered()), this, SLOT(showZoomPage()));
+
+  //properties
+  QAction *propertiesAction = new QAction(this);
+  propertiesAction->setShortcut(Qt::CTRL+Qt::Key_P);
+  addAction(propertiesAction);
+  connect(propertiesAction, SIGNAL(triggered()), this, SLOT(showPropertiesPage()));
+
+  //help
+  QAction *helpAction = new QAction(this);
+  helpAction->setShortcut(Qt::Key_F1);
+  addAction(helpAction);
+  connect(helpAction, SIGNAL(triggered()), this, SLOT(showHelp()));
+
+  //back
+  QAction *backAction = new QAction(this);
+  backAction->setShortcut(Qt::ALT+Qt::Key_Left);
+  addAction(backAction);
+  connect(backAction, SIGNAL(triggered()), this, SLOT(onBack()));
+
+  //about
+  QAction *aboutAction = new QAction(this);
+  aboutAction->setShortcut(Qt::CTRL+Qt::Key_A);
+  addAction(aboutAction);
+  connect(aboutAction, SIGNAL(triggered()), this, SLOT(showAboutPage()));
+
+  //exit
+  QAction *exitAction = new QAction(this);
+  exitAction->setShortcut(Qt::CTRL+Qt::Key_W);
+  addAction(exitAction);
+  connect(exitAction, SIGNAL(triggered()), this, SLOT(close()));
+}
+
+void Window::onBack()
+{
+  qDebug() << "onBack";
+
+  if (0 != prev_.page) {
+    showHelp();
+  }
+}

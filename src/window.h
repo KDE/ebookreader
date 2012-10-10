@@ -77,19 +77,18 @@ private slots:
   void openFile(const QString &filePath);
   void fullScreen();
   void normalScreen();
-  void increaseScale();
-  void decreaseScale();
   void onAnimationFinished();
   void onSendCommand(const QString &cmd);
   void showHelp(bool slideNext = true);
-  void showAboutDialog();
-  void closeAboutDialog();
+  void showAboutPage();
+  void closeAboutPage();
   void showWarningMessage(const QString &title, const QString &explanation = "");
-  void showWaitDialog();
-  void closeWaitDialog();
+  void showWaitPage();
+  void closeWaitPage();
   void onAppUpAuthCheckError();
-  void showPropertiesDialog();
+  void showPropertiesPage();
   void showDocument();
+  void onBack();
 
 private:
   bool eventFilter(QObject *, QEvent *);
@@ -118,6 +117,7 @@ private:
       }
     }
   }
+  void addShortcutKeys();
 
   SlidingStackedWidget *slidingStacked_;
   DocumentWidget *document_;
