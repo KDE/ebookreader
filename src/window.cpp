@@ -581,24 +581,23 @@ bool Window::eventFilter(QObject *, QEvent *event)
           fileBrowser_->close();
           fileBrowser_ = NULL;
         }
-        else if (NULL != gotoPage_) {
+        if (NULL != gotoPage_) {
           gotoPage_->close();
           gotoPage_ = NULL;
         }
-        else if (NULL != zoomPage_) {
+        if (NULL != zoomPage_) {
           zoomPage_->close();
           zoomPage_ = NULL;
         }
-        else if (NULL != commandPopupMenu_) {
+        if (NULL != commandPopupMenu_) {
           commandPopupMenu_->close();
           commandPopupMenu_ = NULL;
         }
-        else if (NULL != aboutDialog_) {
+        if (NULL != aboutDialog_) {
           aboutDialog_->close();
           aboutDialog_ = NULL;
         }
-        else if (isFullScreen()) {
-          //all other utilisations of ESC key should be handled by the above code
+        if (isFullScreen()) {
           normalScreen();
         }
         break;
