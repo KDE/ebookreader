@@ -31,7 +31,7 @@
 class SlidingStackedWidget;
 class Window;
 
-class DocumentWidget : public QObject
+class PageProvider : public QDeclarativeImageProvider
 {
   Q_OBJECT
 
@@ -42,10 +42,13 @@ public slots:
   void onPixmapReady(int page, const QPixmap *pix);
 
 public:
-  DocumentWidget(Window *parent = 0);
-  ~DocumentWidget();
+  PageProvider(Window *parent = 0);
+  ~PageProvider();
   bool setDocument(const QString &filePath);
+
   void setPage(int page = -1);
+  QPixmap requestPixmap(const QString &id, QSize *size, const QSize &requestedSize);
+
   void setScale(qreal scale) {
     scaleFactor_ = scale;
   }
@@ -58,7 +61,7 @@ public:
   int currentIndex() const {
     return currentPage_ % CACHE_SIZE;
   }
-  int numPages() const {
+  int count() const {
     return (NULL != doc_) ? doc_->numPages() : 0;
   }
   bool isLoaded() const {
@@ -80,10 +83,10 @@ public:
     }
   }
   bool invalidatePageCache(int page) {
-    qDebug() << "DocumentWidget::invalidatePageCache" << page;
+    qDebug() << "PageProvider::invalidatePageCache" << page;
 
     if(0 > page || maxNumPages_ <= page) {
-      qDebug() << "DocumentWidget::invalidatePageCache: nothing to do";
+      qDebug() << "PageProvider::invalidatePageCache: nothing to do";
       return false;//operation failed
     }
     doc_->deletePixmap(pageCache_[page % CACHE_SIZE]->pPixmap);

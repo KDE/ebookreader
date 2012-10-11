@@ -23,7 +23,7 @@
 #include "okulardocument.h"
 #include "window.h"
 
-DocumentWidget::DocumentWidget(Window *parent)
+PageProvider::PageProvider(Window *parent)
   : QObject(parent),
     doc_(new OkularDocument()),
     currentPage_(-1),
@@ -43,7 +43,7 @@ DocumentWidget::DocumentWidget(Window *parent)
   connect(doc_, SIGNAL(pixmapReady(int, const QPixmap*)), this, SLOT(onPixmapReady(int, const QPixmap*)));
 }
 
-DocumentWidget::~DocumentWidget()
+PageProvider::~PageProvider()
 {
   for(int n = 0; n < pageCache_.size(); ++n) {
     delete pageCache_[n];
@@ -51,9 +51,9 @@ DocumentWidget::~DocumentWidget()
   delete doc_;
 }
 
-void DocumentWidget::onPixmapReady(int page, const QPixmap *pix)
+void PageProvider::onPixmapReady(int page, const QPixmap *pix)
 {
-  qDebug() << "DocumentWidget::onPixmapReady";
+  qDebug() << "PageProvider::onPixmapReady";
 
   pageCache_[page % CACHE_SIZE]->pPixmap = pix;
   pageCache_[page % CACHE_SIZE]->valid = true;
@@ -65,9 +65,9 @@ void DocumentWidget::onPixmapReady(int page, const QPixmap *pix)
   }
 }
 
-void DocumentWidget::setPage(int page)
+void PageProvider::setPage(int page)
 {
-  qDebug() << "DocumentWidget::setPage" << page;
+  qDebug() << "PageProvider::setPage" << page;
 
   if(page != -1) {
     currentIndex_ = stackedWidget_->currentIndex();
@@ -92,7 +92,7 @@ void DocumentWidget::setPage(int page)
   currentScrollArea_ = (QScrollArea*)stackedWidget_->widget(currentIndex_);//get next/prev widget
   QLabel *label = (QLabel*)currentScrollArea_->widget();
   if(false == pageCache_[currentPage_ % CACHE_SIZE]->valid) {
-    qDebug() << "DocumentWidget::showPage: invalid cache"; 
+    qDebug() << "PageProvider::showPage: invalid cache"; 
     evtPage_ = currentPage_;//prepare to wait synchronously this page
     emit pageRequest(currentPage_, scaleFactor_);
     if (-1 != evtPage_) {
@@ -107,9 +107,15 @@ void DocumentWidget::setPage(int page)
   }
 }
 
-bool DocumentWidget::setDocument(const QString &filePath)
+QPixmap PageProvider::requestPixmap(const QString &id, QSize *size, const QSize &requestedSize) {
+  qDebug() << "PageProvider::requestPixmap";
+
+  qDebug() << id;
+}
+
+bool PageProvider::setDocument(const QString &filePath)
 {
-  qDebug() << "DocumentWidget::setDocument";
+  qDebug() << "PageProvider::setDocument";
 
   bool out = false;
 

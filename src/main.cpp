@@ -29,6 +29,7 @@ int main(int argc, char *argv[])
   //in release mode the log file is not created
   Logger::instance("tabletReader.log");
 #endif
+
   //translation object
   QTranslator translator;
   if(false == translator.load(":/translations/tabletReader_" + QLocale::system().name().left(2))) {
@@ -38,10 +39,20 @@ int main(int argc, char *argv[])
     qDebug() << "loaded translation file" << QLocale::system().name().left(2);
   }
   app.installTranslator(&translator);
-  //main window
-  QDeclarativeView view;
-  qmlRegisterType<Window>("Window", 1, 0, "WindowItem");
-  view.setSource(QUrl("qrc:/qml/qml/window.qml"));
-  view.show();
+
+  //page view
+  QDeclarativeView viewer;
+  viewer.setSource(QUrl("qrc:/qml/qml/window.qml"));
+
+  PageProvider *pages = new PageProvider();
+  viewer.engine()->addImageProvider(QLatin1String("pages"), pages);
+
+  QStringList pageIDs;
+  pageIDs << "image://pages/left" << "image://pages/center" << "image://pages/right";
+
+  QDeclarativeContext *ctxt = viewer.rootContext();
+  ctxt->setContextProperty("dataModel", QVariant::fromValue(pageIDs));
+
+  viewer.show();
   return app.exec();
 }
