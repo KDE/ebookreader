@@ -40,12 +40,8 @@ QTM_USE_NAMESPACE
 #endif
 
 Window::Window(QWidget* /*parent*/)
-  : QDeclarativeItem(NULL),
-    proxy_(NULL),
-    slidingStacked_(NULL),
+  : QDeclarativeView(),
     provider_(NULL),
-    animationFinished_(true),
-    flickable_(NULL),
     fileBrowserModel_(new FileBrowserModel(this)),
     waitTimer_(NULL),
 #ifndef NO_QTMOBILITY
@@ -58,96 +54,19 @@ Window::Window(QWidget* /*parent*/)
 
   eTime_.start();//used to measure the elapsed time since the app is started
 
-  //actions for zoom in/out
-  //TODO: add actions from QML
-  /*QAction *increaseScaleAction = new QAction(this);
-  increaseScaleAction->setShortcut(tr("Ctrl++"));
-  QAction *decreaseScaleAction = new QAction(this);
-  decreaseScaleAction->setShortcut(tr("Ctrl+-"));
-  addAction(increaseScaleAction);
-  addAction(decreaseScaleAction);*/
-
   //zoom scale factors
   //-1 used for fit width scaling factor
   scaleFactors_ << -1 << 0.25 << 0.5 << 0.75 << 1.
                 << 1.25 << 1.5 << 2. << 3. << 4.;
 
-  //create main document
+  //create page provider
   provider_ = new PageProvider(this);//TODO: delete all three objects
-
-  //create sliding animation
-  QWidget *centralWidget = new QWidget();
-  slidingStacked_ = new SlidingStackedWidget(centralWidget);
-
-  //create flickable object
-  flickable_ = new Flickable(this);
-
-  //init document pages and the sliding animation
-  QScrollArea *scroll = NULL;
-  QLabel *label = NULL;
-  register int n = 0;
-  for(n = 0; n < PageProvider::CACHE_SIZE; ++n) {
-    //scroll areas (one for each page)
-    scroll = new QScrollArea(centralWidget);
-    scroll->setFrameShape(QFrame::NoFrame);
-    scroll->setWidgetResizable(true);
-    scroll->setAlignment(Qt::AlignCenter);
-    label = new QLabel();//QLabel is used to display a page
-    label->setAlignment(Qt::AlignCenter);
-    label->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
-    scroll->setWidget(label);
-    scroll->installEventFilter(this);
-    slidingStacked_->addWidget(scroll);//scroll areas are switched by the stacked widget
-    flickable_->activateOn(scroll);
-  }
-  provider_->setStackedWidget(slidingStacked_);
-  slidingStacked_->setSpeed(HORIZONTAL_SLIDE_SPEED_MS);
-  slidingStacked_->setWrap(true);
-  slidingStacked_->setVerticalMode(false);
-  slidingStacked_->setStyleSheet("background:black");
-  slidingStacked_->setAttribute(Qt::WA_DeleteOnClose);
-
-  //put widget onto layout
-  QGridLayout *gridLayout = new QGridLayout();
-  gridLayout->addWidget(slidingStacked_, 1, 0, 1, 1);
-
-  //proxy
-  proxy_ = new QGraphicsProxyWidget(this);
-  proxy_->setPos(-MIN_SCREEN_WIDTH/2, -MIN_SCREEN_HEIGHT/2);
-  //setCentralWidget(centralWidget);
-  proxy_->setWindowTitle(tr(APPLICATION));
-  proxy_->setWidget(centralWidget);
-
-  connect(slidingStacked_, SIGNAL(animationFinished()),
-          this, SLOT(onAnimationFinished()));
-  //connect(increaseScaleAction, SIGNAL(triggered()), this, SLOT(increaseScale()));
-  //connect(decreaseScaleAction, SIGNAL(triggered()), this, SLOT(decreaseScale()));
-
-  //statusBar()->hide();
+  engine()->addImageProvider(QLatin1String("pages"), provider_);
 
   //wait timer initialisation (used to handle long actions: document openings, page changes)
   waitTimer_ = new QTimer(this);
   waitTimer_->setInterval(WAIT_TIMER_INTERVAL_MS);
   connect(waitTimer_, SIGNAL(timeout()), this, SLOT(showWaitDialog()));
-
-  normalScreen();
-
-  //main toolbar
-  /*if(NULL != (toolBar_ = new QDeclarativeView(this))) {
-    toolBar_->setSource(QUrl("qrc:/qml/qml/maintoolbar.qml"));
-    QObject *pDisp = toolBar_->rootObject();
-    if(NULL != pDisp) {
-      pDisp->setProperty("width", width());
-      QObject *pToolbar = pDisp->findChild<QObject*>("toolbar");
-      if(NULL != pToolbar) {
-        connect(pToolbar, SIGNAL(sendCommand(QString)), this, SLOT(onSendCommand(QString)));
-      }
-      else {
-        qDebug() << "cannot find toolbar object";
-      }
-    }
-    gridLayout->addWidget(toolBar_, 0, 0, 1, 1);
-  }*/
 
 #ifndef NO_QTMOBILITY
   //battery status
@@ -158,7 +77,7 @@ Window::Window(QWidget* /*parent*/)
   setWindowFlags(Qt::X11BypassWindowManagerHint);
 #endif
 
-  QTimer::singleShot(0, this, SLOT(showDocument()));
+  showDocument();
 }
 
 void Window::showDocument()
@@ -174,15 +93,21 @@ void Window::showDocument()
     if(provider_->setDocument(filePath)) {
       setupDocDisplay(settings.value(KEY_PAGE, 0).toInt() + 1, 
           settings.value(KEY_ZOOM_LEVEL, 1.0).toFloat());
-      //simulate an onAnimationFinished
-      onAnimationFinished();
+      //configure file browser
       fileBrowserModel_->setCurrentDir(filePath);
+      //configure page viewer
+      QStringList pageIDs;
+      for (int i = 1; i <= provider_->count(); ++i) {
+        pageIDs << "image://pages/"+QString::number(i);
+      }
+      rootContext()->setContextProperty("dataModel", QVariant::fromValue(pageIDs));
     }
   }
   else {
     qDebug() << "no document found";
     showHelp(false);
   }
+  setSource(QUrl("qrc:/qml/qml/main.qml"));
 }
 
 Window::~Window()

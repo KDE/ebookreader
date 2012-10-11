@@ -70,41 +70,16 @@ void PageProvider::setPage(int page)
 {
   qDebug() << "PageProvider::setPage" << page;
 
-  if(page != -1) {
-    currentIndex_ = stackedWidget_->currentIndex();
-    if(NULL != currentScrollArea_) {  //do nothing if no page has been loaded
-      if(currentPage_ <= (page - 1)) {
-        ++currentIndex_;
-        if(CACHE_SIZE == currentIndex_) {
-          currentIndex_ = 0;
-        }
-      }
-      else {
-        --currentIndex_;
-        if(currentIndex_ < 0) {
-          currentIndex_ = CACHE_SIZE - 1;
-        }
-      }
-    }
-    currentPage_ = page - 1;
-  }
+  currentPage_ = page - 1;
 
-  //set image on the scroll area
-  currentScrollArea_ = (QScrollArea*)stackedWidget_->widget(currentIndex_);//get next/prev widget
-  QLabel *label = (QLabel*)currentScrollArea_->widget();
+  //update cache if needed
   if(false == pageCache_[currentPage_ % CACHE_SIZE]->valid) {
-    qDebug() << "PageProvider::showPage: invalid cache"; 
+    qDebug() << "PageProvider::setPage: invalid cache"; 
     evtPage_ = currentPage_;//prepare to wait synchronously this page
     emit pageRequest(currentPage_, scaleFactor_);
     if (-1 != evtPage_) {
       evtLoop_.exec();//wait to receive the page pixmap
     }
-  }
-  const QPixmap *pPix = pageCache_[currentPage_ % CACHE_SIZE]->pPixmap;
-  if((NULL != pPix) && (false == pPix->isNull())) {
-    qDebug() << "setPixmap" << pPix;
-    label->setPixmap(*pPix);
-    label->adjustSize();
   }
 }
 
@@ -114,12 +89,8 @@ QPixmap PageProvider::requestPixmap(const QString &id, QSize *size, const QSize 
   Q_UNUSED(size);
   Q_UNUSED(requestedSize);
 
-  const int PAGEWIDTH = 800;
-  const int PAGEHEIGHT = 600;
-
-  QPixmap page = QPixmap(PAGEWIDTH, PAGEHEIGHT);
-
-  return page;
+  setPage(id.toInt());
+  return *(pageCache_[currentPage_ % CACHE_SIZE]->pPixmap);
 }
 
 bool PageProvider::setDocument(const QString &filePath)

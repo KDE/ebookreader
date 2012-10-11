@@ -41,19 +41,8 @@ int main(int argc, char *argv[])
   app.installTranslator(&translator);
 
   //page view
-  QDeclarativeView viewer;
+  Window win;
+  win.show();
 
-  PageProvider *pages = new PageProvider();
-  viewer.engine()->addImageProvider(QLatin1String("pages"), pages);
-
-  QStringList pageIDs;
-  pageIDs << "image://pages/left" << "image://pages/center" << "image://pages/right";
-
-  QDeclarativeContext *ctxt = viewer.rootContext();
-  ctxt->setContextProperty("dataModel", QVariant::fromValue(pageIDs));
-
-  viewer.setSource(QUrl("qrc:/qml/qml/main.qml"));
-
-  viewer.show();
   return app.exec();
 }

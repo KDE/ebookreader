@@ -45,7 +45,7 @@ class QSystemBatteryInfo;
 QTM_END_NAMESPACE
 #endif
 
-class Window : public QDeclarativeItem
+class Window : public QDeclarativeView
 {
   Q_OBJECT
 
@@ -118,7 +118,6 @@ private:
     }*/
   }
 
-  QGraphicsProxyWidget *proxy_;
   SlidingStackedWidget *slidingStacked_;
   PageProvider *provider_;
   QVector<qreal> scaleFactors_;
