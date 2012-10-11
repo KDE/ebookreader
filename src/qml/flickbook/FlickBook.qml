@@ -13,7 +13,7 @@ Item {
       border.color: "gray"
       border.width: 1
       height: parent.height
-      width: 480
+      width: 800
 
       Rectangle {
         anchors.fill: parent
