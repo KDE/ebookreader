@@ -32,6 +32,5 @@ Item {
     delegate: pageDelegate
     orientation: ListView.Horizontal
     snapMode: ListView.SnapOneItem
-    keyNavigationWraps: true
   }
 }

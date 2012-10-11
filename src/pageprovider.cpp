@@ -114,8 +114,8 @@ QPixmap PageProvider::requestPixmap(const QString &id, QSize *size, const QSize 
   Q_UNUSED(size);
   Q_UNUSED(requestedSize);
 
-  const int PAGEWIDTH = 480 - 15*2;
-  const int PAGEHEIGHT = 800 - 15*2;
+  const int PAGEWIDTH = 800;
+  const int PAGEHEIGHT = 600;
 
   QPixmap page = QPixmap(PAGEWIDTH, PAGEHEIGHT);
 
