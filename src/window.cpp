@@ -43,7 +43,7 @@ Window::Window(QWidget* /*parent*/)
   : QDeclarativeItem(NULL),
     proxy_(NULL),
     slidingStacked_(NULL),
-    document_(NULL),
+    provider_(NULL),
     animationFinished_(true),
     flickable_(NULL),
     fileBrowserModel_(new FileBrowserModel(this)),
@@ -73,7 +73,7 @@ Window::Window(QWidget* /*parent*/)
                 << 1.25 << 1.5 << 2. << 3. << 4.;
 
   //create main document
-  document_ = new DocumentWidget(this);//TODO: delete all three objects
+  provider_ = new PageProvider(this);//TODO: delete all three objects
 
   //create sliding animation
   QWidget *centralWidget = new QWidget();
@@ -86,7 +86,7 @@ Window::Window(QWidget* /*parent*/)
   QScrollArea *scroll = NULL;
   QLabel *label = NULL;
   register int n = 0;
-  for(n = 0; n < DocumentWidget::CACHE_SIZE; ++n) {
+  for(n = 0; n < PageProvider::CACHE_SIZE; ++n) {
     //scroll areas (one for each page)
     scroll = new QScrollArea(centralWidget);
     scroll->setFrameShape(QFrame::NoFrame);
@@ -100,7 +100,7 @@ Window::Window(QWidget* /*parent*/)
     slidingStacked_->addWidget(scroll);//scroll areas are switched by the stacked widget
     flickable_->activateOn(scroll);
   }
-  document_->setStackedWidget(slidingStacked_);
+  provider_->setStackedWidget(slidingStacked_);
   slidingStacked_->setSpeed(HORIZONTAL_SLIDE_SPEED_MS);
   slidingStacked_->setWrap(true);
   slidingStacked_->setVerticalMode(false);
@@ -171,7 +171,7 @@ void Window::showDocument()
   waitTimer_->start();
   if(NULL != (filePath = settings.value(KEY_FILE_PATH).toString())) {
     qDebug() << "Found document " << filePath;
-    if(document_->setDocument(filePath)) {
+    if(provider_->setDocument(filePath)) {
       setupDocDisplay(settings.value(KEY_PAGE, 0).toInt() + 1, 
           settings.value(KEY_ZOOM_LEVEL, 1.0).toFloat());
       //simulate an onAnimationFinished
@@ -328,20 +328,20 @@ void Window::closeGotoPage(const QString &pageNb)
     bool ok = false;
     int newPageNb = pageNb.toInt(&ok);
     if(true == ok) {
-      int currentPage = document_->currentPage() + 1;
-      int numPages = document_->numPages();
-      if((newPageNb != currentPage) && (0 != newPageNb) && (newPageNb <= numPages)) {
+      int currentPage = provider_->currentPage() + 1;
+      int count = provider_->count();
+      if((newPageNb != currentPage) && (0 != newPageNb) && (newPageNb <= count)) {
         //start timer
         waitTimer_->start();
         //change page
         animationFinished_ = false;
-        gotoPage(newPageNb, numPages);
+        gotoPage(newPageNb, count);
         if(currentPage < newPageNb) {
-          document_->showCurrentPageUpper();
+          provider_->showCurrentPageUpper();
           slidingStacked_->slideInNext();
         }
         else {
-          document_->showCurrentPageLower();
+          provider_->showCurrentPageLower();
           slidingStacked_->slideInPrev();
         }
       }
@@ -366,7 +366,7 @@ void Window::showZoomPage()
       pRoot->setProperty("width", width());
       QObject *pZoomReel = pRoot->findChild<QObject*>("zoomreel");
       if(NULL != pZoomReel) {
-        if(false == pZoomReel->setProperty("zoomIndex", scaleFactors_.indexOf(document_->scale()))) {
+        if(false == pZoomReel->setProperty("zoomIndex", scaleFactors_.indexOf(provider_->scale()))) {
           qDebug() << "cannot set property";
         }
         connect(pZoomReel, SIGNAL(setZoomFactor(int)), this, SLOT(closeZoomPage(int)));
@@ -476,10 +476,10 @@ void Window::openFile(const QString &filePath)
 
   //open document
   waitTimer_->start();
-  if(document_->setDocument(filePath)) {
+  if(provider_->setDocument(filePath)) {
     //load document
     animationFinished_ = false;
-    setupDocDisplay(1, document_->scale());
+    setupDocDisplay(1, provider_->scale());
     slidingStacked_->slideInNext();
     setHelpIcon(true, false);
   }
@@ -598,19 +598,19 @@ bool Window::eventFilter(QObject *, QEvent *event)
       showPrevPage();
     }
     if(Qt::Key_Home == keyEvent->key()) {
-      if((0 != document_->currentPage()) && (true == animationFinished_)) {
+      if((0 != provider_->currentPage()) && (true == animationFinished_)) {
         //not at the beginning of the document
         animationFinished_ = false;
-        gotoPage(1, document_->numPages());
+        gotoPage(1, provider_->count());
         slidingStacked_->slideInPrev();
       }
     }
     if(Qt::Key_End == keyEvent->key()) {
-      int numPages = document_->numPages();
-      if(((numPages - 1) != document_->currentPage()) && (true == animationFinished_)) {
+      int count = provider_->count();
+      if(((count - 1) != provider_->currentPage()) && (true == animationFinished_)) {
         //not at the end of the document
         animationFinished_ = false;
-        gotoPage(numPages, numPages);
+        gotoPage(count, count);
         slidingStacked_->slideInNext();
       }
     }
@@ -625,17 +625,17 @@ bool Window::showNextPage()
 
   bool out = false;
 
-  if(true == document_->isLoaded() && true == animationFinished_) {
-    currentPage_ = document_->currentPage() + 2;
-    if(currentPage_ <= document_->numPages()) {
+  if(true == provider_->isLoaded() && true == animationFinished_) {
+    currentPage_ = provider_->currentPage() + 2;
+    if(currentPage_ <= provider_->count()) {
       //start timer
       waitTimer_->start();
       //load a new page
       animationFinished_ = false;
-      document_->setPage(currentPage_);
-      document_->showCurrentPageUpper();
+      provider_->setPage(currentPage_);
+      provider_->showCurrentPageUpper();
       //update the cache after the page has been displayed
-      document_->sendPageRequest(currentPage_);
+      provider_->sendPageRequest(currentPage_);
       //make sure that the next page is ready
       slidingStacked_->slideInNext();
       out = true;
@@ -651,17 +651,17 @@ bool Window::showPrevPage()
 
   bool out = false;
 
-  if(true == document_->isLoaded() && true == animationFinished_) {
-    currentPage_ = document_->currentPage();
+  if(true == provider_->isLoaded() && true == animationFinished_) {
+    currentPage_ = provider_->currentPage();
     if(0 < currentPage_) {
       //start timer
       waitTimer_->start();
       //load a new page
       animationFinished_ = false;
-      document_->setPage(currentPage_);
-      document_->showCurrentPageLower();
+      provider_->setPage(currentPage_);
+      provider_->showCurrentPageLower();
       //update the cache after the page has been displayed
-      document_->sendPageRequest(currentPage_ - 2);
+      provider_->sendPageRequest(currentPage_ - 2);
       //make sure that the prev page is ready
       slidingStacked_->slideInPrev();
       out = true;
@@ -693,26 +693,26 @@ void Window::setupDocDisplay(unsigned int pageNumber, qreal factor)
   //set document zoom factor
   setScale(factor);
   //set current page
-  gotoPage(pageNumber, document_->numPages());
+  gotoPage(pageNumber, provider_->count());
 }
 
-void Window::gotoPage(int pageNb, int numPages)
+void Window::gotoPage(int pageNb, int count)
 {
-  qDebug() << "Window::gotoPage: page nb" << pageNb << ", numPages" << numPages;
+  qDebug() << "Window::gotoPage: page nb" << pageNb << ", count" << count;
 
   //set current page
-  if(true == document_->invalidatePageCache(pageNb - 1)) {
-    document_->setPage(pageNb);
+  if(true == provider_->invalidatePageCache(pageNb - 1)) {
+    provider_->setPage(pageNb);
   }
   //preload next page
-  if((numPages - pageNb) > 0) {
+  if((count - pageNb) > 0) {
     qDebug() << "next page";
-    document_->sendPageRequest(pageNb);//next page (index starts from 0)
+    provider_->sendPageRequest(pageNb);//next page (index starts from 0)
   }
   //preload previous page
   if(pageNb > 1) {
     qDebug() << "previous page";
-    document_->sendPageRequest(pageNb - 2); //previous page (index starts from 0)
+    provider_->sendPageRequest(pageNb - 2); //previous page (index starts from 0)
   }
 }
 
@@ -726,17 +726,17 @@ void Window::updateView(qreal factor)
   }
 
   //set zoom factor
-  if (document_->scale() == factor) {
+  if (provider_->scale() == factor) {
     return;//nothing to do
   }
   setScale(factor);
 
   //update all pages from circular buffer
   animationFinished_ = false;
-  gotoPage(document_->currentPage()+1, document_->numPages());
+  gotoPage(provider_->currentPage()+1, provider_->count());
 
   //update view
-  document_->showCurrentPageUpper();
+  provider_->showCurrentPageUpper();
   slidingStacked_->slideInNext();
 }
 
@@ -754,8 +754,8 @@ void Window::showHelp(bool slideNext)
 
   if (0 == prev_.page) {
     //store the current file name and page number
-    prev_.fileName = document_->filePath();
-    prev_.page = document_->currentPage()+1;
+    prev_.fileName = provider_->filePath();
+    prev_.page = provider_->currentPage()+1;
   }
   else {
     //restore previous file name and page number
@@ -764,10 +764,10 @@ void Window::showHelp(bool slideNext)
     prev_.page = 0;
   }
 
-  if(document_->setDocument(*curFileName)) {
+  if(provider_->setDocument(*curFileName)) {
     animationFinished_ = false;
-    setupDocDisplay(curPage, document_->scale());
-    document_->showCurrentPageUpper();
+    setupDocDisplay(curPage, provider_->scale());
+    provider_->showCurrentPageUpper();
     if(true == slideNext) {
       slidingStacked_->slideInNext();
     }
@@ -931,9 +931,9 @@ void Window::showPropertiesDialog()
       QObject *pAboutDlg = pAbout->findChild<QObject*>("aboutDialog");
       if(NULL != pAboutDlg) {
         //document path
-        QString msg = tr("<H3>Document path:<br><i>%1</i></H3>").arg(document_->filePath());
+        QString msg = tr("<H3>Document path:<br><i>%1</i></H3>").arg(provider_->filePath());
         //current page / page number
-        msg += tr("<H3>Current page / Number of pages:<br><b>%1 / %2</b></H3>").arg(document_->currentPage() + 1).arg(document_->numPages());
+        msg += tr("<H3>Current page / Number of pages:<br><b>%1 / %2</b></H3>").arg(provider_->currentPage() + 1).arg(provider_->count());
         //time since the application was started
         msg += tr("<H3>Elapsed time:<br>%1</H3>").arg(elapsedTime());
         //battery state
@@ -1040,13 +1040,13 @@ QString Window::elapsedTime()
 
 void Window::saveSettings()
 {
-  if((NULL != document_) && (true == document_->isLoaded())) {
-    const QString &fileName = document_->filePath();
+  if((NULL != provider_) && (true == provider_->isLoaded())) {
+    const QString &fileName = provider_->filePath();
     if (fileName != helpFile_) {
       QSettings settings(ORGANIZATION, APPLICATION);
-      settings.setValue(KEY_PAGE, document_->currentPage());
+      settings.setValue(KEY_PAGE, provider_->currentPage());
       settings.setValue(KEY_FILE_PATH, fileName);
-      settings.setValue(KEY_ZOOM_LEVEL, document_->scale());
+      settings.setValue(KEY_ZOOM_LEVEL, provider_->scale());
     }
   }
 }

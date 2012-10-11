@@ -26,12 +26,13 @@
 #include <QMutex>
 #include <QDebug>
 #include <QEventLoop>
+#include <QDeclarativeImageProvider>
 #include "okulardocument.h"
 
 class SlidingStackedWidget;
 class Window;
 
-class PageProvider : public QDeclarativeImageProvider
+class PageProvider : public QObject, public QDeclarativeImageProvider
 {
   Q_OBJECT
 

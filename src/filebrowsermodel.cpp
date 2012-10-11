@@ -21,7 +21,7 @@
 #include <QDebug>
 #include <kmimetype.h>
 #include "filebrowsermodel.h"
-#include "documentwidget.h"
+#include "pageprovider.h"
 
 FileBrowserModel::FileBrowserModel(QObject *parent) :
   QAbstractListModel(parent),

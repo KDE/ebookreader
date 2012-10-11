@@ -17,7 +17,7 @@ set ( tabletReader_HDRS
 	)
 
 set ( tabletReader_SRCS
-	documentwidget.cpp
+	pageprovider.cpp
 	main.cpp
 	window.cpp
 	SlidingStackedWidget.cpp
@@ -40,7 +40,7 @@ QT4_ADD_TRANSLATION(TRS ${tabletReader_TRS})
 
 set ( tabletReader_MOCS
   okulardocument.h
-	documentwidget.h
+	pageprovider.h
 	window.h
 	SlidingStackedWidget.h
 	flickable.h

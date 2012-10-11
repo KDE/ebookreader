@@ -42,7 +42,6 @@ int main(int argc, char *argv[])
 
   //page view
   QDeclarativeView viewer;
-  viewer.setSource(QUrl("qrc:/qml/qml/window.qml"));
 
   PageProvider *pages = new PageProvider();
   viewer.engine()->addImageProvider(QLatin1String("pages"), pages);
@@ -52,6 +51,8 @@ int main(int argc, char *argv[])
 
   QDeclarativeContext *ctxt = viewer.rootContext();
   ctxt->setContextProperty("dataModel", QVariant::fromValue(pageIDs));
+
+  viewer.setSource(QUrl("qrc:/qml/qml/main.qml"));
 
   viewer.show();
   return app.exec();

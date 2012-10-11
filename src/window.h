@@ -29,7 +29,7 @@
 #ifndef NO_QTMOBILITY
 #include <qmobilityglobal.h>
 #endif
-#include "documentwidget.h"
+#include "pageprovider.h"
 
 class QScrollArea;
 class QSpinBox;
@@ -100,9 +100,9 @@ private:
   void updateView(qreal factor);
   void setScale(qreal factor) {
     if (-1 == factor) { //need to set window width for fit width
-      document_->setWinWidth(width());
+      provider_->setWinWidth(width());
     }
-    document_->setScale(factor);
+    provider_->setScale(factor);
   }
   QString elapsedTime();
   void saveSettings();
@@ -120,7 +120,7 @@ private:
 
   QGraphicsProxyWidget *proxy_;
   SlidingStackedWidget *slidingStacked_;
-  DocumentWidget *document_;
+  PageProvider *provider_;
   QVector<qreal> scaleFactors_;
   QPoint startPoint_;
   QPoint endPoint_;

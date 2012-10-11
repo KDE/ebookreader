@@ -18,13 +18,14 @@
 
 #include <QtGui>
 #include <kmimetype.h>
-#include "documentwidget.h"
+#include "pageprovider.h"
 #include "SlidingStackedWidget.h"
 #include "okulardocument.h"
 #include "window.h"
 
 PageProvider::PageProvider(Window *parent)
   : QObject(parent),
+    QDeclarativeImageProvider(QDeclarativeImageProvider::Pixmap),
     doc_(new OkularDocument()),
     currentPage_(-1),
     currentIndex_(-1),
@@ -108,9 +109,17 @@ void PageProvider::setPage(int page)
 }
 
 QPixmap PageProvider::requestPixmap(const QString &id, QSize *size, const QSize &requestedSize) {
-  qDebug() << "PageProvider::requestPixmap";
+  qDebug() << "PageProvider::requestPixmap" << id;
 
-  qDebug() << id;
+  Q_UNUSED(size);
+  Q_UNUSED(requestedSize);
+
+  const int PAGEWIDTH = 480 - 15*2;
+  const int PAGEHEIGHT = 800 - 15*2;
+
+  QPixmap page = QPixmap(PAGEWIDTH, PAGEHEIGHT);
+
+  return page;
 }
 
 bool PageProvider::setDocument(const QString &filePath)
