@@ -27,4 +27,8 @@ Rectangle {
         // some "loading" appState variable etc.
         show: true
     }
+    MouseArea {
+         anchors.fill: parent
+         onClicked: { console.log("pressed") }
+     }
 }

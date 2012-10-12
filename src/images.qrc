@@ -64,7 +64,7 @@
         <file>qml/ModalDialog/gfx/button_pressed.png</file>
         <file>qml/WaitDialog/WaitIndicator.qml</file>
         <file>qml/WaitDialog/gfx/rotation_icon.png</file>
-        <file>qml/waitdialog.qml</file>
+        <file>qml/waitpage.qml</file>
     </qresource>
     <qresource prefix="/translations">
         <file>tabletReader_fr.qm</file>

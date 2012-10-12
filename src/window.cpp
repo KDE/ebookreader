@@ -89,6 +89,7 @@ void Window::showDocument()
   QString filePath;
   waitTimer_->start();
   if(NULL != (filePath = settings.value(KEY_FILE_PATH).toString())) {
+    filePath = "/home/bogdan/Documents/CV-simple/CV-en-simple_detail.pdf";
     qDebug() << "Found document " << filePath;
     if(provider_->setDocument(filePath)) {
       setupDocDisplay(settings.value(KEY_PAGE, 0).toInt() + 1, 
@@ -798,7 +799,7 @@ void Window::showWaitDialog()
   waitTimer_->stop();
   /*if(NULL == waitDialog_) {
     waitDialog_ = new QDeclarativeView(this);
-    waitDialog_->setSource(QUrl("qrc:/qml/qml/waitdialog.qml"));
+    waitDialog_->setSource(QUrl("qrc:/qml/qml/waitpage.qml"));
     waitDialog_->setStyleSheet("background:transparent");
     waitDialog_->setAttribute(Qt::WA_TranslucentBackground);
     waitDialog_->setAttribute(Qt::WA_DeleteOnClose);
