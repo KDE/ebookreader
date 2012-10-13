@@ -15,7 +15,8 @@ Item {
       height: parent.height
       width: 800
 
-      Rectangle {
+      Flickable {
+        clip: true
         anchors.fill: parent
         anchors.margins: 15
         Image {

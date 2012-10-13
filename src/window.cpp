@@ -60,7 +60,7 @@ Window::Window(QWidget* /*parent*/)
                 << 1.25 << 1.5 << 2. << 3. << 4.;
 
   //create page provider
-  provider_ = new PageProvider(this);//TODO: delete all three objects
+  provider_ = new PageProvider();
   engine()->addImageProvider(QLatin1String("pages"), provider_);
 
   //wait timer initialisation (used to handle long actions: document openings, page changes)
@@ -115,6 +115,8 @@ Window::~Window()
 {
   delete fileBrowserModel_;
   fileBrowserModel_ = NULL;
+  delete provider_;
+  provider_ = NULL;
 }
 
 void Window::onSendCommand(const QString &cmd)
