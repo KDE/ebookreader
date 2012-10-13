@@ -71,7 +71,7 @@ void PageProvider::setPage(int page)
   if(false == pageCache_[currentPage_ % CACHE_SIZE]->valid) {
     qDebug() << "PageProvider::setPage: invalid cache"; 
     evtPage_ = currentPage_;//prepare to wait synchronously this page
-    //pageRequest(currentPage_, scaleFactor_);
+    doc_->pageRequest(currentPage_, scaleFactor_);
     if (-1 != evtPage_) {
       evtLoop_.exec();//wait to receive the page pixmap
     }

@@ -39,7 +39,6 @@ public:
   bool setDocument(const QString &filePath);
 
   void pixmapReady(int page, const QPixmap *pix);
-  void pageRequest(int page, qreal factor);
 
   void setPage(int page = -1);
   QPixmap requestPixmap(const QString &id, QSize *size, const QSize &requestedSize);
