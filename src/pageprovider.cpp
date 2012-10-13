@@ -84,9 +84,8 @@ QPixmap PageProvider::requestPixmap(const QString &id, QSize *size, const QSize 
   Q_UNUSED(size);
   Q_UNUSED(requestedSize);
 
-  /*setPage(id.toInt());
-  return *(pageCache_[currentPage_ % CACHE_SIZE]->pPixmap);*/
-  return QPixmap();
+  setPage(id.toInt());
+  return *(pageCache_[currentPage_ % CACHE_SIZE]->pPixmap);
 }
 
 bool PageProvider::setDocument(const QString &filePath)
