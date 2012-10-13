@@ -19,19 +19,16 @@
 #include <QtGui>
 #include <kmimetype.h>
 #include "pageprovider.h"
-#include "SlidingStackedWidget.h"
 #include "okulardocument.h"
 #include "window.h"
 
-PageProvider::PageProvider(Window *parent)
-  : QObject(parent),
-    QDeclarativeImageProvider(QDeclarativeImageProvider::Pixmap),
-    doc_(new OkularDocument()),
+PageProvider::PageProvider()
+  : QDeclarativeImageProvider(QDeclarativeImageProvider::Pixmap),
+    doc_(new OkularDocument(this)),
     currentPage_(-1),
     currentIndex_(-1),
     maxNumPages_(0),
     scaleFactor_(1.0),
-    stackedWidget_(NULL),
     currentScrollArea_(NULL),
     evtPage_(-1)
 {
@@ -40,8 +37,6 @@ PageProvider::PageProvider(Window *parent)
     pageCache_[n]->pPixmap = NULL;
     pageCache_[n]->valid = false;
   }
-  connect(this, SIGNAL(pageRequest(int, qreal)), doc_, SLOT(onPageRequest(int, qreal)));
-  connect(doc_, SIGNAL(pixmapReady(int, const QPixmap*)), this, SLOT(onPixmapReady(int, const QPixmap*)));
 }
 
 PageProvider::~PageProvider()
@@ -52,9 +47,9 @@ PageProvider::~PageProvider()
   delete doc_;
 }
 
-void PageProvider::onPixmapReady(int page, const QPixmap *pix)
+void PageProvider::pixmapReady(int page, const QPixmap *pix)
 {
-  qDebug() << "PageProvider::onPixmapReady";
+  qDebug() << "PageProvider::pixmapReady";
 
   pageCache_[page % CACHE_SIZE]->pPixmap = pix;
   pageCache_[page % CACHE_SIZE]->valid = true;
@@ -76,7 +71,7 @@ void PageProvider::setPage(int page)
   if(false == pageCache_[currentPage_ % CACHE_SIZE]->valid) {
     qDebug() << "PageProvider::setPage: invalid cache"; 
     evtPage_ = currentPage_;//prepare to wait synchronously this page
-    emit pageRequest(currentPage_, scaleFactor_);
+    //pageRequest(currentPage_, scaleFactor_);
     if (-1 != evtPage_) {
       evtLoop_.exec();//wait to receive the page pixmap
     }
@@ -89,8 +84,9 @@ QPixmap PageProvider::requestPixmap(const QString &id, QSize *size, const QSize 
   Q_UNUSED(size);
   Q_UNUSED(requestedSize);
 
-  setPage(id.toInt());
-  return *(pageCache_[currentPage_ % CACHE_SIZE]->pPixmap);
+  /*setPage(id.toInt());
+  return *(pageCache_[currentPage_ % CACHE_SIZE]->pPixmap);*/
+  return QPixmap();
 }
 
 bool PageProvider::setDocument(const QString &filePath)

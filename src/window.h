@@ -32,12 +32,8 @@
 #include "pageprovider.h"
 
 class QScrollArea;
-class QSpinBox;
-class QComboBox;
-class SlidingStackedWidget;
 class FileBrowserModel;
 class QDeclarativeView;
-class Flickable;
 class QTimer;
 #ifndef NO_QTMOBILITY
 QTM_BEGIN_NAMESPACE
@@ -50,7 +46,7 @@ class Window : public QDeclarativeView
   Q_OBJECT
 
 public:
-  Window(QWidget *parent = NULL);
+  Window();
   ~Window();
   bool hasTouchScreen();
   QString batteryStatus();
@@ -80,7 +76,7 @@ private slots:
   void decreaseScale();
   void onAnimationFinished();
   void onSendCommand(const QString &cmd);
-  void showHelp(bool slideNext = true);
+  void showHelp();
   void showAboutDialog();
   void closeAboutDialog();
   void showWarningMessage(const QString &title, const QString &explanation = "");
@@ -118,14 +114,12 @@ private:
     }*/
   }
 
-  SlidingStackedWidget *slidingStacked_;
   PageProvider *provider_;
   QVector<qreal> scaleFactors_;
   QPoint startPoint_;
   QPoint endPoint_;
   bool animationFinished_;
   QElapsedTimer pressTimer_;
-  Flickable *flickable_;
   FileBrowserModel* fileBrowserModel_;
   QTimer *waitTimer_;
 #ifndef NO_QTMOBILITY

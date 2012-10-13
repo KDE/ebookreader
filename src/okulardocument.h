@@ -31,20 +31,14 @@ namespace Okular
   class DocumentObserver;
 }
 class PagePainter;
+class PageProvider;
 
-class OkularDocument : public QObject, private Okular::DocumentObserver
+class OkularDocument : private Okular::DocumentObserver
 {
-  Q_OBJECT
-
-signals:
-  void pixmapReady(int page, const QPixmap *pix);
-
-public slots:
-  void onPageRequest(int page, qreal factor);
-
 public:
-  OkularDocument();
+  explicit OkularDocument(PageProvider *provider);
   bool load(const QString &fileName);
+  void pageRequest(int page, qreal factor);
   uint numPages() const {
     return (NULL != doc_)?doc_->pages():0;
   }
@@ -63,6 +57,7 @@ public:
 private:
   void adjustSize(int &width, int &height);
   const QPixmap* setWhiteBackground(const QPixmap *pixmap);
+  PageProvider *provider_;
   Okular::Document *doc_;
   PagePainter *painter_;
   KMimeType::Ptr mimeType_;

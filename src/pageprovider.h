@@ -29,23 +29,17 @@
 #include <QDeclarativeImageProvider>
 #include "okulardocument.h"
 
-class SlidingStackedWidget;
 class Window;
 
-class PageProvider : public QObject, public QDeclarativeImageProvider
+class PageProvider : public QDeclarativeImageProvider
 {
-  Q_OBJECT
-
-signals:
-  void pageRequest(int page, qreal factor);
-
-public slots:
-  void onPixmapReady(int page, const QPixmap *pix);
-
 public:
-  PageProvider(Window *parent = 0);
+  PageProvider();
   ~PageProvider();
   bool setDocument(const QString &filePath);
+
+  void pixmapReady(int page, const QPixmap *pix);
+  void pageRequest(int page, qreal factor);
 
   void setPage(int page = -1);
   QPixmap requestPixmap(const QString &id, QSize *size, const QSize &requestedSize);
@@ -67,9 +61,6 @@ public:
   }
   bool isLoaded() const {
     return (doc_ != NULL);
-  }
-  void setStackedWidget(SlidingStackedWidget *stackedWidget) {
-    stackedWidget_ = stackedWidget;
   }
 
   void showCurrentPageUpper() {
@@ -96,8 +87,8 @@ public:
     return true;//operation successful
   }
   void sendPageRequest(int page) {
-    if (true == invalidatePageCache(page)) {
-      emit pageRequest(page, scaleFactor_);
+    if ((true == invalidatePageCache(page)) && (NULL != doc_)) {
+      doc_->pageRequest(page, scaleFactor_);
     }
   }
   const QString& filePath() const {
@@ -122,7 +113,6 @@ private:
     bool valid;
   };
   QList<PageCache*> pageCache_;
-  SlidingStackedWidget *stackedWidget_;
   QScrollArea *currentScrollArea_;
   QString filePath_;
   QEventLoop evtLoop_;

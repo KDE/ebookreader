@@ -24,6 +24,7 @@
 #include <core/settings_core.h>
 #include <core/page.h>
 #include "okulardocument.h"
+#include "pageprovider.h"
 #include "screen_size.h"
 
 //main entry point into okular core libray
@@ -65,7 +66,8 @@ private:
   QLinkedList<Okular::PixmapRequest*> req_;
 };
 
-OkularDocument::OkularDocument() :
+OkularDocument::OkularDocument(PageProvider *provider) :
+  provider_(provider),
   doc_(NULL),
   painter_(NULL)
 {
@@ -126,9 +128,9 @@ const QPixmap* OkularDocument::setWhiteBackground(const QPixmap *pixmap)
 }
 
 //send Pixmap request to okular core library
-void OkularDocument::onPageRequest(int page, qreal factor)
+void OkularDocument::pageRequest(int page, qreal factor)
 {
-  qDebug() << "OkularDocument::onPageRequest: pageNb" << page << ", scaleFactor" << factor;
+  qDebug() << "OkularDocument::pageRequest: pageNb" << page << ", scaleFactor" << factor;
 
   if((NULL == doc_) || (NULL == painter_)) {
     return;
@@ -158,7 +160,7 @@ void OkularDocument::notifyPageChanged(int page, int flags)
       if (NULL != p) {
         p->deletePixmap(OKULAR_OBSERVER_ID);
       }
-      emit pixmapReady(page, pix);
+      provider_->pixmapReady(page, pix);
     }
   }
   else if(flags & DocumentObserver::Bookmark) {

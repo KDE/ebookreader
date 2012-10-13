@@ -75,7 +75,7 @@ Thus, the command popup menu allows to handle an e-book in a so called ``advance
 \section{Implementation details}
 TabletReader has been written in C++ using Qt application framework, QML for the graphical user interface and okular core library for handling e-book document formats. Note that okular core library depends on other 3rd party libraries (e.g. poppler library, libchm, etc.) which need to be available too (see for further details http://okular.kde.org/).
 
-The application is build around a circular buffer holding three pages which allows to display the e-book pages using the \textrm{SlidingStackedWidget} class. In general, the circular buffer will hold the currently displayed page, the previous page and the next one so that when the user switches between adjacent pages this is done as fast as possible. 
+The application is build around a circular buffer holding three pages which allows to display the e-book pages using the \textrm{ListView} QML class. In general, the circular buffer will hold the currently displayed page, the previous page and the next one so that when the user switches between adjacent pages this is done as fast as possible. 
 
 When loading a new document, only the current page is synchronously loaded, while the previous and the next pages are loaded asynchronously in the background. Similarly, when changing between adjacent pages, the page from the circular buffer is displayed and then a new page is loaded asynchronously so that, with respect to the currently displayed page, the previous and the next page are always ready to be displayed in the circular buffer.
 

@@ -23,9 +23,7 @@
 #include <QtSystemInfo/QSystemBatteryInfo>
 #endif
 #include "window.h"
-#include "SlidingStackedWidget.h"
 #include "filebrowsermodel.h"
-#include "flickable.h"
 #include "screen_size.h"
 
 #define ORGANIZATION "Bogdan Cristea"
@@ -39,7 +37,7 @@
 QTM_USE_NAMESPACE
 #endif
 
-Window::Window(QWidget* /*parent*/)
+Window::Window()
   : QDeclarativeView(),
     provider_(NULL),
     fileBrowserModel_(new FileBrowserModel(this)),
@@ -106,7 +104,7 @@ void Window::showDocument()
   }
   else {
     qDebug() << "no document found";
-    showHelp(false);
+    showHelp();
   }
   setSource(QUrl("qrc:/qml/qml/main.qml"));
 }
@@ -115,8 +113,6 @@ Window::~Window()
 {
   delete fileBrowserModel_;
   fileBrowserModel_ = NULL;
-  delete provider_;
-  provider_ = NULL;
 }
 
 void Window::onSendCommand(const QString &cmd)
@@ -408,7 +404,6 @@ void Window::openFile(const QString &filePath)
     //load document
     animationFinished_ = false;
     setupDocDisplay(1, provider_->scale());
-    slidingStacked_->slideInNext();
     setHelpIcon(true, false);
   }
   else {
@@ -530,7 +525,6 @@ bool Window::eventFilter(QObject *, QEvent *event)
         //not at the beginning of the document
         animationFinished_ = false;
         gotoPage(1, provider_->count());
-        slidingStacked_->slideInPrev();
       }
     }
     if(Qt::Key_End == keyEvent->key()) {
@@ -539,7 +533,6 @@ bool Window::eventFilter(QObject *, QEvent *event)
         //not at the end of the document
         animationFinished_ = false;
         gotoPage(count, count);
-        slidingStacked_->slideInNext();
       }
     }
   }
@@ -564,8 +557,6 @@ bool Window::showNextPage()
       provider_->showCurrentPageUpper();
       //update the cache after the page has been displayed
       provider_->sendPageRequest(currentPage_);
-      //make sure that the next page is ready
-      slidingStacked_->slideInNext();
       out = true;
     }
   }
@@ -590,8 +581,6 @@ bool Window::showPrevPage()
       provider_->showCurrentPageLower();
       //update the cache after the page has been displayed
       provider_->sendPageRequest(currentPage_ - 2);
-      //make sure that the prev page is ready
-      slidingStacked_->slideInPrev();
       out = true;
     }
   }
@@ -665,10 +654,9 @@ void Window::updateView(qreal factor)
 
   //update view
   provider_->showCurrentPageUpper();
-  slidingStacked_->slideInNext();
 }
 
-void Window::showHelp(bool slideNext)
+void Window::showHelp()
 {
   qDebug() << "Window::showHelp";
 
@@ -696,9 +684,6 @@ void Window::showHelp(bool slideNext)
     animationFinished_ = false;
     setupDocDisplay(curPage, provider_->scale());
     provider_->showCurrentPageUpper();
-    if(true == slideNext) {
-      slidingStacked_->slideInNext();
-    }
     //setHelpIcon(helpFile_ != *curFileName);
   }
   else {
