@@ -33,7 +33,7 @@ if( EXISTS "${CMAKE_SOURCE_DIR}/.git" )
     COMMAND sed -e "s/-/./g"
     OUTPUT_VARIABLE TR_VERSION
     OUTPUT_STRIP_TRAILING_WHITESPACE)
-  # remove leading alphanumeric characters
+  #remove leading alphanumeric characters
   string(REGEX REPLACE "^[a-zA-Z_.]+(.*)" "\\1" TR_VERSION ${TR_VERSION})
 else()
   message (WARNING "Cannot generate build/release number. Please set manually.")
