@@ -58,21 +58,7 @@ public:
   int count() const {
     return (NULL != doc_) ? doc_->numPages() : 0;
   }
-  bool isLoaded() const {
-    return (doc_ != NULL);
-  }
 
-  void showCurrentPageUpper() {
-    if(NULL != currentScrollArea_) {
-      currentScrollArea_->verticalScrollBar()->setValue(0);
-    }
-  }
-  void showCurrentPageLower() {
-    if(NULL != currentScrollArea_) {
-      QScrollBar *scroll = currentScrollArea_->verticalScrollBar();
-      scroll->setValue(scroll->maximum());
-    }
-  }
   bool invalidatePageCache(int page) {
     qDebug() << "PageProvider::invalidatePageCache" << page;
 
@@ -102,6 +88,9 @@ public:
   enum {CACHE_SIZE = 3};
 
 private:
+  void setNextPage();
+  void setPrevPage();
+
   OkularDocument *doc_;
   int currentPage_;
   int currentIndex_;

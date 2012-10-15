@@ -96,7 +96,7 @@ void Window::showDocument()
       fileBrowserModel_->setCurrentDir(filePath);
       //configure page viewer
       QStringList pageIDs;
-      for (int i = 1; i <= provider_->count(); ++i) {
+      for (int i = 0; i < provider_->count(); ++i) {
         pageIDs << "image://pages/"+QString::number(i);
       }
       rootContext()->setContextProperty("dataModel", QVariant::fromValue(pageIDs));

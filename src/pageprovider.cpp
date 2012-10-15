@@ -65,7 +65,7 @@ void PageProvider::setPage(int page)
 {
   qDebug() << "PageProvider::setPage" << page;
 
-  currentPage_ = page - 1;
+  currentPage_ = page;
 
   //update cache if needed
   if(false == pageCache_[currentPage_ % CACHE_SIZE]->valid) {
@@ -78,13 +78,15 @@ void PageProvider::setPage(int page)
   }
 }
 
-QPixmap PageProvider::requestPixmap(const QString &id, QSize *size, const QSize &requestedSize) {
+QPixmap PageProvider::requestPixmap(const QString &id, QSize *size, const QSize &requestedSize)
+{
   qDebug() << "PageProvider::requestPixmap" << id;
 
   Q_UNUSED(size);
   Q_UNUSED(requestedSize);
 
-  setPage(id.toInt());
+  (currentPage_ < id.toInt())?setNextPage():setPrevPage();
+
   return *(pageCache_[currentPage_ % CACHE_SIZE]->pPixmap);
 }
 
@@ -108,3 +110,22 @@ bool PageProvider::setDocument(const QString &filePath)
   }
   return out;
 }
+
+void PageProvider::setNextPage()
+{
+  qDebug() << "PageProvider::setNextPage";
+  if ((currentPage_+1) < maxNumPages_) {
+    setPage(currentPage_+1);
+    sendPageRequest(currentPage_+1);
+  }
+}
+
+void PageProvider::setPrevPage()
+{
+  qDebug() << "PageProvider::setPrevPage";
+  if ((currentPage_-1) >= 0) {
+    setPage(currentPage_-1);
+    sendPageRequest(currentPage_-1);
+  }
+}
+
