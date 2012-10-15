@@ -111,14 +111,12 @@ bool PageProvider::setDocument(const QString &filePath)
       maxNumPages_ = doc_->numPages();
       currentPage_ = -1;
       filePath_ = filePath;
+      setDataModel();
       out = true;
     }
     else if (false == filePath_.isEmpty()) {
       //an error occured -> restore previous document
       out = (EXIT_SUCCESS == doc_->load(filePath_));
-    }
-    if (true == out) {
-      setDataModel();
     }
   }
   return out;

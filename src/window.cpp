@@ -87,7 +87,7 @@ void Window::showDocument()
   QString filePath;
   waitTimer_->start();
   if(NULL != (filePath = settings.value(KEY_FILE_PATH).toString())) {
-    filePath = "/home/bogdan/Documents/CV-simple/CV-en-simple_detail.pdf";
+    filePath = "/home/bogdan/Documents/CV-simple/CV-en-simple_detail.pdf";//TODO: remove this
     qDebug() << "Found document " << filePath;
     if(provider_->setDocument(filePath)) {
       setupDocDisplay(settings.value(KEY_PAGE, 0).toInt(),
@@ -435,29 +435,11 @@ void Window::normalScreen()
   }
 }
 
-void Window::increaseScale()
-{
-  qDebug() << "Window::increaseScale";
-}
-
-void Window::decreaseScale()
-{
-  qDebug() << "Window::decreaseScale";
-}
-
 void Window::closeEvent(QCloseEvent* /*evt*/)
 {
   qDebug() << "Window::closeEvent";
 
   saveSettings();
-
-  //QWidget::closeEvent(evt);
-}
-
-void Window::onAnimationFinished()
-{
-  qDebug() << "Window::onAnimationFinished";
-  closeWaitDialog();
 }
 
 void Window::setupDocDisplay(unsigned int pageNumber, qreal factor)
@@ -656,14 +638,6 @@ void Window::closeWaitDialog()
   else {
     qDebug() << "nothing to do";
   }*/
-}
-
-void Window::onAppUpAuthCheckError()
-{
-  showWarningMessage(tr("Cannot get authorization code for Intel AppUp(TM) software"),
-                     tr("You can use tabletReader, but it is highly recommended to connect to Intel AppUp center"));
-  //aplication will exit
-  //connect(aboutDialog_->engine(), SIGNAL(quit()), this, SLOT(close()));
 }
 
 void Window::showPropertiesDialog()

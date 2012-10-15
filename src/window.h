@@ -72,9 +72,6 @@ private slots:
   void openFile(const QString &filePath);
   void fullScreen();
   void normalScreen();
-  void increaseScale();
-  void decreaseScale();
-  void onAnimationFinished();
   void onSendCommand(const QString &cmd);
   void showHelp();
   void showAboutDialog();
@@ -82,7 +79,6 @@ private slots:
   void showWarningMessage(const QString &title, const QString &explanation = "");
   void showWaitDialog();
   void closeWaitDialog();
-  void onAppUpAuthCheckError();
   void showPropertiesDialog();
   void showDocument();
 
