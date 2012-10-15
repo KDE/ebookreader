@@ -29,12 +29,12 @@
 #include <QDeclarativeImageProvider>
 #include "okulardocument.h"
 
-class Window;
+class QDeclarativeView;
 
 class PageProvider : public QDeclarativeImageProvider
 {
 public:
-  PageProvider();
+  explicit PageProvider(QDeclarativeView *view);
   ~PageProvider();
   bool setDocument(const QString &filePath);
 
@@ -84,13 +84,18 @@ public:
       doc_->setWinWidth(width);
     }
   }
+  bool isLoaded() const {
+    return (NULL != doc_);
+  }
 
   enum {CACHE_SIZE = 3};
 
 private:
+  void setDataModel();
   void setNextPage();
   void setPrevPage();
 
+  QDeclarativeView *view_;
   OkularDocument *doc_;
   int currentPage_;
   int currentIndex_;

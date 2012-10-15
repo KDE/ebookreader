@@ -57,10 +57,6 @@ Window::Window()
   scaleFactors_ << -1 << 0.25 << 0.5 << 0.75 << 1.
                 << 1.25 << 1.5 << 2. << 3. << 4.;
 
-  //create page provider
-  provider_ = new PageProvider();
-  engine()->addImageProvider(QLatin1String("pages"), provider_);
-
   //wait timer initialisation (used to handle long actions: document openings, page changes)
   waitTimer_ = new QTimer(this);
   waitTimer_->setInterval(WAIT_TIMER_INTERVAL_MS);
@@ -82,6 +78,10 @@ void Window::showDocument()
 {
   qDebug() << "Window::showDocument";
 
+  //create page provider
+  provider_ = new PageProvider(this);
+  engine()->addImageProvider(QLatin1String("pages"), provider_);
+
   //set document if one has been previously open
   QSettings settings(ORGANIZATION, APPLICATION);
   QString filePath;
@@ -90,16 +90,10 @@ void Window::showDocument()
     filePath = "/home/bogdan/Documents/CV-simple/CV-en-simple_detail.pdf";
     qDebug() << "Found document " << filePath;
     if(provider_->setDocument(filePath)) {
-      setupDocDisplay(settings.value(KEY_PAGE, 0).toInt() + 1, 
+      setupDocDisplay(settings.value(KEY_PAGE, 0).toInt(),
           settings.value(KEY_ZOOM_LEVEL, 1.0).toFloat());
       //configure file browser
       fileBrowserModel_->setCurrentDir(filePath);
-      //configure page viewer
-      QStringList pageIDs;
-      for (int i = 0; i < provider_->count(); ++i) {
-        pageIDs << "image://pages/"+QString::number(i);
-      }
-      rootContext()->setContextProperty("dataModel", QVariant::fromValue(pageIDs));
     }
   }
   else {
@@ -150,11 +144,6 @@ void Window::onSendCommand(const QString &cmd)
 void Window::showFileBrowser()
 {
   qDebug() << "Window::showFileBrowser";
-
-  if (false == animationFinished_) {
-    qDebug() << "unfinished animation";
-    return;
-  }
 
   /*if(NULL == fileBrowser_) {
     if(NULL == (fileBrowser_ = new QDeclarativeView(this))) {
@@ -393,16 +382,10 @@ void Window::openFile(const QString &filePath)
 {
   qDebug() << "Window::openFile";
 
-  if (false == animationFinished_) {
-    qDebug() << "unfinished animation";
-    return;
-  }
-
   //open document
   waitTimer_->start();
   if(provider_->setDocument(filePath)) {
     //load document
-    animationFinished_ = false;
     setupDocDisplay(1, provider_->scale());
     setHelpIcon(true, false);
   }
@@ -462,132 +445,6 @@ void Window::decreaseScale()
   qDebug() << "Window::decreaseScale";
 }
 
-bool Window::eventFilter(QObject *, QEvent *event)
-{
-  if(QEvent::Wheel == event->type()) {
-    // * handle mouse wheel events
-    QWheelEvent *wheelEvent = static_cast<QWheelEvent*>(event);
-    if(0 > wheelEvent->delta()) {
-      showNextPage();
-      return true;//stop further processing
-    }
-    if(0 < wheelEvent->delta()) {
-      showPrevPage();
-      return true;
-    }
-  }
-  else if(QEvent::MouseButtonPress == event->type()) {
-    // * handle mouse events
-    QMouseEvent* mouseEvent = static_cast<QMouseEvent*>(event);
-    startPoint_ = mouseEvent->pos();
-    pressTimer_.start();
-  }
-  else if(QEvent::MouseButtonRelease == event->type()) {
-    QMouseEvent* mouseEvent = static_cast<QMouseEvent*>(event);
-    endPoint_ = mouseEvent->pos();
-
-    //process distance and direction
-    int xDiff = qAbs(startPoint_.x() - endPoint_.x());
-    int yDiff = qAbs(startPoint_.y() - endPoint_.y());
-    if(xDiff <= 2 * SWIPE_THRESHOLD && yDiff <= SWIPE_THRESHOLD) {
-      if(pressTimer_.isValid() && pressTimer_.elapsed() >= LONG_PRESS_TIMEOUT_MS) {
-        pressTimer_.invalidate();
-        showCommandPopupMenu();
-      }
-    }
-    else if(xDiff > yDiff) {
-      // horizontal swipe detected, now find direction
-      if(startPoint_.x() > endPoint_.x()) {
-        //left swipe
-        showNextPage();
-      }
-      else if(startPoint_.x() < endPoint_.x()) {
-        //right swipe
-        showPrevPage();
-      }
-    }
-    // vertical swipe is handled by Flickable class
-  }
-  else if(QEvent::KeyPress == event->type()) {
-    // * handle key events
-    QKeyEvent *keyEvent = static_cast<QKeyEvent*>(event);
-    /*if(Qt::Key_Escape == keyEvent->key() && isFullScreen()) {
-      normalScreen();
-    }*/
-    if(Qt::Key_Right == keyEvent->key()) {
-      showNextPage();
-    }
-    if(Qt::Key_Left == keyEvent->key()) {
-      showPrevPage();
-    }
-    if(Qt::Key_Home == keyEvent->key()) {
-      if((0 != provider_->currentPage()) && (true == animationFinished_)) {
-        //not at the beginning of the document
-        animationFinished_ = false;
-        gotoPage(1, provider_->count());
-      }
-    }
-    if(Qt::Key_End == keyEvent->key()) {
-      int count = provider_->count();
-      if(((count - 1) != provider_->currentPage()) && (true == animationFinished_)) {
-        //not at the end of the document
-        animationFinished_ = false;
-        gotoPage(count, count);
-      }
-    }
-  }
-
-  return false;
-}
-
-bool Window::showNextPage()
-{
-  qDebug() << "Window::showNextPage";
-
-  bool out = false;
-
-  if(true == provider_->isLoaded() && true == animationFinished_) {
-    currentPage_ = provider_->currentPage() + 2;
-    if(currentPage_ <= provider_->count()) {
-      //start timer
-      waitTimer_->start();
-      //load a new page
-      animationFinished_ = false;
-      provider_->setPage(currentPage_);
-      provider_->showCurrentPageUpper();
-      //update the cache after the page has been displayed
-      provider_->sendPageRequest(currentPage_);
-      out = true;
-    }
-  }
-
-  return out;
-}
-
-bool Window::showPrevPage()
-{
-  qDebug() << "Window::showPrevPage";
-
-  bool out = false;
-
-  if(true == provider_->isLoaded() && true == animationFinished_) {
-    currentPage_ = provider_->currentPage();
-    if(0 < currentPage_) {
-      //start timer
-      waitTimer_->start();
-      //load a new page
-      animationFinished_ = false;
-      provider_->setPage(currentPage_);
-      provider_->showCurrentPageLower();
-      //update the cache after the page has been displayed
-      provider_->sendPageRequest(currentPage_ - 2);
-      out = true;
-    }
-  }
-
-  return out;
-}
-
 void Window::closeEvent(QCloseEvent* /*evt*/)
 {
   qDebug() << "Window::closeEvent";
@@ -601,7 +458,6 @@ void Window::onAnimationFinished()
 {
   qDebug() << "Window::onAnimationFinished";
   closeWaitDialog();
-  animationFinished_ = true;//must be the last statement
 }
 
 void Window::setupDocDisplay(unsigned int pageNumber, qreal factor)
@@ -618,29 +474,24 @@ void Window::gotoPage(int pageNb, int count)
   qDebug() << "Window::gotoPage: page nb" << pageNb << ", count" << count;
 
   //set current page
-  if(true == provider_->invalidatePageCache(pageNb - 1)) {
+  if(true == provider_->invalidatePageCache(pageNb)) {
     provider_->setPage(pageNb);
   }
   //preload next page
-  if((count - pageNb) > 0) {
+  if(count > (pageNb+1)) {
     qDebug() << "next page";
-    provider_->sendPageRequest(pageNb);//next page (index starts from 0)
+    provider_->sendPageRequest(pageNb+1);//next page (index starts from 0)
   }
   //preload previous page
-  if(pageNb > 1) {
+  if(pageNb > 0) {
     qDebug() << "previous page";
-    provider_->sendPageRequest(pageNb - 2); //previous page (index starts from 0)
+    provider_->sendPageRequest(pageNb-1); //previous page (index starts from 0)
   }
 }
 
 void Window::updateView(qreal factor)
 {
   qDebug() << "Window::updateView";
-
-  if (false == animationFinished_) {
-    qDebug() << "unfinished animation";
-    return;
-  }
 
   //set zoom factor
   if (provider_->scale() == factor) {
@@ -649,46 +500,35 @@ void Window::updateView(qreal factor)
   setScale(factor);
 
   //update all pages from circular buffer
-  animationFinished_ = false;
-  gotoPage(provider_->currentPage()+1, provider_->count());
-
-  //update view
-  provider_->showCurrentPageUpper();
+  gotoPage(provider_->currentPage(), provider_->count());
 }
 
 void Window::showHelp()
 {
   qDebug() << "Window::showHelp";
 
-  if (false == animationFinished_) {
-    qDebug() << "unfinished animation";
-    return;
-  }
-
   const QString *curFileName = &helpFile_;
-  int curPage = 1;
+  int curPage = 0;
 
-  if (0 == prev_.page) {
+  if (-1 == prev_.page) {
     //store the current file name and page number
     prev_.fileName = provider_->filePath();
-    prev_.page = provider_->currentPage()+1;
+    prev_.page = provider_->currentPage();
   }
   else {
     //restore previous file name and page number
     curFileName = &(prev_.fileName);
     curPage = prev_.page;
-    prev_.page = 0;
+    prev_.page = -1;
   }
 
   if(provider_->setDocument(*curFileName)) {
-    animationFinished_ = false;
     setupDocDisplay(curPage, provider_->scale());
-    provider_->showCurrentPageUpper();
     //setHelpIcon(helpFile_ != *curFileName);
   }
   else {
     qDebug() << "cannot open help file";
-    prev_.page = 0;
+    prev_.page = -1;
     showWarningMessage(tr("Cannot open help file"));
   }
 }

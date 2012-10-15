@@ -22,8 +22,9 @@
 #include "okulardocument.h"
 #include "window.h"
 
-PageProvider::PageProvider()
+PageProvider::PageProvider(QDeclarativeView *view)
   : QDeclarativeImageProvider(QDeclarativeImageProvider::Pixmap),
+    view_(view),
     doc_(new OkularDocument(this)),
     currentPage_(-1),
     currentIndex_(-1),
@@ -90,6 +91,15 @@ QPixmap PageProvider::requestPixmap(const QString &id, QSize *size, const QSize 
   return *(pageCache_[currentPage_ % CACHE_SIZE]->pPixmap);
 }
 
+void PageProvider::setDataModel()
+{
+  QStringList pageIDs;
+  for (int i = 0; i < maxNumPages_; ++i) {
+    pageIDs << "image://pages/"+QString::number(i);
+  }
+  view_->rootContext()->setContextProperty("dataModel", QVariant::fromValue(pageIDs));
+}
+
 bool PageProvider::setDocument(const QString &filePath)
 {
   qDebug() << "PageProvider::setDocument";
@@ -106,6 +116,9 @@ bool PageProvider::setDocument(const QString &filePath)
     else if (false == filePath_.isEmpty()) {
       //an error occured -> restore previous document
       out = (EXIT_SUCCESS == doc_->load(filePath_));
+    }
+    if (true == out) {
+      setDataModel();
     }
   }
   return out;

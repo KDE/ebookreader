@@ -87,9 +87,6 @@ private slots:
   void showDocument();
 
 private:
-  bool eventFilter(QObject *, QEvent *);
-  bool showNextPage();
-  bool showPrevPage();
   void showPageNumber(int currentPage, int nbPages);
   void setupDocDisplay(unsigned int pageNumber, qreal factor);
   void gotoPage(int pageNb, int numPages);
@@ -118,7 +115,6 @@ private:
   QVector<qreal> scaleFactors_;
   QPoint startPoint_;
   QPoint endPoint_;
-  bool animationFinished_;
   QElapsedTimer pressTimer_;
   FileBrowserModel* fileBrowserModel_;
   QTimer *waitTimer_;
