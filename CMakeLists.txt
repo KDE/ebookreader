@@ -29,14 +29,20 @@ endif()
 #generate an automatic build/release number if available
 #release numbers are generated from latest tag of the form [a-zA-Z_.]M.m
 if( EXISTS "${CMAKE_SOURCE_DIR}/.git" )
-  execute_process(COMMAND git describe --abbrev=4 HEAD
-    COMMAND sed -e "s/-/./g"
-    OUTPUT_VARIABLE TR_VERSION
-    OUTPUT_STRIP_TRAILING_WHITESPACE)
-  #remove leading alphanumeric characters
-  string(REGEX REPLACE "^[a-zA-Z_.]+(.*)" "\\1" TR_VERSION ${TR_VERSION})
-else()
+  find_package(Git)
+  if(GIT_FOUND)
+    execute_process(COMMAND ${GIT_EXECUTABLE} describe --abbrev=4 HEAD
+      OUTPUT_VARIABLE TR_VERSION
+      OUTPUT_STRIP_TRAILING_WHITESPACE)
+    #replace dashes with points
+    STRING(REGEX REPLACE "-" "." TR_VERSION ${TR_VERSION})
+    #remove leading alphanumeric characters
+    string(REGEX REPLACE "^[a-zA-Z_.]+(.*)" "\\1" TR_VERSION ${TR_VERSION})
+  endif()
+endif()
+if(NOT TR_VERSION)
   message (WARNING "Cannot generate build/release number. Please set manually.")
+  #set(TR_VERSION "2.1")
 endif()
 
 CONFIGURE_FILE ( ${CMAKE_SOURCE_DIR}/src/config.h.in ${CMAKE_BINARY_DIR}/src/config.h )
