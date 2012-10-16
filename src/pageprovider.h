@@ -59,18 +59,6 @@ public:
     return (NULL != doc_) ? doc_->numPages() : 0;
   }
 
-  bool invalidatePageCache(int page) {
-    qDebug() << "PageProvider::invalidatePageCache" << page;
-
-    if(0 > page || maxNumPages_ <= page) {
-      qDebug() << "PageProvider::invalidatePageCache: nothing to do";
-      return false;//operation failed
-    }
-    doc_->deletePixmap(pageCache_[page % CACHE_SIZE]->pPixmap);
-    pageCache_[page % CACHE_SIZE]->pPixmap = NULL;
-    pageCache_[page % CACHE_SIZE]->valid = false;
-    return true;//operation successful
-  }
   void sendPageRequest(int page) {
     if ((true == invalidatePageCache(page)) && (NULL != doc_)) {
       doc_->pageRequest(page, scaleFactor_);
@@ -94,12 +82,24 @@ private:
   void setDataModel();
   void setNextPage();
   void setPrevPage();
+  bool invalidatePageCache(int page) {
+    qDebug() << "PageProvider::invalidatePageCache" << page;
+
+    bool out = false;
+    if((0 <= page) && (numPages_ > page)) {
+      doc_->deletePixmap(pageCache_[page % CACHE_SIZE]->pPixmap);
+      pageCache_[page % CACHE_SIZE]->pPixmap = NULL;
+      pageCache_[page % CACHE_SIZE]->valid = false;
+      out = true;
+    }
+    return out;
+  }
 
   QDeclarativeView *view_;
   OkularDocument *doc_;
   int currentPage_;
   int currentIndex_;
-  int maxNumPages_;
+  int numPages_;
   qreal scaleFactor_;
   struct PageCache {
     const QPixmap *pPixmap;

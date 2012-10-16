@@ -28,7 +28,7 @@ PageProvider::PageProvider(QDeclarativeView *view)
     doc_(new OkularDocument(this)),
     currentPage_(-1),
     currentIndex_(-1),
-    maxNumPages_(0),
+    numPages_(0),
     scaleFactor_(1.0),
     currentScrollArea_(NULL),
     evtPage_(-1)
@@ -82,7 +82,7 @@ void PageProvider::setPage(int page)
 void PageProvider::setNextPage()
 {
   qDebug() << "PageProvider::setNextPage";
-  if ((currentPage_+1) < maxNumPages_) {
+  if ((currentPage_+1) < numPages_) {
     setPage(currentPage_+1);
     sendPageRequest(currentPage_+1);
   }
@@ -112,7 +112,7 @@ QPixmap PageProvider::requestPixmap(const QString &id, QSize *size, const QSize 
 void PageProvider::setDataModel()
 {
   QStringList pageIDs;
-  for (int i = 0; i < maxNumPages_; ++i) {
+  for (int i = 0; i < numPages_; ++i) {
     pageIDs << "image://pages/"+QString::number(i);
   }
   view_->rootContext()->setContextProperty("dataModel", QVariant::fromValue(pageIDs));
@@ -126,7 +126,7 @@ bool PageProvider::setDocument(const QString &filePath)
 
   if (NULL != doc_) {
     if(true == doc_->load(filePath)) {
-      maxNumPages_ = doc_->numPages();
+      numPages_ = doc_->numPages();
       currentPage_ = -1;
       filePath_ = filePath;
       setDataModel();
