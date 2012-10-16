@@ -79,6 +79,24 @@ void PageProvider::setPage(int page)
   }
 }
 
+void PageProvider::setNextPage()
+{
+  qDebug() << "PageProvider::setNextPage";
+  if ((currentPage_+1) < maxNumPages_) {
+    setPage(currentPage_+1);
+    sendPageRequest(currentPage_+1);
+  }
+}
+
+void PageProvider::setPrevPage()
+{
+  qDebug() << "PageProvider::setPrevPage";
+  if ((currentPage_-1) >= 0) {
+    setPage(currentPage_-1);
+    sendPageRequest(currentPage_-1);
+  }
+}
+
 QPixmap PageProvider::requestPixmap(const QString &id, QSize *size, const QSize &requestedSize)
 {
   qDebug() << "PageProvider::requestPixmap" << id;
@@ -120,23 +138,5 @@ bool PageProvider::setDocument(const QString &filePath)
     }
   }
   return out;
-}
-
-void PageProvider::setNextPage()
-{
-  qDebug() << "PageProvider::setNextPage";
-  if ((currentPage_+1) < maxNumPages_) {
-    setPage(currentPage_+1);
-    sendPageRequest(currentPage_+1);
-  }
-}
-
-void PageProvider::setPrevPage()
-{
-  qDebug() << "PageProvider::setPrevPage";
-  if ((currentPage_-1) >= 0) {
-    setPage(currentPage_-1);
-    sendPageRequest(currentPage_-1);
-  }
 }
 
