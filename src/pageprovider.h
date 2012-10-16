@@ -40,7 +40,7 @@ public:
 
   void pixmapReady(int page, const QPixmap *pix);
 
-  void setPage(int page = -1);
+  void setPage(int page, bool force = false);
   QPixmap requestPixmap(const QString &id, QSize *size, const QSize &requestedSize);
 
   void setScale(qreal scale) {

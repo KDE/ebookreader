@@ -456,9 +456,7 @@ void Window::gotoPage(int pageNb, int count)
   qDebug() << "Window::gotoPage: page nb" << pageNb << ", count" << count;
 
   //set current page
-  if(true == provider_->invalidatePageCache(pageNb)) {
-    provider_->setPage(pageNb);
-  }
+  provider_->setPage(pageNb, true);
   //preload next page
   if(count > (pageNb+1)) {
     qDebug() << "next page";

@@ -62,11 +62,16 @@ void PageProvider::pixmapReady(int page, const QPixmap *pix)
   }
 }
 
-void PageProvider::setPage(int page)
+void PageProvider::setPage(int page, bool force)
 {
   qDebug() << "PageProvider::setPage" << page;
 
   currentPage_ = page;
+
+  //remove previous page from cache if requested
+  if ((true == force) && (false == invalidatePageCache(page))) {
+    return;
+  }
 
   //update cache if needed
   if(false == pageCache_[currentPage_ % CACHE_SIZE]->valid) {
