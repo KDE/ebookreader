@@ -16,10 +16,13 @@ Item {
       width: 800
 
       Flickable {
-        clip: true
         anchors.fill: parent
         anchors.margins: 15
+        //contentWidth: image.width
+        //contentHeight: image.height
+        boundsBehavior: Flickable.StopAtBounds
         Image {
+          id: image
           anchors.horizontalCenter: parent.horizontalCenter
           source: modelData
         }
