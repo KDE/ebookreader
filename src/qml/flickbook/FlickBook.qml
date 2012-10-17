@@ -9,7 +9,7 @@ Item {
 
     Rectangle {
       id: page
-      color: "white"
+      color: "black"
       border.color: "gray"
       border.width: 1
       height: parent.height
@@ -20,6 +20,7 @@ Item {
         anchors.fill: parent
         anchors.margins: 15
         Image {
+          anchors.horizontalCenter: parent.horizontalCenter
           source: modelData
         }
       }

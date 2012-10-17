@@ -82,6 +82,9 @@ void PageProvider::setPage(int page, bool force)
       evtLoop_.exec();//wait to receive the page pixmap
     }
   }
+  else {
+    qDebug() << "page" << page << "already in cache";
+  }
 }
 
 void PageProvider::setNextPage()
