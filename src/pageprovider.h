@@ -89,6 +89,9 @@ private:
       pageCache_[page % CACHE_SIZE]->valid = false;
       out = true;
     }
+    else {
+      qDebug() << "invalid page number";
+    }
     return out;
   }
 
