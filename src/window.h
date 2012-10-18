@@ -106,6 +106,15 @@ private:
       }
     }*/
   }
+  template<typename T>
+  void setProperty(QObject *obj, const char *property, const T &value) {
+    if (true == obj->setProperty(property, value)) {
+      qDebug() << "set" << property << "to" << value;
+    }
+    else {
+      qDebug() << "cannot set" << property;
+    }
+  }
 
   PageProvider *provider_;
   QVector<qreal> scaleFactors_;

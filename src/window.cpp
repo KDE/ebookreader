@@ -108,15 +108,12 @@ void Window::showDocument()
     qDebug() << "got object";
     QObject *list = rootObj->findChild<QObject*>("list");
     if (NULL != list) {
-      if (false == list->setProperty("currentIndex", provider_->currentPage())) {
-        qDebug() << "Cannot set property currrentIndex";
-      }
-      else {
-        qDebug() << "set current index to" << provider_->currentPage();
-      }
+      setProperty(list, "highlightFollowsCurrentItem", false);
+      setProperty(list, "currentIndex", provider_->currentPage());
+      setProperty(list, "highlightFollowsCurrentItem", true);
     }
     else {
-      qDebug() << "cannot get book";
+      qDebug() << "cannot get list";
     }
   }
 }
