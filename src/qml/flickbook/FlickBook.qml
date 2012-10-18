@@ -5,7 +5,7 @@ Item {
   id: book
 
   Component {
-  id: pageDelegate
+    id: pageDelegate
 
     Rectangle {
       id: page
@@ -18,8 +18,8 @@ Item {
       Flickable {
         anchors.fill: parent
         anchors.margins: 15
-        //contentWidth: image.width
-        //contentHeight: image.height
+        contentWidth: image.width
+        contentHeight: image.height
         boundsBehavior: Flickable.StopAtBounds
         Image {
           id: image
@@ -37,5 +37,6 @@ Item {
     delegate: pageDelegate
     orientation: ListView.Horizontal
     snapMode: ListView.SnapOneItem
+    focus: true
   }
 }

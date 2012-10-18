@@ -101,6 +101,12 @@ void Window::showDocument()
     showHelp();
   }
   setSource(QUrl("qrc:/qml/qml/main.qml"));
+
+  //connect signals
+  QObject *obj = rootObject();
+  if (NULL != obj) {
+    qDebug() << "got object";
+  }
 }
 
 Window::~Window()
