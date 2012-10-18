@@ -7,7 +7,7 @@ Rectangle {
   color: "black"
 
   Loader {
-    id:someLoader
+    id: someLoader
     source: "waitpage.qml"
   }
 

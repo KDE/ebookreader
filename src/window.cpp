@@ -102,10 +102,22 @@ void Window::showDocument()
   }
   setSource(QUrl("qrc:/qml/qml/main.qml"));
 
-  //connect signals
-  QObject *obj = rootObject();
-  if (NULL != obj) {
+  //setup UI
+  QObject *rootObj = rootObject();
+  if (NULL != rootObj) {
     qDebug() << "got object";
+    QObject *list = rootObj->findChild<QObject*>("list");
+    if (NULL != list) {
+      if (false == list->setProperty("currentIndex", provider_->currentPage())) {
+        qDebug() << "Cannot set property currrentIndex";
+      }
+      else {
+        qDebug() << "set current index to" << provider_->currentPage();
+      }
+    }
+    else {
+      qDebug() << "cannot get book";
+    }
   }
 }
 
@@ -771,13 +783,18 @@ QString Window::elapsedTime()
 
 void Window::saveSettings()
 {
+  qDebug() << "Window::saveSettings";
+
   if((NULL != provider_) && (true == provider_->isLoaded())) {
     const QString &fileName = provider_->filePath();
     if (fileName != helpFile_) {
       QSettings settings(ORGANIZATION, APPLICATION);
-      settings.setValue(KEY_PAGE, provider_->currentPage());
       settings.setValue(KEY_FILE_PATH, fileName);
+      qDebug() << "File" << fileName;
+      settings.setValue(KEY_PAGE, provider_->currentPage());
+      qDebug() << "Page" << provider_->currentPage();
       settings.setValue(KEY_ZOOM_LEVEL, provider_->scale());
+      qDebug() << "Zoom" << provider_->scale();
     }
   }
 }

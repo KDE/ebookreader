@@ -52,9 +52,6 @@ public:
   int currentPage() const {
     return currentPage_;
   }
-  int currentIndex() const {
-    return currentPage_ % CACHE_SIZE;
-  }
   int count() const {
     return (NULL != doc_) ? doc_->numPages() : 0;
   }

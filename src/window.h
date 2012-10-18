@@ -109,15 +109,11 @@ private:
 
   PageProvider *provider_;
   QVector<qreal> scaleFactors_;
-  QPoint startPoint_;
-  QPoint endPoint_;
-  QElapsedTimer pressTimer_;
   FileBrowserModel* fileBrowserModel_;
   QTimer *waitTimer_;
 #ifndef NO_QTMOBILITY
   QTM_NAMESPACE::QSystemBatteryInfo *batteryInfo_;
 #endif
-  int currentPage_;
   QElapsedTimer eTime_;
   const QString helpFile_;
   struct {

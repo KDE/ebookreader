@@ -34,6 +34,7 @@ Item {
 
   ListView {
     id: list
+    objectName: "list"
     anchors.fill: parent
     model: dataModel
     delegate: pageDelegate
