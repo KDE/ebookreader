@@ -84,7 +84,7 @@ private slots:
 
 private:
   void showPageNumber(int currentPage, int nbPages);
-  void setupDocDisplay(unsigned int pageNumber, qreal factor);
+  void setupDocDisplay(int pageNumber, qreal factor);
   void gotoPage(int pageNb, int numPages);
   void updateView(qreal factor);
   void setScale(qreal factor) {

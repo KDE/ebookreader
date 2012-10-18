@@ -21,6 +21,8 @@ Item {
         contentWidth: image.width
         contentHeight: image.height
         boundsBehavior: Flickable.StopAtBounds
+        flickableDirection: Flickable.HorizontalAndVerticalFlick
+        clip: true
         Image {
           id: image
           anchors.horizontalCenter: parent.horizontalCenter

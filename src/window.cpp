@@ -448,7 +448,7 @@ void Window::closeEvent(QCloseEvent* /*evt*/)
   saveSettings();
 }
 
-void Window::setupDocDisplay(unsigned int pageNumber, qreal factor)
+void Window::setupDocDisplay(int pageNumber, qreal factor)
 {
   qDebug() << "Window::setupDocDisplay" << pageNumber;
   //set document zoom factor
