@@ -57,6 +57,8 @@ public:
   }
 
   void sendPageRequest(int page) {
+    qDebug() << "PageProvider::sendPageRequest";
+
     if ((true == invalidatePageCache(page)) && (NULL != doc_)) {
       doc_->pageRequest(page, scaleFactor_);
     }

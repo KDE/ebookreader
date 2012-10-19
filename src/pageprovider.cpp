@@ -75,7 +75,7 @@ void PageProvider::setPage(int page, bool force)
 
   //update cache if needed
   if(false == pageCache_[currentPage_ % CACHE_SIZE]->valid) {
-    qDebug() << "PageProvider::setPage: invalid cache"; 
+    qDebug() << "invalid cache";
     evtPage_ = currentPage_;//prepare to wait synchronously this page
     doc_->pageRequest(currentPage_, scaleFactor_);
     if (-1 != evtPage_) {
@@ -94,6 +94,9 @@ void PageProvider::setNextPage()
     setPage(currentPage_+1);
     sendPageRequest(currentPage_+1);
   }
+  else {
+    qDebug() << "nothing to do";
+  }
 }
 
 void PageProvider::setPrevPage()
@@ -102,6 +105,9 @@ void PageProvider::setPrevPage()
   if ((currentPage_-1) >= 0) {
     setPage(currentPage_-1);
     sendPageRequest(currentPage_-1);
+  }
+  else {
+    qDebug() << "nothing to do";
   }
 }
 

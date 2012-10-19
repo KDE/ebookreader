@@ -25,7 +25,7 @@ Item {
         clip: true
         Image {
           id: image
-          anchors.horizontalCenter: parent.horizontalCenter
+          //anchors.horizontalCenter: parent.horizontalCenter
           source: modelData
         }
       }
