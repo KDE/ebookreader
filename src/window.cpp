@@ -463,9 +463,10 @@ void Window::setupDocDisplay(int pageNumber, qreal factor)
   //set document zoom factor
   setScale(factor);
   //set current page
-  gotoPage(pageNumber, provider_->count());
+  provider_->setPage(pageNumber, true);
 }
 
+//TODO: remove this method ?
 void Window::gotoPage(int pageNb, int count)
 {
   qDebug() << "Window::gotoPage: page nb" << pageNb << ", count" << count;

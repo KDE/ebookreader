@@ -130,7 +130,19 @@ QPixmap PageProvider::requestPixmap(const QString &id, QSize *size, const QSize 
   Q_UNUSED(size);
   Q_UNUSED(requestedSize);
 
-  (currentPage_ < id.toInt())?setNextPage():setPrevPage();
+  int page = id.toInt();
+  if (0 == page) {
+    setNextPage();
+  }
+  else if ((numPages_-1) == page) {
+    setPrevPage();
+  }
+  else if (-1 == currentPage_) {
+    setPage(page);
+  }
+  else {
+    (currentPage_ <= page)?setNextPage():setPrevPage();
+  }
 
   return *(pageCache_[currentPage_ % CACHE_SIZE]->pPixmap);
 }
