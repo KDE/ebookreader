@@ -36,7 +36,7 @@ PageProvider::PageProvider(QDeclarativeView *view)
   for(int n = 0; n < CACHE_SIZE; ++n) {
     pageCache_.append(new PageCache);
     pageCache_[n]->pPixmap = NULL;
-    pageCache_[n]->valid = false;
+    pageCache_[n]->status = PAGE_CACHE_INVALID;
   }
 }
 
@@ -50,10 +50,10 @@ PageProvider::~PageProvider()
 
 void PageProvider::pixmapReady(int page, const QPixmap *pix)
 {
-  qDebug() << "PageProvider::pixmapReady";
+  qDebug() << "PageProvider::pixmapReady" << page;
 
   pageCache_[page % CACHE_SIZE]->pPixmap = pix;
-  pageCache_[page % CACHE_SIZE]->valid = true;
+  pageCache_[page % CACHE_SIZE]->status = PAGE_CACHE_VALID;
   if (page == evtPage_) {
     if (true == evtLoop_.isRunning()) {//racing conditions should be managed by the upper layers
       evtLoop_.quit();//used for synchronous page requests
@@ -74,16 +74,28 @@ void PageProvider::setPage(int page, bool force)
   }
 
   //update cache if needed
-  if(false == pageCache_[currentPage_ % CACHE_SIZE]->valid) {
-    qDebug() << "invalid cache";
+  switch (PageCacheStatus st = pageCache_[currentPage_%CACHE_SIZE]->status) {
+  case PAGE_CACHE_INVALID:
+  case PAGE_CACHE_PENDING:
     evtPage_ = currentPage_;//prepare to wait synchronously this page
-    doc_->pageRequest(currentPage_, scaleFactor_);
-    if (-1 != evtPage_) {
-      evtLoop_.exec();//wait to receive the page pixmap
+    if (PAGE_CACHE_INVALID == st) {
+      qDebug() << "invalid cache";
+      doc_->pageRequest(currentPage_, scaleFactor_);//send request when the cache is invalid
     }
-  }
-  else {
-    qDebug() << "page" << page << "already in cache";
+    else {
+      qDebug() << "pending cache";
+    }
+    if (-1 != evtPage_) {
+      qDebug() << "event loop started";
+      evtLoop_.exec();//wait to receive the page pixmap
+      qDebug() << "event loop ended";
+    }
+    break;
+  case PAGE_CACHE_VALID:
+    qDebug() << "valid cache";
+    break;
+  default:
+      qDebug() << "unknown page state";
   }
 }
 

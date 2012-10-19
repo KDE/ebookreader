@@ -61,6 +61,7 @@ public:
 
     if ((true == invalidatePageCache(page)) && (NULL != doc_)) {
       doc_->pageRequest(page, scaleFactor_);
+      pageCache_[page % CACHE_SIZE]->status = PAGE_CACHE_PENDING;
     }
   }
   const QString& filePath() const {
@@ -88,7 +89,7 @@ private:
     if((0 <= page) && (numPages_ > page)) {
       doc_->deletePixmap(pageCache_[page % CACHE_SIZE]->pPixmap);
       pageCache_[page % CACHE_SIZE]->pPixmap = NULL;
-      pageCache_[page % CACHE_SIZE]->valid = false;
+      pageCache_[page % CACHE_SIZE]->status = PAGE_CACHE_INVALID;
       out = true;
     }
     else {
@@ -103,9 +104,10 @@ private:
   int currentIndex_;
   int numPages_;
   qreal scaleFactor_;
+  enum PageCacheStatus {PAGE_CACHE_INVALID, PAGE_CACHE_VALID, PAGE_CACHE_PENDING};
   struct PageCache {
     const QPixmap *pPixmap;
-    bool valid;
+    PageCacheStatus status;
   };
   QList<PageCache*> pageCache_;
   QScrollArea *currentScrollArea_;
