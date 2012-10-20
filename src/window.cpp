@@ -86,13 +86,13 @@ void Window::showDocument()
   QSettings settings(ORGANIZATION, APPLICATION);
   QString filePath;
   waitTimer_->start();
+  int currentPage = -1;
   if(NULL != (filePath = settings.value(KEY_FILE_PATH).toString())) {
     filePath = "/home/bogdan/Documents/CV-simple/CV-en-simple_detail.pdf";//TODO: remove this
     qDebug() << "Found document " << filePath;
     if(provider_->setDocument(filePath)) {
       setScale(settings.value(KEY_ZOOM_LEVEL, 1.0).toFloat());
-      setupDocDisplay(settings.value(KEY_PAGE, 0).toInt(),
-          settings.value(KEY_ZOOM_LEVEL, 1.0).toFloat());
+      currentPage = settings.value(KEY_PAGE, 0).toInt();
       //configure file browser
       fileBrowserModel_->setCurrentDir(filePath);
     }
@@ -110,7 +110,7 @@ void Window::showDocument()
     QObject *list = rootObj->findChild<QObject*>("list");
     if (NULL != list) {
       setProperty(list, "highlightFollowsCurrentItem", false);
-      setProperty(list, "currentIndex", provider_->currentPage());
+      setProperty(list, "currentIndex", currentPage);
       setProperty(list, "highlightFollowsCurrentItem", true);
     }
     else {
@@ -458,6 +458,7 @@ void Window::closeEvent(QCloseEvent* /*evt*/)
   saveSettings();
 }
 
+//TODO: remove this method
 void Window::setupDocDisplay(int pageNumber, qreal factor)
 {
   qDebug() << "Window::setupDocDisplay" << pageNumber;
@@ -465,7 +466,7 @@ void Window::setupDocDisplay(int pageNumber, qreal factor)
   //set document zoom factor
   setScale(factor);
   //set current page
-  provider_->setPage(pageNumber, true);
+  //provider_->setPage(pageNumber, true);
 }
 
 //TODO: remove this method ?
@@ -474,19 +475,20 @@ void Window::gotoPage(int pageNb, int count)
   qDebug() << "Window::gotoPage: page nb" << pageNb << ", count" << count;
 
   //set current page
-  provider_->setPage(pageNb, true);
+  //provider_->setPage(pageNb, true);
   //preload next page
   if(count > (pageNb+1)) {
     qDebug() << "next page";
-    provider_->sendPageRequest(pageNb+1);//next page (index starts from 0)
+    //provider_->sendPageRequest(pageNb+1);//next page (index starts from 0)
   }
   //preload previous page
   if(pageNb > 0) {
     qDebug() << "previous page";
-    provider_->sendPageRequest(pageNb-1); //previous page (index starts from 0)
+    //provider_->sendPageRequest(pageNb-1); //previous page (index starts from 0)
   }
 }
 
+//TODO: remove
 void Window::updateView(qreal factor)
 {
   qDebug() << "Window::updateView";
@@ -498,7 +500,7 @@ void Window::updateView(qreal factor)
   setScale(factor);
 
   //update all pages from circular buffer
-  gotoPage(provider_->currentPage(), provider_->count());
+  //gotoPage(provider_->currentPage(), provider_->count());
 }
 
 void Window::showHelp()
@@ -511,7 +513,7 @@ void Window::showHelp()
   if (-1 == prev_.page) {
     //store the current file name and page number
     prev_.fileName = provider_->filePath();
-    prev_.page = provider_->currentPage();
+    //prev_.page = provider_->currentPage();TODO: use a different approach
   }
   else {
     //restore previous file name and page number
@@ -790,11 +792,8 @@ void Window::saveSettings()
     if (fileName != helpFile_) {
       QSettings settings(ORGANIZATION, APPLICATION);
       settings.setValue(KEY_FILE_PATH, fileName);
-      qDebug() << "File" << fileName;
-      settings.setValue(KEY_PAGE, provider_->currentPage());
-      qDebug() << "Page" << provider_->currentPage();
+      //settings.setValue(KEY_PAGE, provider_->currentPage());//TODO: use a different approach
       settings.setValue(KEY_ZOOM_LEVEL, provider_->scale());
-      qDebug() << "Zoom" << provider_->scale();
     }
   }
 }
