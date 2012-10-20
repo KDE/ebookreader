@@ -36,11 +36,7 @@ class PageProvider : public QDeclarativeImageProvider
 public:
   explicit PageProvider(QDeclarativeView *view);
   ~PageProvider();
-  bool setDocument(const QString &filePath);
 
-  void pixmapReady(int page, const QPixmap *pix);
-
-  void setPage(int page, bool force = false);
   QPixmap requestPixmap(const QString &id, QSize *size, const QSize &requestedSize);
 
   void setScale(qreal scale) {
@@ -48,9 +44,6 @@ public:
   }
   qreal scale() const {
     return scaleFactor_;
-  }
-  int currentPage() const {
-    return currentPage_;
   }
   int count() const {
     return (NULL != doc_) ? doc_->numPages() : 0;
@@ -64,6 +57,9 @@ public:
       pageCache_[page % CACHE_SIZE]->status = PAGE_CACHE_PENDING;
     }
   }
+  void pixmapReady(int page, const QPixmap *pix);
+
+  bool setDocument(const QString &filePath);
   const QString& filePath() const {
     return filePath_;
   }
@@ -79,6 +75,7 @@ public:
   enum {CACHE_SIZE = 3};
 
 private:
+  void setPage(int page, bool force = false);
   void setDataModel();
   void setNextPage();
   void setPrevPage();

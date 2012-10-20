@@ -90,6 +90,7 @@ void Window::showDocument()
     filePath = "/home/bogdan/Documents/CV-simple/CV-en-simple_detail.pdf";//TODO: remove this
     qDebug() << "Found document " << filePath;
     if(provider_->setDocument(filePath)) {
+      setScale(settings.value(KEY_ZOOM_LEVEL, 1.0).toFloat());
       setupDocDisplay(settings.value(KEY_PAGE, 0).toInt(),
           settings.value(KEY_ZOOM_LEVEL, 1.0).toFloat());
       //configure file browser
@@ -460,6 +461,7 @@ void Window::closeEvent(QCloseEvent* /*evt*/)
 void Window::setupDocDisplay(int pageNumber, qreal factor)
 {
   qDebug() << "Window::setupDocDisplay" << pageNumber;
+
   //set document zoom factor
   setScale(factor);
   //set current page

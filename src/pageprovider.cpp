@@ -123,6 +123,7 @@ void PageProvider::setPrevPage()
   }
 }
 
+//main entry point for the UI
 QPixmap PageProvider::requestPixmap(const QString &id, QSize *size, const QSize &requestedSize)
 {
   qDebug() << "PageProvider::requestPixmap" << id;
