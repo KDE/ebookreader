@@ -45,7 +45,8 @@ Window::Window()
 #ifndef NO_QTMOBILITY
     batteryInfo_(NULL),
 #endif
-    helpFile_(QCoreApplication::applicationDirPath()+QString(HELP_FILE))
+    helpFile_(QCoreApplication::applicationDirPath()+QString(HELP_FILE)),
+    currentPage_(-1)
 {
   prev_.fileName = "";
   prev_.page = 0;
@@ -79,20 +80,19 @@ void Window::showDocument()
   qDebug() << "Window::showDocument";
 
   //create page provider
-  provider_ = new PageProvider(this);
+  provider_ = new PageProvider(rootContext());
   engine()->addImageProvider(QLatin1String("pages"), provider_);
 
   //set document if one has been previously open
   QSettings settings(ORGANIZATION, APPLICATION);
   QString filePath;
   waitTimer_->start();
-  int currentPage = -1;
   if(NULL != (filePath = settings.value(KEY_FILE_PATH).toString())) {
     filePath = "/home/bogdan/Documents/CV-simple/CV-en-simple_detail.pdf";//TODO: remove this
     qDebug() << "Found document " << filePath;
     if(provider_->setDocument(filePath)) {
       setScale(settings.value(KEY_ZOOM_LEVEL, 1.0).toFloat());
-      currentPage = settings.value(KEY_PAGE, 0).toInt();
+      currentPage_ = settings.value(KEY_PAGE, 0).toInt();
       //configure file browser
       fileBrowserModel_->setCurrentDir(filePath);
     }
@@ -101,22 +101,8 @@ void Window::showDocument()
     qDebug() << "no document found";
     showHelp();
   }
+  rootContext()->setContextProperty("windowMgr", this);
   setSource(QUrl("qrc:/qml/qml/main.qml"));
-
-  //setup UI
-  QObject *rootObj = rootObject();
-  if (NULL != rootObj) {
-    qDebug() << "got object";
-    QObject *list = rootObj->findChild<QObject*>("list");
-    if (NULL != list) {
-      setProperty(list, "highlightFollowsCurrentItem", false);
-      setProperty(list, "currentIndex", currentPage);
-      setProperty(list, "highlightFollowsCurrentItem", true);
-    }
-    else {
-      qDebug() << "cannot get list";
-    }
-  }
 }
 
 Window::~Window()
@@ -792,8 +778,11 @@ void Window::saveSettings()
     if (fileName != helpFile_) {
       QSettings settings(ORGANIZATION, APPLICATION);
       settings.setValue(KEY_FILE_PATH, fileName);
-      //settings.setValue(KEY_PAGE, provider_->currentPage());//TODO: use a different approach
+      qDebug() << "file name" << fileName;
+      settings.setValue(KEY_PAGE, provider_->currentPage());
+      qDebug() << "current page" << provider_->currentPage();
       settings.setValue(KEY_ZOOM_LEVEL, provider_->scale());
+      qDebug() << "zoom factor" << provider_->scale();
     }
   }
 }

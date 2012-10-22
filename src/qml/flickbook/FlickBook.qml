@@ -41,7 +41,6 @@ Item {
     orientation: ListView.Horizontal
     snapMode: ListView.SnapOneItem
     focus: true
-    cacheBuffer: 0
-    currentIndex: 1
+    currentIndex: windowMgr.currentPage
   }
 }

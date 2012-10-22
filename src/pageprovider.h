@@ -29,12 +29,12 @@
 #include <QDeclarativeImageProvider>
 #include "okulardocument.h"
 
-class QDeclarativeView;
+class QDeclarativeContext;
 
 class PageProvider : public QDeclarativeImageProvider
 {
 public:
-  explicit PageProvider(QDeclarativeView *view);
+  explicit PageProvider(QDeclarativeContext *context);
   ~PageProvider();
 
   QPixmap requestPixmap(const QString &id, QSize *size, const QSize &requestedSize);
@@ -71,6 +71,9 @@ public:
   bool isLoaded() const {
     return (NULL != doc_);
   }
+  int currentPage() const {
+    return currentPage_;
+  }
 
   enum {CACHE_SIZE = 3};
 
@@ -95,10 +98,9 @@ private:
     return out;
   }
 
-  QDeclarativeView *view_;
+  QDeclarativeContext *context_;
   OkularDocument *doc_;
   int currentPage_;
-  int currentIndex_;
   int numPages_;
   qreal scaleFactor_;
   enum PageCacheStatus {PAGE_CACHE_INVALID, PAGE_CACHE_VALID, PAGE_CACHE_PENDING};

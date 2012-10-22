@@ -31,7 +31,6 @@
 #endif
 #include "pageprovider.h"
 
-class QScrollArea;
 class FileBrowserModel;
 class QDeclarativeView;
 class QTimer;
@@ -45,11 +44,17 @@ class Window : public QDeclarativeView
 {
   Q_OBJECT
 
+  Q_PROPERTY(int currentPage READ getCurrentPage NOTIFY changeCurrentPage)
+
 public:
   Window();
   ~Window();
   bool hasTouchScreen();
   QString batteryStatus();
+  int getCurrentPage() const {
+    qDebug() << "Window::getCurrentPage" << currentPage_;
+    return currentPage_;
+  }
   enum {TOOLTIP_VISIBLE_TIME_MS = 1500,
         HORIZONTAL_SLIDE_SPEED_MS = 500,
         SWIPE_THRESHOLD = 5,
@@ -59,6 +64,9 @@ public:
 
 protected:
   void closeEvent(QCloseEvent *);
+
+signals:
+  void changeCurrentPage(int page);
 
 private slots:
   void showFileBrowser();
@@ -129,6 +137,7 @@ private:
     QString fileName;
     int page;
   } prev_;//used by showHelp to restore the previous document
+  int currentPage_;
 };
 
 #endif
