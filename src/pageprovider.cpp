@@ -135,6 +135,7 @@ QPixmap PageProvider::requestPixmap(const QString &id, QSize *size, const QSize 
     setNextPage();
   }
   else if ((numPages_-1) == page) {
+    currentPage_ = numPages_;
     setPrevPage();
   }
   else if (-1 == currentPage_) {

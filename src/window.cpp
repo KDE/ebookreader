@@ -102,7 +102,9 @@ void Window::showDocument()
     showHelp();
   }
   rootContext()->setContextProperty("windowMgr", this);
+  qDebug() << "start loading main.qml";
   setSource(QUrl("qrc:/qml/qml/main.qml"));
+  qDebug() << "finish loading main.qml";
 }
 
 Window::~Window()
