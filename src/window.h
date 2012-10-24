@@ -55,8 +55,7 @@ public:
   ~Window();
   bool hasTouchScreen();
   QString batteryStatus();
-  enum {TOOLTIP_VISIBLE_TIME_MS = 1500,
-        HORIZONTAL_SLIDE_SPEED_MS = 500,
+  enum {HORIZONTAL_SLIDE_SPEED_MS = 500,
         SWIPE_THRESHOLD = 5,
         LONG_PRESS_TIMEOUT_MS = 1000,
         WAIT_TIMER_INTERVAL_MS = 1000,
