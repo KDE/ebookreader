@@ -128,6 +128,7 @@ Window::Window(QWidget *parent)
   //main toolbar
   if(NULL != (toolBar_ = new QDeclarativeView(this))) {
     toolBar_->setSource(QUrl("qrc:/qml/qml/maintoolbar.qml"));
+    toolBar_->installEventFilter(this);
     QObject *pDisp = toolBar_->rootObject();
     if(NULL != pDisp) {
       pDisp->setProperty("width", width());
