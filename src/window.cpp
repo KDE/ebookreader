@@ -26,7 +26,6 @@
 #include "SlidingStackedWidget.h"
 #include "filebrowsermodel.h"
 #include "flickable.h"
-#include "screen_size.h"
 
 #define ORGANIZATION "Bogdan Cristea"
 #define APPLICATION "tabletReader"

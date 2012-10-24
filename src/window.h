@@ -59,8 +59,9 @@ public:
         HORIZONTAL_SLIDE_SPEED_MS = 500,
         SWIPE_THRESHOLD = 5,
         LONG_PRESS_TIMEOUT_MS = 1000,
-        WAIT_TIMER_INTERVAL_MS = 1000
-       };
+        WAIT_TIMER_INTERVAL_MS = 1000,
+        MIN_SCREEN_WIDTH = 1024,
+        MIN_SCREEN_HEIGHT = 768};
 
 protected:
   void closeEvent(QCloseEvent *);

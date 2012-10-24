@@ -24,7 +24,6 @@
 #include <core/settings_core.h>
 #include <core/page.h>
 #include "okulardocument.h"
-#include "screen_size.h"
 
 //main entry point into okular core libray
 class PagePainter
