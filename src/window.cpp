@@ -531,6 +531,8 @@ void Window::normalScreen()
 
 bool Window::eventFilter(QObject *, QEvent *event)
 {
+  bool out = false;
+
   if(QEvent::Wheel == event->type()) {
     // * handle mouse wheel events
     QWheelEvent *wheelEvent = static_cast<QWheelEvent*>(event);
@@ -605,13 +607,20 @@ bool Window::eventFilter(QObject *, QEvent *event)
         }
         break;
       case Qt::Key_Right:
-        showNextPage();
+        if (false == isBackground()) {
+          showNextPage();
+        }
+        out = true;//don't propagate this event
         break;
       case Qt::Key_Left:
-        showPrevPage();
+        if (false == isBackground()) {
+          showPrevPage();
+        }
+        out = true;//don't propagate this event
         break;
       case Qt::Key_Home:
-        if((0 != document_->currentPage()) && (true == animationFinished_)) {
+        if((0 != document_->currentPage()) && (true == animationFinished_) &&
+            (false == isBackground())) {
           //not at the beginning of the document
           animationFinished_ = false;
           gotoPage(1, document_->numPages());
@@ -621,7 +630,8 @@ bool Window::eventFilter(QObject *, QEvent *event)
       case Qt::Key_End:
         {
           int numPages = document_->numPages();
-          if(((numPages - 1) != document_->currentPage()) && (true == animationFinished_)) {
+          if(((numPages - 1) != document_->currentPage()) && (true == animationFinished_) &&
+              (false == isBackground())) {
             //not at the end of the document
             animationFinished_ = false;
             gotoPage(numPages, numPages);
@@ -632,7 +642,7 @@ bool Window::eventFilter(QObject *, QEvent *event)
     }
   }
 
-  return false;
+  return out;
 }
 
 bool Window::showNextPage()

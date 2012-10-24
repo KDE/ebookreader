@@ -118,6 +118,11 @@ private:
     }
   }
   void addShortcutKeys();
+  bool isBackground() {
+    return (NULL != fileBrowser_) || (NULL != gotoPage_) ||
+      (NULL != zoomPage_) || (NULL != commandPopupMenu_) ||
+      (NULL != aboutDialog_) || (NULL != waitDialog_);
+  }
 
   SlidingStackedWidget *slidingStacked_;
   DocumentWidget *document_;
