@@ -33,8 +33,11 @@
 #define KEY_PAGE "current_page"
 #define KEY_FILE_PATH "current_file_path"
 #define KEY_ZOOM_LEVEL "current_zoom_level"
+#if defined(WIN32) || defined(WIN64)
+#define HELP_FILE "/tabletReaderHelp.pdf"
+#else
 #define HELP_FILE "/../share/doc/tabletReaderHelp.pdf"
-
+#endif
 #ifndef NO_QTMOBILITY
 QTM_USE_NAMESPACE
 #endif
@@ -789,6 +792,7 @@ void Window::showHelp(bool slideNext)
   else {
     qDebug() << "cannot open help file";
     prev_.page = 0;
+    waitTimer_->stop();
     showWarningMessage(tr("Cannot open help file"));
   }
 }
