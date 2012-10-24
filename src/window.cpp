@@ -509,7 +509,7 @@ void Window::normalScreen()
   if(NULL != pDesktop) {
     int width = pDesktop->width();
     int height = pDesktop->height();
-    if((FULL_SCREEN_WIDTH >= width) || (FULL_SCREEN_HEIGHT >= height)) {
+    if((MIN_SCREEN_WIDTH >= width) && (MIN_SCREEN_HEIGHT >= height)) {
       qDebug() << "using full screen mode with toolbar";
       setFixedSize(width, height);
       showFullScreen();
