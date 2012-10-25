@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 SET(DOCUMENT_NAME tabletReaderHelp)
 
 PROJECT(Document)
