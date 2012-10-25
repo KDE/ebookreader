@@ -177,6 +177,7 @@ void Window::showDocument()
   }
   else {
     qDebug() << "no document found";
+    waitTimer_->stop();
     showHelp(false);
   }
 }
@@ -802,7 +803,6 @@ void Window::showHelp(bool slideNext)
   else {
     qDebug() << "cannot open help file";
     prev_.page = 0;
-    waitTimer_->stop();
     showWarningMessage(tr("Cannot open help file"));
   }
 }
