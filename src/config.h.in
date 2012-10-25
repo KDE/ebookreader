@@ -10,10 +10,4 @@
 //version number
 #cmakedefine TR_VERSION "@TR_VERSION@"
 
-#ifndef TR_VERSION
-#define TR_VERSION_MAJOR 2
-#define TR_VERSION_MINOR 1
-#define TR_VERSION STRING(TR_VERSION_MAJOR) "." STRING(TR_VERSION_MINOR)
-#endif
-
 #endif
