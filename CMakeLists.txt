@@ -48,7 +48,7 @@ if( EXISTS "${CMAKE_SOURCE_DIR}/.git" )
 endif()
 if(NOT TR_VERSION)
   set(TR_VERSION "2.3")
-  message (WARNING "Cannot generate automatic build/release number. Set manually.")
+  message (WARNING "Cannot generate automatic build/release number. Using hard coded value.")
 endif()
 
 CONFIGURE_FILE ( ${CMAKE_SOURCE_DIR}/src/config.h.in ${CMAKE_BINARY_DIR}/src/config.h )
@@ -61,6 +61,4 @@ include_directories (
 add_subdirectory ( src )
 
 message (STATUS "Build type: ${MSG}")
-if (TR_VERSION)
-  message (STATUS "Version: ${TR_VERSION}")
-endif()
+message (STATUS "Version: ${TR_VERSION}")

@@ -25,7 +25,7 @@ IF(PS2PDF_CONVERTER)
 			   DEPENDS ${Document_BINARY_DIR}/${DOCUMENT_NAME}.ps
 			   COMMENT "ps2pdf")
 
-ADD_CUSTOM_TARGET(atReaderHelp ALL echo
+ADD_CUSTOM_TARGET(tabletReaderHelp ALL echo
 	 	  DEPENDS ${Document_BINARY_DIR}/${DOCUMENT_NAME}.pdf)
 INSTALL(FILES ${Document_BINARY_DIR}/${DOCUMENT_NAME}.pdf DESTINATION share/doc) 
 

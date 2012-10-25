@@ -212,7 +212,7 @@ void Window::onSendCommand(const QString &cmd)
   else if(tr("About") == cmd) {
     showAboutPage();
   }
-  else if(tr("Exit") == cmd) {
+  else if(tr("Exit") == cmd) {//TODO: use quit instead
     close();
   }
   else {
@@ -1112,7 +1112,7 @@ void Window::addShortcutKeys()
 
   //help
   QAction *helpAction = new QAction(this);
-  helpAction->setShortcut(Qt::Key_F1);
+  helpAction->setShortcut(Qt::Key_F1);//TODO: use also Ctrl+H
   addAction(helpAction);
   connect(helpAction, SIGNAL(triggered()), this, SLOT(showHelp()));
 
@@ -1130,7 +1130,7 @@ void Window::addShortcutKeys()
 
   //exit
   QAction *exitAction = new QAction(this);
-  exitAction->setShortcut(Qt::CTRL+Qt::Key_W);
+  exitAction->setShortcut(Qt::CTRL+Qt::Key_Q);
   addAction(exitAction);
   connect(exitAction, SIGNAL(triggered()), this, SLOT(close()));
 }
