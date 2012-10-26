@@ -60,6 +60,7 @@ public:
     return OKULAR_OBSERVER_ID;
   }
   void notifyPageChanged(int page, int flags);
+  const QStringList& supportedFilePatterns();
 private:
   void adjustSize(int &width, int &height);
   const QPixmap* setWhiteBackground(const QPixmap *pixmap);
@@ -67,6 +68,7 @@ private:
   PagePainter *painter_;
   KMimeType::Ptr mimeType_;
   int winWidth_;
+  QStringList supportedFilePatterns_;
 };
 
 #endif // OKULAR_DOCUMENT_H

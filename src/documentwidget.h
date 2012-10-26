@@ -106,6 +106,9 @@ public:
       doc_->setWinWidth(width);
     }
   }
+  const QStringList& supportedFilePatterns() const {
+    return doc_->supportedFilePatterns();
+  }
 
   enum {CACHE_SIZE = 3};
 

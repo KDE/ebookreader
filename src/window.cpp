@@ -54,7 +54,7 @@ Window::Window(QWidget *parent)
     aboutDialog_(NULL),
     waitDialog_(NULL),
     flickable_(NULL),
-    fileBrowserModel_(new FileBrowserModel(this)),
+    fileBrowserModel_(NULL),
     waitTimer_(NULL),
 #ifndef NO_QTMOBILITY
     batteryInfo_(NULL),
@@ -81,6 +81,8 @@ Window::Window(QWidget *parent)
 
   //create main document
   document_ = new DocumentWidget(this);
+  //create file browser (uses supported file types given by OkularDocument)
+  fileBrowserModel_ = new FileBrowserModel(this, document_->supportedFilePatterns());
 
   //create sliding animation
   slidingStacked_ = new SlidingStackedWidget(this);
@@ -843,14 +845,15 @@ void Window::showAboutPage()
       if(NULL != pAboutDlg) {
         pAboutDlg->setProperty("text", tr("<H2>tabletReader v%1</H2>"
                                           "<H3>e-book reader for touch-enabled devices</H3>"
-                                          "<H4>Supported formats: all Okular supported formats.</H4>"
-                                          "<H4>(e.g. PDF, CHM, DJVU, EPUB, etc)</H4><br>"
+                                          "<H4>Supported formats:</H4>"
+                                          "<H4>%2</H4>"
                                           "Copyright (C) 2012, Bogdan Cristea. All rights reserved.<br>"
                                           "<i>e-mail: cristeab@gmail.com</i><br><br>"
                                           "This program is distributed in the hope that it will be useful, "
                                           "but WITHOUT ANY WARRANTY; without even the implied warranty of "
                                           "MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the "
-                                          "GNU General Public License for more details.<br><br>").arg(TR_VERSION));
+                                          "GNU General Public License for more details.<br><br>").arg(TR_VERSION).
+            arg(document_->supportedFilePatterns().join(", ")));
       }
       else {
         qDebug() << "cannot get aboutDialog object";

@@ -26,7 +26,7 @@ class FileBrowserModel : public QAbstractListModel
 {
   Q_OBJECT
 public:
-  explicit FileBrowserModel(QObject *parent = 0);
+  FileBrowserModel(QObject *parent, const QStringList &list);
   QVariant data(const QModelIndex &index, int role) const;
   int rowCount(const QModelIndex &parent) const;
   void addDirToSearch(QString& dir);
@@ -43,11 +43,11 @@ public slots:
 private:
   Q_DISABLE_COPY(FileBrowserModel);
   enum PdfPreviewRoles { TITLE, PAGES, IMAGE, IS_FILE, PATH };
-  QString _currentDir;
-  QVector<QString> _files;
-  QVector<QString> _dirs;
-  QObject *_parent;
-
+  QString currentDir_;
+  QVector<QString> files_;
+  QVector<QString> dirs_;
+  QObject *parent_;
+  const QStringList &supportedFilePatterns_;
 };
 
 #endif // FileBrowserModel_H

@@ -185,3 +185,20 @@ void OkularDocument::notifyPageChanged(int page, int flags)
     qDebug() << "Unknown notification" << flags << " for page" << page;
   }
 }
+
+const QStringList& OkularDocument::supportedFilePatterns()
+{
+  if ((NULL != doc_) && (true == supportedFilePatterns_.isEmpty())) {
+    QStringList supportedMimeTypes = doc_->supportedMimeTypes();
+    QStringList::ConstIterator it;
+    for (it = supportedMimeTypes.begin(); it != supportedMimeTypes.end(); ++it) {
+      KMimeType::Ptr type = KMimeType::mimeType(*it);
+      if (false == type.isNull()) {
+        supportedFilePatterns_ << type->patterns();
+      }
+    }
+    supportedFilePatterns_.removeDuplicates();
+    supportedFilePatterns_.sort();
+  }
+  return supportedFilePatterns_;
+}
