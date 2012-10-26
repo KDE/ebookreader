@@ -244,7 +244,7 @@ void Window::showFileBrowser()
       showWarningMessage(tr("fileBrowserObject is NULL"));
       return;
     }
-    fileBrowserModel_->searchPdfFiles();
+    fileBrowserModel_->searchSupportedFiles();
     fileBrowser_->engine()->rootContext()->setContextProperty("pdfPreviewModel", fileBrowserModel_);
     fileBrowser_->setSource(QUrl("qrc:/qml/qml/filebrowser.qml"));
     fileBrowser_->setStyleSheet("background:transparent");

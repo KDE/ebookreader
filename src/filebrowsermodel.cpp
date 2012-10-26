@@ -52,11 +52,11 @@ void FileBrowserModel::changeCurrentDir(int index)
     currentDir_ += "/" +  dirs_[index];
   }
   qDebug() << currentDir_;
-  searchPdfFiles();
+  searchSupportedFiles();
   reset();
 }
 
-void FileBrowserModel::searchPdfFiles()
+void FileBrowserModel::searchSupportedFiles()
 {
   files_.clear();
   dirs_.clear();

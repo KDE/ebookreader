@@ -31,7 +31,7 @@ public:
   int rowCount(const QModelIndex &parent) const;
   void addDirToSearch(QString& dir);
   void removeDirToSearch(QString& dir);
-  void searchPdfFiles();
+  void searchSupportedFiles();
   void setCurrentDir(const QString &filePath);
   static QString closeFileBrowserText() {
     return tr("Close File Browser");
