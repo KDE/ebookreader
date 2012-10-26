@@ -60,7 +60,8 @@ public:
         LONG_PRESS_TIMEOUT_MS = 1000,
         WAIT_TIMER_INTERVAL_MS = 1000,
         MIN_SCREEN_WIDTH = 1024,
-        MIN_SCREEN_HEIGHT = 768};
+        MIN_SCREEN_HEIGHT = 768,
+        FIT_WIDTH_ZOOM_FACTOR = -1};
 
 protected:
   void closeEvent(QCloseEvent *);
@@ -99,7 +100,7 @@ private:
   void gotoPage(int pageNb, int numPages);
   void updateView(qreal factor);
   void setScale(qreal factor) {
-    if (-1 == factor) { //need to set window width for fit width
+    if (FIT_WIDTH_ZOOM_FACTOR == factor) { //need to set window width for fit width
       document_->setWinWidth(width());
     }
     document_->setScale(factor);

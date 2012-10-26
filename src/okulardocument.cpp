@@ -23,6 +23,7 @@
 #include <core/generator.h>
 #include <core/settings_core.h>
 #include <core/page.h>
+#include "window.h"
 #include "okulardocument.h"
 
 //main entry point into okular core libray
@@ -137,7 +138,7 @@ void OkularDocument::onPageRequest(int page, qreal factor)
 
   const Okular::Page *p = doc_->page(page);
   if(NULL != p) {
-    if (-1 == factor) {
+    if (Window::FIT_WIDTH_ZOOM_FACTOR == factor) {
       factor = winWidth_/p->width();//adjust scale factor to occupy the entire window width
     }
     int width = int(factor*(p->width()));

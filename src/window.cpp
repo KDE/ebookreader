@@ -175,7 +175,7 @@ void Window::showDocument()
   }
   else {
     qDebug() << "no document found";
-    setScale(-1);//use default fit width scale factor
+    setScale(FIT_WIDTH_ZOOM_FACTOR);//use default fit width scale factor
     showHelp(false);
   }
   onAnimationFinished();//simulate an onAnimationFinished
