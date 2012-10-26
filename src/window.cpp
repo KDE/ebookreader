@@ -59,7 +59,8 @@ Window::Window(QWidget *parent)
 #ifndef NO_QTMOBILITY
     batteryInfo_(NULL),
 #endif
-    helpFile_(QCoreApplication::applicationDirPath()+QString(HELP_FILE))
+    helpFile_(QCoreApplication::applicationDirPath()+QString(HELP_FILE)),
+    fullScreen_(false)
 {
   prev_.fileName = "";
   prev_.page = 0;
@@ -494,11 +495,18 @@ void Window::fullScreen()
 {
   qDebug() << "Window::fullScreen";
 
+  if (true == fullScreen_) {
+    return;
+  }
+
   toolBar_->hide();
   showFullScreen();
   if(true == hasTouchScreen()) {
     QApplication::setOverrideCursor(QCursor(Qt::BlankCursor));
   }
+  //work around since the window width is not yet available
+  updateViewForFitWidth(QApplication::desktop()->width());
+  fullScreen_ = true;
 }
 
 void Window::normalScreen()
@@ -522,13 +530,17 @@ void Window::normalScreen()
     }
     else {
       qDebug() << "using normal mode";
+      width = (MIN_SCREEN_WIDTH < width) ? MIN_SCREEN_WIDTH : width;
+      height = (MIN_SCREEN_HEIGHT < height) ? MIN_SCREEN_HEIGHT : height;
+      resize(width, height);
       showNormal();
-      resize((MIN_SCREEN_WIDTH < width) ? MIN_SCREEN_WIDTH : width,
-             (MIN_SCREEN_HEIGHT < height) ? MIN_SCREEN_HEIGHT : height);
       if(true == hasTouchScreen()) {
         QApplication::restoreOverrideCursor();
       }
     }
+    //work around since the window width is not yet available
+    updateViewForFitWidth(width);
+    fullScreen_ = false;
   }
 }
 
@@ -745,7 +757,7 @@ void Window::gotoPage(int pageNb, int numPages)
   }
 }
 
-void Window::updateView(qreal factor)
+void Window::updateView(qreal factor, bool force)
 {
   qDebug() << "Window::updateView";
 
@@ -755,10 +767,12 @@ void Window::updateView(qreal factor)
   }
 
   //set zoom factor
-  if (document_->scale() == factor) {
-    return;//nothing to do
+  if (false == force) {
+    if (document_->scale() == factor) {
+      return;
+    }
+    setScale(factor);
   }
-  setScale(factor);
 
   //update all pages from circular buffer
   animationFinished_ = false;

@@ -98,7 +98,7 @@ private:
   void showPageNumber(int currentPage, int nbPages);
   void setupDocDisplay(unsigned int pageNumber, qreal factor);
   void gotoPage(int pageNb, int numPages);
-  void updateView(qreal factor);
+  void updateView(qreal factor, bool force = false);
   void setScale(qreal factor) {
     if (FIT_WIDTH_ZOOM_FACTOR == factor) { //need to set window width for fit width
       document_->setWinWidth(width());
@@ -123,6 +123,13 @@ private:
     return (NULL != fileBrowser_) || (NULL != gotoPage_) ||
       (NULL != zoomPage_) || (NULL != commandPopupMenu_) ||
       (NULL != aboutDialog_) || (NULL != waitDialog_);
+  }
+  void updateViewForFitWidth(int width) {
+    if ((NULL != document_) && (FIT_WIDTH_ZOOM_FACTOR == document_->scale())) {
+      document_->setWinWidth(width);
+      document_->setScale(FIT_WIDTH_ZOOM_FACTOR);
+      updateView(FIT_WIDTH_ZOOM_FACTOR, true);
+    }
   }
 
   SlidingStackedWidget *slidingStacked_;
@@ -149,6 +156,7 @@ private:
   int currentPage_;
   QElapsedTimer eTime_;
   const QString helpFile_;
+  bool fullScreen_;
   struct {
     QString fileName;
     int page;
