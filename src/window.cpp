@@ -170,16 +170,15 @@ void Window::showDocument()
     if(document_->setDocument(filePath)) {
       setupDocDisplay(settings.value(KEY_PAGE, 0).toInt() + 1, 
           settings.value(KEY_ZOOM_LEVEL, 1.0).toFloat());
-      //simulate an onAnimationFinished
-      onAnimationFinished();
       fileBrowserModel_->setCurrentDir(filePath);
     }
   }
   else {
     qDebug() << "no document found";
-    waitTimer_->stop();
+    setScale(-1);//use default fit width scale factor
     showHelp(false);
   }
+  onAnimationFinished();//simulate an onAnimationFinished
 }
 
 Window::~Window()
@@ -207,6 +206,9 @@ void Window::onSendCommand(const QString &cmd)
     showPropertiesPage();
   }
   else if((tr("Help") == cmd) || (tr("Back") == cmd)) {
+    if ((tr("Help") == cmd) && (helpFile_ == document_->filePath())) {
+      return;//nothing to do
+    }
     showHelp();
   }
   else if(tr("About") == cmd) {
@@ -798,7 +800,8 @@ void Window::showHelp(bool slideNext)
     if(true == slideNext) {
       slidingStacked_->slideInNext();
     }
-    setHelpIcon(helpFile_ != *curFileName);
+    bool showHelp = (helpFile_ != *curFileName) || (0 == prev_.page);
+    setHelpIcon(showHelp);
   }
   else {
     qDebug() << "cannot open help file";

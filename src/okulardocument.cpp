@@ -85,9 +85,9 @@ OkularDocument::~OkularDocument()
 bool OkularDocument::load(const QString &fileName)
 {
   bool res = false;
-  mimeType_ = KMimeType::findByPath(fileName);
   if (NULL != doc_) {
     doc_->closeDocument();//close previous document if any
+    mimeType_ = KMimeType::findByPath(fileName);
     res = doc_->openDocument(fileName, KUrl::fromPath(fileName), mimeType_);
   }
   return res;
