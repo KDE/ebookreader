@@ -217,7 +217,7 @@ void Window::onSendCommand(const QString &cmd)
   else if(tr("About") == cmd) {
     showAboutPage();
   }
-  else if(tr("Exit") == cmd) {//TODO: use quit instead
+  else if(tr("Quit") == cmd) {
     close();
   }
   else {
@@ -456,7 +456,7 @@ void Window::closeCommandPopupMenu(const QString &cmd)
     else if(tr("Zoom") == cmd) {
       showZoomPage();
     }
-    else if(tr("Exit") == cmd) {
+    else if(tr("Quit") == cmd) {
       close();
     }
     else if(tr("Normal Screen") == cmd) {

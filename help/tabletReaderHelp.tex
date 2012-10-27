@@ -45,10 +45,10 @@ This software has been intended to be used on Linux-based operating systems with
  \item \textit{Properties}: displays document and application properties (Ctrl+p): document path, current page and the number of pages, elapsed time, battery status.
  \item \textit{Help}: displays this help manual (F1). If previously another document has been opened, the Help button is replaced by a Back button so that the user can go back to the previously opened document (Alt+left arrow).
  \item \textit{About}: displays a dialog with information about this software (Ctrl+a).
- \item \textit{Exit}: exits from the application (Ctrl+w) and saves into a local file the current document path and name, current page and the  zoom factor so that the next time when the application is started the saved settings will be used. Thus you could continue to read the document from the page you closed the application the last time.
+ \item \textit{Quit}: exits from the application (Ctrl+w) and saves into a local file the current document path and name, current page and the  zoom factor so that the next time when the application is started the saved settings will be used. Thus you could continue to read the document from the page you closed the application the last time.
 \end{itemize}
 
-\textit{Note}: the escape key can be used to cancel any of the above described actions (except Exit).
+\textit{Note}: the escape key can be used to cancel any of the above described actions (except Quit).
 
 \subsection{Command popup menu}
 The popup menu is available only in full screen mode and it can be displayed by either:
@@ -71,7 +71,7 @@ The following commands are available:
  \item \textit{Go To Page}: same as the \textit{Go To Page} button of the toolbar
  \item \textit{Zoom}: same as the \textit{Zoom} button of the toolbar
  \item \textit{Properties}: same as the \textit{Properties} button of the toolbar
- \item \textit{Exit}: same as the \textit{Exit} button of the toolbar
+ \item \textit{Quit}: same as the \textit{Quit} button of the toolbar
 \end{itemize}
 Thus, the command popup menu allows to handle an e-book in a so called ``advanced user mode" by providing only the essential commands.
 
@@ -82,7 +82,7 @@ The application is build around a circular buffer holding three pages which allo
 
 When loading a new document, only the current page is synchronously loaded, while the previous and the next pages are loaded asynchronously in the background. Similarly, when changing between adjacent pages, the page from the circular buffer is displayed and then a new page is loaded asynchronously so that, with respect to the currently displayed page, the previous and the next page are always ready to be displayed in the circular buffer.
 
-The current application settings (current document, current page, zoom factor) are stored using the \textrm{QSettings} class in a portable format between operating systems. However, in order to save the current settings the application must be closed using the \textit{Exit} command. If the device is powered off while using the application the current settings are not saved because there is no way to catch the termination signal. If no settings are available, when the application is started, this help document is displayed.
+The current application settings (current document, current page, zoom factor) are stored using the \textrm{QSettings} class in a portable format between operating systems. However, in order to save the current settings the application must be closed using the \textit{Quit} command. If the device is powered off while using the application the current settings are not saved because there is no way to catch the termination signal. If no settings are available, when the application is started, this help document is displayed.
 
 The Qt internationalization support is used to adapt the interface language to the language of the operating system. English is the default language and currently translations exist for French and Romanian.
 

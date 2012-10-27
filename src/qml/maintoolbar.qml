@@ -73,7 +73,7 @@ Rectangle {
         }
 
         ToolbarView {
-            toolbarItemTitle: qsTr("Exit")
+            toolbarItemTitle: qsTr("Quit")
             toolbarItemIcon: ":/toolbar/qml/Toolbar/pics/Actions-application-exit-icon.png"
             clip: true
         }
