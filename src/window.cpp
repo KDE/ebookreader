@@ -597,6 +597,10 @@ bool Window::eventFilter(QObject *, QEvent *event)
     QKeyEvent *keyEvent = static_cast<QKeyEvent*>(event);
     switch(keyEvent->key()) {
       case Qt::Key_Escape:
+        if (isFullScreen() && (false == isBackground())) {
+          //must be the first check
+          normalScreen();
+        }
         if (NULL != fileBrowser_) {
           fileBrowser_->close();
           fileBrowser_ = NULL;
@@ -616,9 +620,6 @@ bool Window::eventFilter(QObject *, QEvent *event)
         if (NULL != aboutDialog_) {
           aboutDialog_->close();
           aboutDialog_ = NULL;
-        }
-        if (isFullScreen()) {
-          normalScreen();
         }
         break;
       case Qt::Key_Right:
