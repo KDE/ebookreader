@@ -852,7 +852,7 @@ void Window::showAboutPage()
                                           "<H3>e-book reader for touch-enabled devices</H3>"
                                           "<H4>Supported formats:</H4>"
                                           "<H4>%2</H4>"
-                                          "Copyright (C) 2012, Bogdan Cristea. All rights reserved.<br>"
+                                          "<br>Copyright (C) 2012, Bogdan Cristea. All rights reserved.<br>"
                                           "<i>e-mail: cristeab@gmail.com</i><br><br>"
                                           "This program is distributed in the hope that it will be useful, "
                                           "but WITHOUT ANY WARRANTY; without even the implied warranty of "

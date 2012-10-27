@@ -10,33 +10,12 @@ set ( LIBS ${LIBS}
 	${OKULAR_CORE_LIBRARY} 
 	${KDE4_KDECORE_LIBRARY} )
 
-set ( tabletReader_HDRS
-	logger.h
-	document.h
-	okulardocument.h
-	)
+file ( GLOB tabletReader_HDRS *.h )
 
-set ( tabletReader_SRCS
-	documentwidget.cpp
-	main.cpp
-	window.cpp
-	SlidingStackedWidget.cpp
-	flickable.cpp
-	logger.cpp
-	filebrowsermodel.cpp
-	okulardocument.cpp
-	)
+file ( GLOB tabletReader_SRCS *.cpp)
 
-set ( tabletReader_RSCS
-	images.qrc
-	)
+set ( tabletReader_RSCS images.qrc )
 QT4_ADD_RESOURCES(RSCS ${tabletReader_RSCS})
-
-set ( tabletReader_TRS
-	tabletReader_fr.ts
-	tabletReader_ro.ts
-	)
-QT4_ADD_TRANSLATION(TRS ${tabletReader_TRS})
 
 set ( tabletReader_MOCS
   okulardocument.h
@@ -48,6 +27,13 @@ set ( tabletReader_MOCS
 	)
 QT4_WRAP_CPP(MOCS ${tabletReader_MOCS})
 
-add_executable ( tabletReader ${tabletReader_SRCS} ${UIS} ${RSCS} ${TRS} ${MOCS} )
+set ( tabletReader_TRANS ${tabletReader_HDRS} ${tabletReader_SRCS} )
+set ( tabletReader_TS
+  ${CMAKE_SOURCE_DIR}/src/tabletReader_fr.ts
+  ${CMAKE_SOURCE_DIR}/src/tabletReader_ro.ts
+	)
+QT4_CREATE_TRANSLATION(QMS ${tabletReader_TRANS} ${tabletReader_TS})
+
+add_executable ( tabletReader ${tabletReader_SRCS} ${RSCS} ${MOCS} ${QMS} )
 target_link_libraries ( tabletReader  ${QT_QTCORE_LIBRARY} ${QT_QTGUI_LIBRARY} ${QT_QTDECLARATIVE_LIBRARY} ${QT_QTXML_LIBRARY} ${QT_QTWEBKIT_LIBRARY} ${LIBS} )
 install ( TARGETS tabletReader RUNTIME DESTINATION bin )
