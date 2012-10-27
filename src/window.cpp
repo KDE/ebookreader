@@ -566,22 +566,16 @@ bool Window::eventFilter(QObject *, QEvent *event)
     // * handle mouse events
     QMouseEvent* mouseEvent = static_cast<QMouseEvent*>(event);
     startPoint_ = mouseEvent->pos();
-    pressTimer_.start();
   }
   else if(QEvent::MouseButtonRelease == event->type()) {
+    // * handle mouse events - cont
     QMouseEvent* mouseEvent = static_cast<QMouseEvent*>(event);
     endPoint_ = mouseEvent->pos();
 
     //process distance and direction
     int xDiff = qAbs(startPoint_.x() - endPoint_.x());
     int yDiff = qAbs(startPoint_.y() - endPoint_.y());
-    if(xDiff <= 2 * SWIPE_THRESHOLD && yDiff <= SWIPE_THRESHOLD) {
-      if(pressTimer_.isValid() && pressTimer_.elapsed() >= LONG_PRESS_TIMEOUT_MS) {
-        pressTimer_.invalidate();
-        showCommandPopupMenu();
-      }
-    }
-    else if(xDiff > yDiff) {
+    if((xDiff > 2 * SWIPE_THRESHOLD) && (xDiff > yDiff)) {
       // horizontal swipe detected, now find direction
       if(startPoint_.x() > endPoint_.x()) {
         //left swipe
@@ -593,6 +587,10 @@ bool Window::eventFilter(QObject *, QEvent *event)
       }
     }
     // vertical swipe is handled by Flickable class
+  }
+  else if (QEvent::ContextMenu == event->type()) {
+    // * handle right click event
+    showCommandPopupMenu();
   }
   else if(QEvent::KeyPress == event->type()) {
     // * handle key events
