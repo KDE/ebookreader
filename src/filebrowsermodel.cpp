@@ -81,12 +81,13 @@ void FileBrowserModel::searchSupportedFiles()
       continue;
     if(file == "..") {
       QDir dir = QDir(absPath);
+      QString currentDirName = QDir(currentDir_).dirName();
       if(!dir.isRoot()) {
-        dirToAdd =
-          tr("Go Back To '") + QDir(dir.canonicalPath()).dirName() + "'";
+        dirToAdd = tr("Go Back to '%1' from '%2'").arg(QDir(dir.canonicalPath()).dirName()).
+          arg(currentDirName);
       }
       else {
-        dirToAdd = tr("Go Back To /");
+        dirToAdd = tr("Go Back to '/' from '%1'").arg(currentDirName);
       }
     }
     else {
