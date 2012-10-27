@@ -189,6 +189,7 @@ void OkularDocument::notifyPageChanged(int page, int flags)
 const QStringList& OkularDocument::supportedFilePatterns()
 {
   if ((NULL != doc_) && (true == supportedFilePatterns_.isEmpty())) {
+    //shall be called only once
     QStringList supportedMimeTypes = doc_->supportedMimeTypes();
     QStringList::ConstIterator it;
     for (it = supportedMimeTypes.begin(); it != supportedMimeTypes.end(); ++it) {

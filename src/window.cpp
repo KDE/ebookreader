@@ -989,7 +989,9 @@ void Window::showPropertiesPage()
         //time since the application was started
         msg += tr("<H3>Elapsed time:<br>%1</H3>").arg(elapsedTime());
         //battery state
+#ifndef NO_QTMOBILITY
         msg += tr("<H3>Battery status:<br>%1</H3>").arg(batteryStatus());
+#endif
         //set message
         pAboutDlg->setProperty("text", msg);
       }
