@@ -25,6 +25,7 @@ IF(PS2PDF_CONVERTER)
 			   ARGS ${Document_BINARY_DIR}/${DOCUMENT_NAME}.ps
 			   DEPENDS ${Document_BINARY_DIR}/${DOCUMENT_NAME}.ps
 			   COMMENT "ps2pdf")
+  configure_file(${Document_BINARY_DIR}/${DOCUMENT_NAME}.pdf ${Document_SOURCE_DIR}/${DOCUMENT_NAME}.pdf COPYONLY)
 
 ADD_CUSTOM_TARGET(tabletReaderHelp ALL echo
 	 	  DEPENDS ${Document_BINARY_DIR}/${DOCUMENT_NAME}.pdf)
