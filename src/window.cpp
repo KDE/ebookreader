@@ -551,15 +551,17 @@ bool Window::eventFilter(QObject *, QEvent *event)
   bool out = false;
 
   if(QEvent::Wheel == event->type()) {
-    // * handle mouse wheel events
-    QWheelEvent *wheelEvent = static_cast<QWheelEvent*>(event);
-    if(0 > wheelEvent->delta()) {
-      showNextPage();
-      return true;//stop further processing
-    }
-    if(0 < wheelEvent->delta()) {
-      showPrevPage();
-      return true;
+    if (false == isBackground()) {
+      // * handle mouse wheel events
+      QWheelEvent *wheelEvent = static_cast<QWheelEvent*>(event);
+      if(0 > wheelEvent->delta()) {
+        showNextPage();
+        return true;//stop further processing
+      }
+      if(0 < wheelEvent->delta()) {
+        showPrevPage();
+        return true;
+      }
     }
   }
   else if(QEvent::MouseButtonPress == event->type()) {
@@ -633,6 +635,10 @@ bool Window::eventFilter(QObject *, QEvent *event)
           showPrevPage();
         }
         out = true;//don't propagate this event
+        break;
+      case Qt::Key_Up:
+      case Qt::Key_Down:
+        out = isBackground();
         break;
       case Qt::Key_Home:
         if((0 != document_->currentPage()) && (true == animationFinished_) &&
