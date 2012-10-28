@@ -170,13 +170,12 @@ void Window::showDocument()
   QSettings settings(ORGANIZATION, APPLICATION);
   QString filePath;
   waitTimer_->start();
-  if(NULL != (filePath = settings.value(KEY_FILE_PATH).toString())) {
-    qDebug() << "Found document " << filePath;
-    if(document_->setDocument(filePath)) {
+  if ((NULL != (filePath = settings.value(KEY_FILE_PATH).toString())) &&
+    (true == document_->setDocument(filePath))) {
+      qDebug() << "Found document " << filePath;
       setupDocDisplay(settings.value(KEY_PAGE, 0).toInt() + 1, 
           settings.value(KEY_ZOOM_LEVEL, 1.0).toFloat());
       fileBrowserModel_->setCurrentDir(filePath);
-    }
   }
   else {
     qDebug() << "no document found";
