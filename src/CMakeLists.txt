@@ -27,12 +27,15 @@ set ( tabletReader_MOCS
 	)
 QT4_WRAP_CPP(MOCS ${tabletReader_MOCS})
 
-set ( tabletReader_TRANS ${tabletReader_HDRS} ${tabletReader_SRCS} )
-set ( tabletReader_TS
-  ${CMAKE_SOURCE_DIR}/src/tabletReader_fr.ts
-  ${CMAKE_SOURCE_DIR}/src/tabletReader_ro.ts
-	)
-QT4_CREATE_TRANSLATION(QMS ${tabletReader_TRANS} ${tabletReader_TS})
+if (NOT WIN32)
+  #don't generate translations on Windows (use the existing ones)
+  set ( tabletReader_TRANS ${tabletReader_HDRS} ${tabletReader_SRCS} )
+  set ( tabletReader_TS
+    ${CMAKE_SOURCE_DIR}/src/tabletReader_fr.ts
+    ${CMAKE_SOURCE_DIR}/src/tabletReader_ro.ts
+	  )
+  QT4_CREATE_TRANSLATION(QMS ${tabletReader_TRANS} ${tabletReader_TS})
+endif()
 
 add_executable ( tabletReader ${tabletReader_SRCS} ${RSCS} ${MOCS} ${QMS} )
 target_link_libraries ( tabletReader  ${QT_QTCORE_LIBRARY} ${QT_QTGUI_LIBRARY} ${QT_QTDECLARATIVE_LIBRARY} ${QT_QTXML_LIBRARY} ${QT_QTWEBKIT_LIBRARY} ${LIBS} )
@@ -40,4 +43,13 @@ if (WIN32)
   set_target_properties(tabletReader PROPERTIES WIN32_EXECUTABLE TRUE)
   target_link_libraries ( tabletReader ${QT_QTMAIN_LIBRARY} )
 endif()
+
 install ( TARGETS tabletReader RUNTIME DESTINATION bin )
+#TODO: install files on std location
+
+if (EXISTS ${CMAKE_BINARY_DIR}/src/tabletReader_ro.qm)
+  configure_file(${CMAKE_BINARY_DIR}/src/tabletReader_ro.qm ${CMAKE_SOURCE_DIR}/src/tabletReader_ro.qm COPYONLY)
+endif()
+if (EXISTS ${CMAKE_BINARY_DIR}/src/tabletReader_fr.qm)
+  configure_file(${CMAKE_BINARY_DIR}/src/tabletReader_fr.qm ${CMAKE_SOURCE_DIR}/src/tabletReader_fr.qm COPYONLY)
+endif()
