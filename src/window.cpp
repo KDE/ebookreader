@@ -500,6 +500,7 @@ void Window::fullScreen()
   if (true == fullScreen_) {
     return;
   }
+  normScrGeometry_ = geometry();//store current geometry
 
   toolBar_->hide();
   showFullScreen();
@@ -515,9 +516,16 @@ void Window::normalScreen()
 {
   qDebug() << "Window::normalScreen";
 
+  fullScreen_ = false;
   if (NULL != toolBar_) {
     toolBar_->show();
   }
+
+  if (true == normScrGeometry_.isValid()) {
+    setGeometry(normScrGeometry_);
+    return;
+  }
+
   QDesktopWidget *pDesktop = QApplication::desktop();
   if(NULL != pDesktop) {
     int width = pDesktop->width();
@@ -542,7 +550,6 @@ void Window::normalScreen()
     }
     //work around since the window width is not yet available
     updateViewForFitWidth(width);
-    fullScreen_ = false;
   }
 }
 

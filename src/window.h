@@ -154,6 +154,7 @@ private:
   QElapsedTimer eTime_;
   const QString helpFile_;
   bool fullScreen_;
+  QRect normScrGeometry_;
   struct {
     QString fileName;
     int page;
