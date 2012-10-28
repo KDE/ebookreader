@@ -523,15 +523,11 @@ void Window::normalScreen()
     toolBar_->show();
   }
 
-  if (true == normScrGeometry_.isValid()) {
-    setGeometry(normScrGeometry_);
-    return;
-  }
-
-  QDesktopWidget *pDesktop = QApplication::desktop();
-  if(NULL != pDesktop) {
-    int width = pDesktop->width();
-    int height = pDesktop->height();
+  int width = 0;
+  int height = 0;
+  if (false == normScrGeometry_.isValid()) {
+    width = QApplication::desktop()->width();
+    height = QApplication::desktop()->height();
     if((MIN_SCREEN_WIDTH >= width) && (MIN_SCREEN_HEIGHT >= height)) {
       qDebug() << "using full screen mode with toolbar";
       setFixedSize(width, height);
@@ -550,9 +546,13 @@ void Window::normalScreen()
         QApplication::restoreOverrideCursor();
       }
     }
-    //work around since the window width is not yet available
-    updateViewForFitWidth(width);
   }
+  else {
+    setGeometry(normScrGeometry_);
+    width = normScrGeometry_.width();
+  }
+  //work around since the window width is not yet available
+  updateViewForFitWidth(width);
 }
 
 bool Window::eventFilter(QObject *, QEvent *event)
@@ -824,6 +824,7 @@ void Window::showHelp(bool slideNext)
 
   if(document_->setDocument(*curFileName)) {
     animationFinished_ = false;
+    waitTimer_->start();
     setupDocDisplay(curPage, document_->scale());
     document_->showCurrentPageUpper();
     if(true == slideNext) {
