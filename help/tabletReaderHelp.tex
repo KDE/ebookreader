@@ -1,5 +1,7 @@
 \documentclass[journal,12pt]{IEEEtran}
+
 \usepackage[utf8x]{inputenc}
+\usepackage{url}
 
 \begin{document}
 
@@ -10,7 +12,7 @@
 
 \section{Introduction}
 
-\IEEEPARstart{T}{}abletReader has been designed to be a simple e-book reader for touch-enabled devices (e.g. tablets, ultrabooks). Okular core library is used as backend (http://okular.kde.org/), so that all okular supported e-book formats are available (PDF, DJVU, etc.). TabletReader can be used on devices without a touch screen, but in this case a keyboard and a mouse are needed. TabletReader needs a screen large enough (at least 800x600 pixels). Devices with screens of smaller size (e.g. smartphones) may not be suitable for reading e-books using A4 or larger page sizes since the displayed text does not adapt to the screen size (as Acrobat Reader does).
+\IEEEPARstart{T}{}abletReader has been designed to be a simple e-book reader for touch-enabled devices (e.g. tablets, ultrabooks). Okular core library is used as backend (\url{http://okular.kde.org/}), so that all okular supported e-book formats are available (PDF, DJVU, etc.). TabletReader can be used on devices without a touch screen, but in this case a keyboard and a mouse are needed. TabletReader needs a screen large enough (at least 800x600 pixels). Devices with screens of smaller size (e.g. smartphones) may not be suitable for reading e-books using A4 or larger page sizes since the displayed text does not adapt to the screen size (as Acrobat Reader does).
 
 Through its interface, tabletReader enables to open e-books found on the local filesystem, to switch between full screen (no toolbar) and normal screen (with toolbar) modes, to go to a specific page, to zoom the displayed document, to display document properties, to show this help, to display information about this software and to exit from the application. At exit, the current e-book document path and name, the current page and the zoom factor are saved so that the next time you launch tabletReader the document is opened at the same page you previously were. 
 
@@ -76,7 +78,7 @@ The following commands are available:
 Thus, the command popup menu allows to handle an e-book in a so called ``advanced user mode" by providing only the essential commands.
 
 \section{Implementation details}
-TabletReader has been written in C++ using Qt application framework, QML for the graphical user interface and okular core library for handling e-book formats. Note that okular core library depends on other 3rd party libraries (e.g. poppler library) which need to be available too (see for further details http://okular.kde.org/).
+TabletReader has been written in C++ using Qt application framework, QML for the graphical user interface and okular core library for handling e-book formats. Note that okular core library depends on other 3rd party libraries (e.g. poppler library) which need to be available too (see for further details \url{http://okular.kde.org/}).
 
 The application is build around a circular buffer holding three pages which allows to display the e-book pages using the \textrm{SlidingStackedWidget} class. In general, the circular buffer will hold the currently displayed page, the previous page and the next one so that when the user switches between adjacent pages this is done as fast as possible. 
 
@@ -85,6 +87,8 @@ When loading a new document, only the current page is synchronously loaded, whil
 The current application settings (current document, current page, zoom factor) are stored using the \textrm{QSettings} class in a portable format between operating systems. However, in order to save the current settings the application must be closed using the \textit{Quit} command. If the device is powered off while using the application the current settings are not saved because there is no way to catch the termination signal. If no settings are available, when the application is started, this help document is displayed.
 
 The Qt internationalization support is used to adapt the interface language to the language of the operating system. English is the default language and currently translations exist for French and Romanian.
+
+TabletReader is part of the KDE project and its sources can be found at: \url{https://projects.kde.org/projects/playground/edu/ebookreader}.
 
 \section{License}
  Copyright \copyright 2012, Bogdan Cristea. All rights reserved.
