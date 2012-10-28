@@ -36,4 +36,8 @@ QT4_CREATE_TRANSLATION(QMS ${tabletReader_TRANS} ${tabletReader_TS})
 
 add_executable ( tabletReader ${tabletReader_SRCS} ${RSCS} ${MOCS} ${QMS} )
 target_link_libraries ( tabletReader  ${QT_QTCORE_LIBRARY} ${QT_QTGUI_LIBRARY} ${QT_QTDECLARATIVE_LIBRARY} ${QT_QTXML_LIBRARY} ${QT_QTWEBKIT_LIBRARY} ${LIBS} )
+if (WIN32)
+  set_target_properties(tabletReader PROPERTIES WIN32_EXECUTABLE TRUE)
+  target_link_libraries ( tabletReader ${QT_QTMAIN_LIBRARY} )
+endif()
 install ( TARGETS tabletReader RUNTIME DESTINATION bin )

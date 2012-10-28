@@ -94,7 +94,6 @@ private:
   bool eventFilter(QObject *, QEvent *);
   bool showNextPage();
   bool showPrevPage();
-  void showPageNumber(int currentPage, int nbPages);
   void setupDocDisplay(unsigned int pageNumber, qreal factor);
   void gotoPage(int pageNb, int numPages);
   void updateView(qreal factor, bool force = false);
