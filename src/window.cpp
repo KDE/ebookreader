@@ -153,9 +153,11 @@ Window::Window(QWidget *parent)
   batteryInfo_ = new QSystemBatteryInfo(this);
 #endif
 
+  Qt::WindowFlags winFlags = Qt::WindowMinimizeButtonHint;
 #ifndef DESKTOP_APP
-  setWindowFlags(Qt::X11BypassWindowManagerHint);
+  winFlags |= Qt::X11BypassWindowManagerHint;
 #endif
+  setWindowFlags(winFlags);
 
   QTimer::singleShot(0, this, SLOT(showDocument()));
 }
@@ -670,7 +672,6 @@ bool Window::eventFilter(QObject *, QEvent *event)
         break;
     }
   }
-
   return out;
 }
 
