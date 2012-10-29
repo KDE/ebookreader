@@ -174,7 +174,7 @@
         <translation type="obsolete">&lt;H2&gt; TabletReader v1.1 &lt;/ H2&gt; &lt;br&gt; &lt;h3&gt; cititor PDF pentru dispozitivele cu ecran tactil &lt;/ H3&gt; &lt;br&gt; Copyright (C) 2012, Bogdan Cristea. Toate drepturile rezervate. &lt;br&gt; Acest program este distribuit în speranţa că va fi util, fără nici o GARANŢIE, nici chiar fără garanţia implicită de vandabilitate sau POTRIVIRE PENTRU UN ANUMIT SCOP. A se vedea GNU General Public License pentru mai multe detalii. &lt;br&gt; &lt;br&gt;</translation>
     </message>
     <message>
-        <location filename="window.cpp" line="970"/>
+        <location filename="window.cpp" line="972"/>
         <source>Cannot get authorization code for Intel AppUp(TM) software</source>
         <translation>Nu se poate citi codul de autorizare pentru programul Intel AppUp (TM)</translation>
     </message>
@@ -183,41 +183,41 @@
         <translation type="obsolete">Nu puteti folosi tabletReader</translation>
     </message>
     <message>
-        <location filename="window.cpp" line="200"/>
+        <location filename="window.cpp" line="202"/>
         <source>Full Screen</source>
         <translation>Tot Ecranul</translation>
     </message>
     <message>
-        <location filename="window.cpp" line="203"/>
-        <location filename="window.cpp" line="451"/>
+        <location filename="window.cpp" line="205"/>
+        <location filename="window.cpp" line="453"/>
         <source>Go To Page</source>
         <translation>Mergi la Pagina</translation>
     </message>
     <message>
-        <location filename="window.cpp" line="206"/>
-        <location filename="window.cpp" line="457"/>
+        <location filename="window.cpp" line="208"/>
+        <location filename="window.cpp" line="459"/>
         <source>Zoom</source>
         <translation>Marire</translation>
     </message>
     <message>
-        <location filename="window.cpp" line="209"/>
-        <location filename="window.cpp" line="454"/>
+        <location filename="window.cpp" line="211"/>
+        <location filename="window.cpp" line="456"/>
         <source>Properties</source>
         <translation>Proprietati</translation>
     </message>
     <message>
-        <location filename="window.cpp" line="212"/>
-        <location filename="window.cpp" line="213"/>
+        <location filename="window.cpp" line="214"/>
+        <location filename="window.cpp" line="215"/>
         <source>Help</source>
         <translation>Ajutor</translation>
     </message>
     <message>
-        <location filename="window.cpp" line="212"/>
+        <location filename="window.cpp" line="214"/>
         <source>Back</source>
         <translation>Revenire</translation>
     </message>
     <message>
-        <location filename="window.cpp" line="218"/>
+        <location filename="window.cpp" line="220"/>
         <source>About</source>
         <translation>Despre</translation>
     </message>
@@ -226,17 +226,17 @@
         <translation type="obsolete">Iesire</translation>
     </message>
     <message>
-        <location filename="window.cpp" line="240"/>
+        <location filename="window.cpp" line="242"/>
         <source>Cannot create fileBrowser object</source>
         <translation>Nu se poate crea obiectul fileBrowser</translation>
     </message>
     <message>
-        <location filename="window.cpp" line="241"/>
+        <location filename="window.cpp" line="243"/>
         <source>not enough memory</source>
         <translation>memorie insuficienta</translation>
     </message>
     <message>
-        <location filename="window.cpp" line="245"/>
+        <location filename="window.cpp" line="247"/>
         <source>fileBrowserObject is NULL</source>
         <translation>obiectul fileBrowserObject este NULL</translation>
     </message>
@@ -245,7 +245,7 @@
         <translation type="obsolete">&lt;H2&gt; TabletReader v1.0 &lt;/H2&gt;&lt;H3&gt; cititor PDF pentru dispozitivele cu ecran tactil &lt;/H3&gt; &lt;br&gt; Copyright (C) 2012, Bogdan Cristea. Toate drepturile rezervate. &lt;br&gt;&lt;i&gt;e-mail: cristeab@gmail.com&lt;/i&gt;&lt;br&gt;&lt;br&gt;Acest program este distribuit în speranţa că va fi util, fără nici o GARANŢIE, nici chiar fără garanţia implicită de vandabilitate sau POTRIVIRE PENTRU UN ANUMIT SCOP. A se vedea GNU General Public License pentru mai multe detalii. &lt;br&gt;</translation>
     </message>
     <message>
-        <location filename="window.cpp" line="493"/>
+        <location filename="window.cpp" line="495"/>
         <source>%1 cannot be opened</source>
         <translation>%1 nu poate fi deschis</translation>
     </message>
@@ -258,105 +258,105 @@
         <translation type="obsolete">&lt;H2&gt; TabletReader v2.0 &lt;/H2&gt;&lt;H3&gt; cititor de carti electronice pentru dispozitivele cu ecran tactil &lt;/H3&gt;&lt;H4&gt;Formate suportate: PDF, CHM, DJVU, EPUB, etc.&lt;/H4&gt;&lt;H4&gt;(toate formatele suportate de Okular)&lt;/H4&gt;&lt;br&gt; Copyright (C) 2012, Bogdan Cristea. Toate drepturile rezervate. &lt;br&gt;&lt;i&gt;e-mail: cristeab@gmail.com&lt;/i&gt;&lt;br&gt;&lt;br&gt;Acest program este distribuit în speranţa că va fi util, fără nici o GARANŢIE, nici chiar fără garanţia implicită de vandabilitate sau POTRIVIRE PENTRU UN ANUMIT SCOP. A se vedea GNU General Public License pentru mai multe detalii. &lt;br&gt;</translation>
     </message>
     <message>
-        <location filename="window.cpp" line="221"/>
-        <location filename="window.cpp" line="460"/>
+        <location filename="window.cpp" line="223"/>
+        <location filename="window.cpp" line="462"/>
         <source>Quit</source>
         <translation>Iesire</translation>
     </message>
     <message>
-        <location filename="window.cpp" line="859"/>
+        <location filename="window.cpp" line="861"/>
         <source>&lt;H2&gt;tabletReader v%1&lt;/H2&gt;&lt;H3&gt;e-book reader for touch-enabled devices&lt;/H3&gt;&lt;H4&gt;Supported formats:&lt;/H4&gt;&lt;H4&gt;%2&lt;/H4&gt;&lt;br&gt;Copyright (C) 2012, Bogdan Cristea. All rights reserved.&lt;br&gt;&lt;i&gt;e-mail: cristeab@gmail.com&lt;/i&gt;&lt;br&gt;&lt;br&gt;This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.&lt;br&gt;&lt;br&gt;</source>
         <translation>&lt;H2&gt; TabletReader v%1&lt;/H2&gt;&lt;H3&gt; cititor de carti electronice pentru dispozitivele cu ecran tactil &lt;/H3&gt;&lt;H4&gt;Formate suportate:&lt;/H4&gt;&lt;H4&gt;%2&lt;/H4&gt;&lt;br&gt; Copyright (C) 2012, Bogdan Cristea. Toate drepturile rezervate. &lt;br&gt;&lt;i&gt;e-mail: cristeab@gmail.com&lt;/i&gt;&lt;br&gt;&lt;br&gt;Acest program este distribuit în speranţa că va fi util, fără nici o GARANŢIE, nici chiar fără garanţia implicită de vandabilitate sau POTRIVIRE PENTRU UN ANUMIT SCOP. A se vedea GNU General Public License pentru mai multe detalii. &lt;br&gt;</translation>
     </message>
     <message>
-        <location filename="window.cpp" line="971"/>
+        <location filename="window.cpp" line="973"/>
         <source>You can use tabletReader, but it is highly recommended to connect to Intel AppUp center</source>
         <translation>Puteti folosi tabletReader, dar este recomandat sa fiti conectat la centrul AppUp al Intel</translation>
     </message>
     <message>
-        <location filename="window.cpp" line="994"/>
+        <location filename="window.cpp" line="996"/>
         <source>&lt;H3&gt;Document path:&lt;br&gt;&lt;i&gt;%1&lt;/i&gt;&lt;/H3&gt;</source>
         <translation>&lt;H3&gt;Calea documentului:&lt;br&gt;&lt;i&gt;%1&lt;/i&gt;&lt;/H3&gt;</translation>
     </message>
     <message>
-        <location filename="window.cpp" line="996"/>
+        <location filename="window.cpp" line="998"/>
         <source>&lt;H3&gt;Current page / Number of pages:&lt;br&gt;&lt;b&gt;%1 / %2&lt;/b&gt;&lt;/H3&gt;</source>
         <oldsource>&lt;H3&gt;Current page / Page number:&lt;br&gt;&lt;b&gt;%1 / %2&lt;/b&gt;&lt;/H3&gt;</oldsource>
         <translation>&lt;H3&gt;Pagina curenta / Numarul de pagini:&lt;br&gt;&lt;b&gt;%1 / %2&lt;/b&gt;&lt;/H3&gt;</translation>
     </message>
     <message>
-        <location filename="window.cpp" line="998"/>
+        <location filename="window.cpp" line="1000"/>
         <source>&lt;H3&gt;Elapsed time:&lt;br&gt;%1&lt;/H3&gt;</source>
         <translation>&lt;H3&gt;Timpul scurs:&lt;br&gt;%1&lt;/H3&gt;</translation>
     </message>
     <message>
-        <location filename="window.cpp" line="1001"/>
+        <location filename="window.cpp" line="1003"/>
         <source>&lt;H3&gt;Battery status:&lt;br&gt;%1&lt;/H3&gt;</source>
         <translation>&lt;H3&gt;Starea bateriei:&lt;br&gt;%1&lt;/H3&gt;</translation>
     </message>
     <message>
-        <location filename="window.cpp" line="1037"/>
+        <location filename="window.cpp" line="1039"/>
         <source>no charger</source>
         <translation>fara incarcator</translation>
     </message>
     <message>
-        <location filename="window.cpp" line="1040"/>
+        <location filename="window.cpp" line="1042"/>
         <source>wall charger</source>
         <translation>incarcator conectat</translation>
     </message>
     <message>
-        <location filename="window.cpp" line="1046"/>
+        <location filename="window.cpp" line="1048"/>
         <source>charging</source>
         <translation>se incarca</translation>
     </message>
     <message>
-        <location filename="window.cpp" line="1050"/>
+        <location filename="window.cpp" line="1052"/>
         <source>unknown</source>
         <translation>necunoscut</translation>
     </message>
     <message>
-        <location filename="window.cpp" line="1054"/>
+        <location filename="window.cpp" line="1056"/>
         <source>, %1% remaining capacity</source>
         <translation>, %1% capacitate ramasa</translation>
     </message>
     <message>
-        <location filename="window.cpp" line="1057"/>
+        <location filename="window.cpp" line="1059"/>
         <source>, unknown remaining capacity</source>
         <translation>, capacitate ramasa necunoscuta</translation>
     </message>
     <message>
-        <location filename="window.cpp" line="1070"/>
+        <location filename="window.cpp" line="1072"/>
         <source>1 hour</source>
         <translation>1 ora</translation>
     </message>
     <message>
-        <location filename="window.cpp" line="1073"/>
+        <location filename="window.cpp" line="1075"/>
         <source>%1 hours</source>
         <translation>%1 ore</translation>
     </message>
     <message>
-        <location filename="window.cpp" line="1082"/>
+        <location filename="window.cpp" line="1084"/>
         <source>1 minute</source>
         <translation>1 minut</translation>
     </message>
     <message>
-        <location filename="window.cpp" line="1085"/>
+        <location filename="window.cpp" line="1087"/>
         <source>%1 minutes</source>
         <translation>%1 minute</translation>
     </message>
     <message>
-        <location filename="window.cpp" line="1094"/>
+        <location filename="window.cpp" line="1096"/>
         <source>1 second</source>
         <translation>1 secunda</translation>
     </message>
     <message>
-        <location filename="window.cpp" line="1097"/>
+        <location filename="window.cpp" line="1099"/>
         <source>%1 seconds</source>
         <translation>%1 secunde</translation>
     </message>
     <message>
-        <location filename="window.cpp" line="197"/>
-        <location filename="window.cpp" line="448"/>
+        <location filename="window.cpp" line="199"/>
+        <location filename="window.cpp" line="450"/>
         <source>Open</source>
         <translation>Deschide</translation>
     </message>
@@ -365,12 +365,12 @@
         <translation type="obsolete">Afiseaza/Ascunde Numarul de Pagina</translation>
     </message>
     <message>
-        <location filename="window.cpp" line="463"/>
+        <location filename="window.cpp" line="465"/>
         <source>Normal Screen</source>
         <translation>Ecran Normal</translation>
     </message>
     <message>
-        <location filename="window.cpp" line="492"/>
+        <location filename="window.cpp" line="494"/>
         <source>Failed to open file</source>
         <translation>Fisierul nu poate fi deschis</translation>
     </message>
@@ -383,7 +383,7 @@
         <translation type="obsolete">pagina %1 din %2</translation>
     </message>
     <message>
-        <location filename="window.cpp" line="838"/>
+        <location filename="window.cpp" line="840"/>
         <source>Cannot open help file</source>
         <translation>Nu se poate deschide fichierul de ajutor</translation>
     </message>
