@@ -48,8 +48,7 @@ Logger::Logger(const QString &fileLogName)
   ts_.setDevice(pOutFile_);
   loggerMutex_ = new QMutex;
   qInstallMsgHandler(debugMessageHandler);
-  qDebug() << "\n\nSTART" << QDateTime::currentDateTime().toString(Qt::ISODate)
-           << "START\n";
+  ts_ << "\n\n\t\t\t\tSTART on " << QDateTime::currentDateTime().toString("dd/MM/yyyy") << "\n\n";
 }
 
 Logger::~Logger()
@@ -80,8 +79,8 @@ void Logger::debugMessageHandler(QtMsgType type, const char *msg)
     txt = QString("Fatal: %1").arg(msg);
     abort();
   }
-  ts_ << QDateTime::currentDateTime().toMSecsSinceEpoch()
+  ts_ << QDateTime::currentDateTime().toString("hh:mm:ss.zzz")
       << "\tTID:" << QThread::currentThreadId()
-      << " " << txt << endl;
+      << "\t" << txt << endl;
   loggerMutex_->unlock();
 }
