@@ -37,7 +37,7 @@ DocumentWidget::DocumentWidget(Window *parent)
   for(int n = 0; n < CACHE_SIZE; ++n) {
     pageCache_.append(new PageCache);
     pageCache_[n]->pPixmap = NULL;
-    pageCache_[n]->valid = false;
+    pageCache_[n]->status = PAGE_CACHE_INVALID;
   }
   connect(this, SIGNAL(pageRequest(int, qreal)), doc_, SLOT(onPageRequest(int, qreal)));
   connect(doc_, SIGNAL(pixmapReady(int, const QPixmap*)), this, SLOT(onPixmapReady(int, const QPixmap*)));
@@ -56,7 +56,7 @@ void DocumentWidget::onPixmapReady(int page, const QPixmap *pix)
   qDebug() << "DocumentWidget::onPixmapReady";
 
   pageCache_[page % CACHE_SIZE]->pPixmap = pix;
-  pageCache_[page % CACHE_SIZE]->valid = true;
+  pageCache_[page % CACHE_SIZE]->status = PAGE_CACHE_VALID;
   if (page == evtPage_) {
     if (true == evtLoop_.isRunning()) {//racing conditions should be managed by the upper layers
       evtLoop_.quit();//used for synchronous page requests
@@ -91,19 +91,33 @@ void DocumentWidget::setPage(int page)
   //set image on the scroll area
   currentScrollArea_ = (QScrollArea*)stackedWidget_->widget(currentIndex_);//get next/prev widget
   QLabel *label = (QLabel*)currentScrollArea_->widget();
-  if(false == pageCache_[currentPage_ % CACHE_SIZE]->valid) {
-    qDebug() << "DocumentWidget::showPage: invalid cache"; 
+  const QPixmap *pPix = NULL;
+  switch (PageCacheStatus st = pageCache_[currentPage_%CACHE_SIZE]->status) {
+  case PAGE_CACHE_INVALID:
+  case PAGE_CACHE_PENDING:
     evtPage_ = currentPage_;//prepare to wait synchronously this page
-    emit pageRequest(currentPage_, scaleFactor_);
+    if (PAGE_CACHE_INVALID == st) {
+      qDebug() << "invalid cache";
+      emit pageRequest(currentPage_, scaleFactor_);
+    }
+    else {
+      qDebug() << "pending cache";
+    }
     if (-1 != evtPage_) {
       evtLoop_.exec();//wait to receive the page pixmap
     }
-  }
-  const QPixmap *pPix = pageCache_[currentPage_ % CACHE_SIZE]->pPixmap;
-  if((NULL != pPix) && (false == pPix->isNull())) {
-    qDebug() << "setPixmap" << pPix;
-    label->setPixmap(*pPix);
-    label->adjustSize();
+    //falls through
+  case PAGE_CACHE_VALID:
+    qDebug() << "valid cache";
+    pPix = pageCache_[currentPage_ % CACHE_SIZE]->pPixmap;
+    if((NULL != pPix) && (false == pPix->isNull())) {
+      qDebug() << "setPixmap" << pPix;
+      label->setPixmap(*pPix);
+      label->adjustSize();
+    }
+    break;
+  default:
+    qDebug() << "unknown page state";
   }
 }
 

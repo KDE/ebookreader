@@ -66,6 +66,7 @@ Window::Window(QWidget *parent)
   prev_.page = 0;
 
   eTime_.start();//used to measure the elapsed time since the app is started
+  QApplication::setOverrideCursor(Qt::WaitCursor);
 
   //main window
   QWidget *centralWidget = new QWidget(this);
@@ -183,6 +184,7 @@ void Window::showDocument()
     showHelp(false);
   }
   onAnimationFinished();//simulate an onAnimationFinished
+  QApplication::restoreOverrideCursor();
 }
 
 Window::~Window()

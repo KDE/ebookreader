@@ -44,7 +44,7 @@ public slots:
   void onPixmapReady(int page, const QPixmap *pix);
 
 public:
-  DocumentWidget(Window *parent = 0);
+  explicit DocumentWidget(Window *parent = 0);
   ~DocumentWidget();
   bool setDocument(const QString &filePath);
   void setPage(int page = -1);
@@ -90,11 +90,12 @@ public:
     }
     doc_->deletePixmap(pageCache_[page % CACHE_SIZE]->pPixmap);
     pageCache_[page % CACHE_SIZE]->pPixmap = NULL;
-    pageCache_[page % CACHE_SIZE]->valid = false;
+    pageCache_[page % CACHE_SIZE]->status = PAGE_CACHE_INVALID;
     return true;//operation successful
   }
   void sendPageRequest(int page) {
     if (true == invalidatePageCache(page)) {
+      pageCache_[page % CACHE_SIZE]->status = PAGE_CACHE_PENDING;
       emit pageRequest(page, scaleFactor_);
     }
   }
@@ -118,9 +119,10 @@ private:
   int currentIndex_;
   int maxNumPages_;
   qreal scaleFactor_;
+  enum PageCacheStatus {PAGE_CACHE_INVALID, PAGE_CACHE_VALID, PAGE_CACHE_PENDING};
   struct PageCache {
     const QPixmap *pPixmap;
-    bool valid;
+    PageCacheStatus status;
   };
   QList<PageCache*> pageCache_;
   SlidingStackedWidget *stackedWidget_;
