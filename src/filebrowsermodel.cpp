@@ -137,6 +137,42 @@ QVariant FileBrowserModel::data(const QModelIndex &index, int role) const
         else if(ptr->is("application/epub+zip")) {
           iconFileName = QString(":/filebrowser/icons/Epub-document-icon.png");
         }
+        else if(ptr->is("application/x-fictionbook+xml")) {
+          iconFileName = QString(":/filebrowser/icons/fb2-icon.png");
+        }
+        else if(ptr->is("application/x-cbr")) {
+          iconFileName = QString(":/filebrowser/icons/cbr-icon.png");
+        }
+        else if(ptr->is("image/bmp")) {
+          iconFileName = QString(":/filebrowser/icons/bmp-icon.png");
+        }
+        else if(ptr->is("application/x-dvi")) {
+          iconFileName = QString(":/filebrowser/icons/dvi-icon.png");
+        }
+        else if(ptr->is("image/x-eps")) {
+          iconFileName = QString(":/filebrowser/icons/eps-icon.png");
+        }
+        else if(ptr->is("image/jpeg")) {
+          iconFileName = QString(":/filebrowser/icons/jpg-icon.png");
+        }
+        else if(ptr->is("image/png")) {
+          iconFileName = QString(":/filebrowser/icons/png-icon.png");
+        }
+        else if(ptr->is("application/vnd.oasis.opendocument.text")) {
+          iconFileName = QString(":/filebrowser/icons/odt-icon.png");
+        }
+        else if(ptr->is("image/gif")) {
+          iconFileName = QString(":/filebrowser/icons/gif-icon.png");
+        }
+        else if(ptr->is("image/vnd.microsoft.icon")) {
+          iconFileName = QString(":/filebrowser/icons/ico-icon.png");
+        }
+        else if(ptr->is("image/tiff")) {
+          iconFileName = QString(":/filebrowser/icons/tif-icon.png");
+        }
+        else if(ptr->is("application/postscript")) {
+          iconFileName = QString(":/filebrowser/icons/ps-icon.png");
+        }
         else {
           iconFileName = QString(":/filebrowser/icons/Document-icon.png");
         }

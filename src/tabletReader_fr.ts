@@ -12,7 +12,7 @@
     <name>FileBrowserModel</name>
     <message>
         <location filename="filebrowsermodel.cpp" line="46"/>
-        <location filename="filebrowsermodel.cpp" line="156"/>
+        <location filename="filebrowsermodel.cpp" line="192"/>
         <source>Go</source>
         <translation>Retourner</translation>
     </message>
