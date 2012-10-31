@@ -254,6 +254,7 @@ void Window::showFileBrowser()
     fileBrowser_->setAttribute(Qt::WA_TranslucentBackground);
     fileBrowser_->setAttribute(Qt::WA_DeleteOnClose);
     fileBrowser_->setWindowFlags(Qt::FramelessWindowHint);
+	fileBrowser_->setFocusPolicy(Qt::NoFocus);
     fileBrowser_->move(0, 0);
     QObject *pDisp = fileBrowser_->rootObject();
     if(NULL != pDisp) {
@@ -298,6 +299,7 @@ void Window::showGotoPage()
     gotoPage_->setAttribute(Qt::WA_TranslucentBackground);
     gotoPage_->setAttribute(Qt::WA_DeleteOnClose);
     gotoPage_->setWindowFlags(Qt::FramelessWindowHint);
+    gotoPage_->setFocusPolicy(Qt::NoFocus);
     QObject *pRoot = gotoPage_->rootObject();
     if(NULL != pRoot) {
       pRoot->setProperty("width", width());
@@ -365,6 +367,7 @@ void Window::showZoomPage()
     zoomPage_->setAttribute(Qt::WA_TranslucentBackground);
     zoomPage_->setAttribute(Qt::WA_DeleteOnClose);
     zoomPage_->setWindowFlags(Qt::FramelessWindowHint);
+    zoomPage_->setFocusPolicy(Qt::NoFocus);
     connect(zoomPage_->engine(), SIGNAL(quit()), this, SLOT(closeZoomPage()));
     QObject *pRoot = zoomPage_->rootObject();
     if(NULL != pRoot) {

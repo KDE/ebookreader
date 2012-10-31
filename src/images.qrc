@@ -33,6 +33,7 @@
         <file>icons/ico-icon.png</file>
         <file>icons/tif-icon.png</file>
         <file>icons/ps-icon.png</file>
+        <file>icons/psd-icon.png</file>
     </qresource>
     <qresource prefix="/qml">
         <file>qml/gotopage.qml</file>

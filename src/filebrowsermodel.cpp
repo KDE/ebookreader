@@ -173,6 +173,9 @@ QVariant FileBrowserModel::data(const QModelIndex &index, int role) const
         else if(ptr->is("application/postscript")) {
           iconFileName = QString(":/filebrowser/icons/ps-icon.png");
         }
+        else if(ptr->is("image/vnd.adobe.photoshop")) {
+          iconFileName = QString(":/filebrowser/icons/psd-icon.png");
+        }
         else {
           iconFileName = QString(":/filebrowser/icons/Document-icon.png");
         }
