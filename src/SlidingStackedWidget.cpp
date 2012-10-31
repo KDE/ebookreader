@@ -18,7 +18,6 @@
 
 #include "SlidingStackedWidget.h"
 
-
 SlidingStackedWidget::SlidingStackedWidget(QWidget *parent)
   : QStackedWidget(parent)
 {

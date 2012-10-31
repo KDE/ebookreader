@@ -31,11 +31,11 @@
 #include <qmobilityglobal.h>
 #endif
 #include "documentwidget.h"
+#include "SlidingStackedWidget.h"
 
 class QScrollArea;
 class QSpinBox;
 class QComboBox;
-class SlidingStackedWidget;
 class FileBrowserModel;
 class QDeclarativeView;
 class Flickable;
@@ -99,7 +99,7 @@ private:
   void updateView(qreal factor, bool force = false);
   void setScale(qreal factor) {
     if (FIT_WIDTH_ZOOM_FACTOR == factor) { //need to set window width for fit width
-      document_->setWinWidth(width());
+      document_->setWinWidth(slidingStacked_->frameRect().width());
     }
     document_->setScale(factor);
   }
@@ -122,9 +122,9 @@ private:
       (NULL != zoomPage_) || (NULL != commandPopupMenu_) ||
       (NULL != aboutDialog_) || (NULL != waitDialog_);
   }
-  void updateViewForFitWidth(int width) {
+  void updateViewForFitWidth() {
     if ((NULL != document_) && (FIT_WIDTH_ZOOM_FACTOR == document_->scale())) {
-      document_->setWinWidth(width);
+      document_->setWinWidth(slidingStacked_->rect().width());
       document_->setScale(FIT_WIDTH_ZOOM_FACTOR);
       updateView(FIT_WIDTH_ZOOM_FACTOR, true);
     }

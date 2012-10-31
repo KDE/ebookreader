@@ -23,7 +23,6 @@
 #include <QtSystemInfo/QSystemBatteryInfo>
 #endif
 #include "window.h"
-#include "SlidingStackedWidget.h"
 #include "filebrowsermodel.h"
 #include "flickable.h"
 
@@ -513,8 +512,8 @@ void Window::fullScreen()
   if(true == hasTouchScreen()) {
     QApplication::setOverrideCursor(QCursor(Qt::BlankCursor));
   }
-  //work around since the window width is not yet available
-  updateViewForFitWidth(QApplication::desktop()->width());
+  //update page width if needed
+  updateViewForFitWidth();
   fullScreen_ = true;
 }
 
@@ -527,11 +526,9 @@ void Window::normalScreen()
     toolBar_->show();
   }
 
-  int width = 0;
-  int height = 0;
   if (false == normScrGeometry_.isValid()) {
-    width = QApplication::desktop()->width();
-    height = QApplication::desktop()->height();
+    int width = QApplication::desktop()->width();
+    int height = QApplication::desktop()->height();
     if((MIN_SCREEN_WIDTH >= width) && (MIN_SCREEN_HEIGHT >= height)) {
       qDebug() << "using full screen mode with toolbar";
       setFixedSize(width, height);
@@ -553,10 +550,9 @@ void Window::normalScreen()
   }
   else {
     setGeometry(normScrGeometry_);
-    width = normScrGeometry_.width();
   }
-  //work around since the window width is not yet available
-  updateViewForFitWidth(width);
+  //update page width if needed
+  updateViewForFitWidth();
 }
 
 bool Window::eventFilter(QObject *, QEvent *event)
