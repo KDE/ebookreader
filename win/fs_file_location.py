@@ -5,7 +5,7 @@
 import os
 
 fd = open("file_loc.txt", "w")
-root_install_folder = "C:\\Users\\Bogdan Cristea\\Desktop\\tabletReader\\tabletReader"
+root_install_folder = "C:\\Users\\Bogdan Cristea\\Documents\\test"
 
 def list_files(folder_path):
     for file in os.listdir(folder_path):

@@ -10,7 +10,7 @@ build_type = 'Debug'#Debug or Release
 >>>>>>> 4f0b1d2... add script for copying all needed files
 files_folder = "C:\\Users\\Bogdan Cristea\\Documents\\C++\\ebookreader\\win\\file_loc.txt"
 src_root_path = "C:\\kderoot"
-dst_root_path = "C:\\Users\\Bogdan Cristea\\Documents\\test"
+dst_root_path = "C:\\Users\\Bogdan Cristea\\Documents\\C++\\ebookreader\\build\\src"
 
 <<<<<<< HEAD
 def copy_file(src, dst):
