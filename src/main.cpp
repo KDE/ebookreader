@@ -21,6 +21,14 @@
 #include "window.h"
 #include "logger.h"
 
+#if defined(WIN32) || defined(WIN64)
+#define _UNICODE
+#include <windows.h>
+#include <tlhelp32.h>
+#include <tchar.h>
+void stopKde4WinDaemons();
+#endif
+
 int main(int argc, char *argv[])
 {
   QApplication app(argc, argv);
@@ -41,5 +49,38 @@ int main(int argc, char *argv[])
   //main window
   Window wnd;
   wnd.show();
-  return app.exec();
+  int out = app.exec();
+#if defined(WIN32) || defined(WIN64)
+  stopKde4WinDaemons();
+#endif
+  return out;
 }
+
+#if defined(WIN32) || defined(WIN64)
+void stopKde4WinDaemons()
+{
+    PROCESSENTRY32 entry;
+    entry.dwSize = sizeof(PROCESSENTRY32);
+
+    HANDLE snapshot = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, NULL);
+
+    if (Process32First(snapshot, &entry))
+    {
+        while (Process32Next(snapshot, &entry))
+        {
+            if ((0 == _tcsicmp(entry.szExeFile, _T("dbus-daemon.exe"))) ||
+              (0 == _tcsicmp(entry.szExeFile, _T("klauncher.exe"))))
+            {  
+                HANDLE hProcess = OpenProcess(PROCESS_TERMINATE, FALSE, entry.th32ProcessID);
+                if (NULL != hProcess)
+                {
+                  TerminateProcess(hProcess, 0);
+                  CloseHandle(hProcess);
+                }
+            }
+        }
+    }
+
+    CloseHandle(snapshot);
+}
+#endif
