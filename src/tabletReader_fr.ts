@@ -101,35 +101,47 @@
 <context>
     <name>ModalDialog</name>
     <message>
+        <location filename="qml/ModalDialog/ModalDialog.qml" line="98"/>
         <source>OK</source>
-        <translation type="obsolete">OK</translation>
+        <translation>OK</translation>
     </message>
     <message>
+        <location filename="qml/ModalDialog/ModalDialog.qml" line="114"/>
         <source>Cancel</source>
-        <translation type="obsolete">Annuler</translation>
+        <translation>Annuler</translation>
     </message>
 </context>
 <context>
     <name>PopupListModel</name>
     <message>
+        <location filename="qml/PopupMenu/PopupListModel.qml" line="28"/>
         <source>Open</source>
-        <translation type="obsolete">Ouvrir</translation>
+        <translation>Ouvrir</translation>
     </message>
     <message>
+        <location filename="qml/PopupMenu/PopupListModel.qml" line="29"/>
         <source>Normal Screen</source>
-        <translation type="obsolete">Ecran Normal</translation>
+        <translation>Ecran Normal</translation>
     </message>
     <message>
+        <location filename="qml/PopupMenu/PopupListModel.qml" line="30"/>
         <source>Go To Page</source>
-        <translation type="obsolete">Aller à la Page</translation>
+        <translation>Aller à la Page</translation>
     </message>
     <message>
+        <location filename="qml/PopupMenu/PopupListModel.qml" line="31"/>
         <source>Zoom</source>
-        <translation type="obsolete">Agrandir</translation>
+        <translation>Agrandir</translation>
     </message>
     <message>
+        <location filename="qml/PopupMenu/PopupListModel.qml" line="32"/>
         <source>Properties</source>
-        <translation type="obsolete">Propriétés</translation>
+        <translation>Propriétés</translation>
+    </message>
+    <message>
+        <location filename="qml/PopupMenu/PopupListModel.qml" line="33"/>
+        <source>Quit</source>
+        <translation>Quitter</translation>
     </message>
     <message>
         <source>Show/Hide Page Number</source>
@@ -393,41 +405,92 @@
     </message>
 </context>
 <context>
+    <name>calculator</name>
+    <message>
+        <location filename="qml/Core/calculator.js" line="24"/>
+        <source>First</source>
+        <translation>Première</translation>
+    </message>
+    <message>
+        <location filename="qml/Core/calculator.js" line="27"/>
+        <source>Middle</source>
+        <translation>Milieu</translation>
+    </message>
+    <message>
+        <location filename="qml/Core/calculator.js" line="31"/>
+        <source>Last</source>
+        <translation>Dernière</translation>
+    </message>
+</context>
+<context>
     <name>gotopage</name>
     <message>
+        <location filename="qml/gotopage.qml" line="70"/>
         <source>GoTo Page</source>
-        <translation type="obsolete">Aller à la Page</translation>
+        <translation>Aller à la Page</translation>
+    </message>
+    <message>
+        <location filename="qml/gotopage.qml" line="113"/>
+        <source>First</source>
+        <translation>Première</translation>
+    </message>
+    <message>
+        <location filename="qml/gotopage.qml" line="114"/>
+        <source>Middle</source>
+        <translation>Milieu</translation>
+    </message>
+    <message>
+        <location filename="qml/gotopage.qml" line="115"/>
+        <source>Last</source>
+        <translation>Dernière</translation>
     </message>
 </context>
 <context>
     <name>maintoolbar</name>
     <message>
+        <location filename="qml/maintoolbar.qml" line="34"/>
         <source>Open</source>
-        <translation type="obsolete">Ouvrir</translation>
+        <translation>Ouvrir</translation>
     </message>
     <message>
+        <location filename="qml/maintoolbar.qml" line="40"/>
         <source>Full Screen</source>
-        <translation type="obsolete">Plein Ecran</translation>
+        <translation>Plein Ecran</translation>
     </message>
     <message>
+        <location filename="qml/maintoolbar.qml" line="46"/>
         <source>Go To Page</source>
-        <translation type="obsolete">Aller à la Page</translation>
+        <translation>Aller à la Page</translation>
     </message>
     <message>
+        <location filename="qml/maintoolbar.qml" line="52"/>
         <source>Zoom</source>
-        <translation type="obsolete">Agrandir</translation>
+        <translation>Agrandir</translation>
     </message>
     <message>
+        <location filename="qml/maintoolbar.qml" line="58"/>
         <source>Properties</source>
-        <translation type="obsolete">Propriétés</translation>
+        <translation>Propriétés</translation>
     </message>
     <message>
+        <location filename="qml/maintoolbar.qml" line="64"/>
         <source>Help</source>
-        <translation type="obsolete">Aide</translation>
+        <translation>Aide</translation>
     </message>
     <message>
+        <location filename="qml/maintoolbar.qml" line="64"/>
+        <source>Back</source>
+        <translation>Retourner</translation>
+    </message>
+    <message>
+        <location filename="qml/maintoolbar.qml" line="70"/>
         <source>About</source>
-        <translation type="obsolete">A Propos</translation>
+        <translation>A Propos</translation>
+    </message>
+    <message>
+        <location filename="qml/maintoolbar.qml" line="76"/>
+        <source>Quit</source>
+        <translation>Quitter</translation>
     </message>
     <message>
         <source>Exit</source>
@@ -437,8 +500,9 @@
 <context>
     <name>zoompage</name>
     <message>
+        <location filename="qml/zoompage.qml" line="60"/>
         <source>Zoom Factor</source>
-        <translation type="obsolete">Facteur</translation>
+        <translation>Facteur</translation>
     </message>
 </context>
 </TS>

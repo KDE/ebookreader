@@ -2,7 +2,7 @@ project ( tabletReader )
 
 include_directories ( ${CMAKE_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR}
 	${QT_QTCORE_INCLUDE_DIR} ${QT_QTGUI_INCLUDE_DIR} ${QT_QTDECLARATIVE_INCLUDE_DIR} ${QT_QTXML_INCLUDE_DIR} ${QT_QTWEBKIT_INCLUDE_DIR} 
-	${QT_MOBILITY_INCLUDE_DIR}/QtMobility ${QT_MOBILITY_SYSTEMINFO_INCLUDE_DIR}
+/bin/bash: :$: command not found
 	${OKULAR_INCLUDE_DIR}/okular )
 set ( LIBS ${LIBS}
 	${QT_QTNETWORK_LIBRARY}
@@ -29,7 +29,14 @@ QT4_WRAP_CPP(MOCS ${tabletReader_MOCS})
 
 if (NOT WIN32)
   #don't generate translations on Windows (use the existing ones)
-  set ( tabletReader_TRANS ${tabletReader_HDRS} ${tabletReader_SRCS} )
+  set ( tabletReader_QML
+    qml/PopupMenu/PopupListModel.qml
+    qml/zoompage.qml
+    qml/ModalDialog/ModalDialog.qml
+    qml/gotopage.qml
+    qml/Core/calculator.js
+    qml/maintoolbar.qml )
+  set ( tabletReader_TRANS ${tabletReader_HDRS} ${tabletReader_SRCS} ${tabletReader_QML} )
   set ( tabletReader_TS
     ${CMAKE_SOURCE_DIR}/src/tabletReader_fr.ts
     ${CMAKE_SOURCE_DIR}/src/tabletReader_ro.ts
@@ -94,8 +101,5 @@ if (WIN32)
   CreateShortCut \\\"$SMPROGRAMS\\\\tabletReader.lnk\\\" \\\"$INSTDIR\\\\bin\\\\tabletReader.exe\\\" \\\"\\\" \\\"$INSTDIR\\\\bin\\\\tabletReader.ico\\\"")
   set(CPACK_NSIS_EXTRA_UNINSTALL_COMMANDS "Delete \\\"$DESKTOP\\\\tabletReader.lnk\\\"
   Delete \\\"$SMPROGRAMS\\\\tabletReader.lnk\\\"")
-  if (EXISTS ${CMAKE_BINARY_DIR}/tabletReader-2.3-win32.exe)
-    configure_file(${CMAKE_BINARY_DIR}/tabletReader-2.3-win32.exe ${CMAKE_SOURCE_DIR}/win/tabletReader-2.3-win32.exe COPYONLY)
-  endif()
 endif()
 include(CPack)
