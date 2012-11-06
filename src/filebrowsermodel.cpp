@@ -131,7 +131,8 @@ QVariant FileBrowserModel::data(const QModelIndex &index, int role) const
         else if(ptr->is("image/vnd.djvu")) {
           iconFileName = QString(":/filebrowser/icons/Djvu-document-icon.png");
         }
-        else if(ptr->is("application/vnd.ms-htmlhelp")) {
+        else if(ptr->is("application/vnd.ms-htmlhelp") ||
+          ptr->is("application/x-chm")) {
           iconFileName = QString(":/filebrowser/icons/Chm-document-icon.png");
         }
         else if(ptr->is("application/epub+zip")) {

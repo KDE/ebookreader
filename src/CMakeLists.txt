@@ -84,12 +84,15 @@ if (WIN32)
   set(CPACK_GENERATOR "NSIS")
   set(CPACK_NSIS_MUI_FINISHPAGE_RUN "tabletReader.exe")
   set(CPACK_NSIS_CONTACT "cristeab@gmail.com")
-  set(CPACK_NSIS_MUI_ICON ${CMAKE_SOURCE_DIR}/src/icons/tabletReader.ico)
-  set(CPACK_NSIS_MUI_UNIICON ${CMAKE_SOURCE_DIR}/src/icons/tabletReader.ico)
+  set(CPACK_NSIS_INSTALLED_ICON_NAME "bin\\\\tabletReader.exe")
+  set(CPACK_NSIS_MUI_ICON "${CMAKE_SOURCE_DIR}/src/icons/tabletReader.ico")
+  set(CPACK_NSIS_MUI_UNIICON "${CMAKE_SOURCE_DIR}/src/icons/tabletReader.ico")
+  set(CPACK_NSIS_URL_INFO_ABOUT "https://projects.kde.org/projects/playground/edu/ebookreader")
+  set(CPACK_NSIS_CONTACT "Bogdan Cristea <cristeab\@gmail.com>")
   set(CPACK_NSIS_EXTRA_INSTALL_COMMANDS "ExecWait '\\\"$INSTDIR\\\\bin\\\\kbuildsycoca4.exe\\\"'
   CreateShortCut \\\"$DESKTOP\\\\tabletReader.lnk\\\" \\\"$INSTDIR\\\\bin\\\\tabletReader.exe\\\" \\\"\\\" \\\"$INSTDIR\\\\bin\\\\tabletReader.ico\\\"
   CreateShortCut \\\"$SMPROGRAMS\\\\tabletReader.lnk\\\" \\\"$INSTDIR\\\\bin\\\\tabletReader.exe\\\" \\\"\\\" \\\"$INSTDIR\\\\bin\\\\tabletReader.ico\\\"")
-  set(CPACK_NSIS_EXTRA_UNINSTALL_COMMANDS "Delete \\\"$DESKTOP\\\\tabletReader.lnk\\\" 
+  set(CPACK_NSIS_EXTRA_UNINSTALL_COMMANDS "Delete \\\"$DESKTOP\\\\tabletReader.lnk\\\"
   Delete \\\"$SMPROGRAMS\\\\tabletReader.lnk\\\"")
   if (EXISTS ${CMAKE_BINARY_DIR}/tabletReader-2.3-win32.exe)
     configure_file(${CMAKE_BINARY_DIR}/tabletReader-2.3-win32.exe ${CMAKE_SOURCE_DIR}/win/tabletReader-2.3-win32.exe COPYONLY)

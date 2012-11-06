@@ -22,10 +22,13 @@ function doOperation(op) {
         lastOp = ""
     } else if (op == qsTr("First")) {
         display.text = "1"
+        lastOp = ""
     } else if (op == qsTr("Middle")) {
         var mid = Math.ceil(display.nbPages/2)
         display.text = mid.toString()
+        lastOp = ""
     } else if (op == qsTr("Last")) {
         display.text = display.nbPages.toString()
+        lastOp = ""
     }
 }

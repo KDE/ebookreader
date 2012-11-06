@@ -99,7 +99,8 @@ bool OkularDocument::load(const QString &fileName)
 void OkularDocument::preProcessPage(int &width, int &height, const Okular::Page *page)
 {
   qreal factor = 0;
-  if (mimeType_->is("application/vnd.ms-htmlhelp")) {
+  if (mimeType_->is("application/vnd.ms-htmlhelp") ||
+    mimeType_->is("application/x-chm")) {
     //for chm docs request page with the true size (factor = 1)
     factor = 1.0;
   } else if (Window::FIT_WIDTH_ZOOM_FACTOR == zoomFactor_) {
@@ -135,15 +136,16 @@ const QPixmap* OkularDocument::postProcessPage(const QPixmap *pixmap)
       p.end();
     }
   }
-  else if (mimeType_->is("application/vnd.ms-htmlhelp")) {
+  else if (mimeType_->is("application/vnd.ms-htmlhelp") ||
+    mimeType_->is("application/x-chm")) {
     //apply zoom on the obtained pixmap
     if (Window::FIT_WIDTH_ZOOM_FACTOR == zoomFactor_) {
-      out = new QPixmap(pixmap->scaledToWidth(winWidth_));
+      out = new QPixmap(pixmap->scaledToWidth(winWidth_, Qt::SmoothTransformation));
     }
     else {
       int width = int(pixmap->width()*zoomFactor_);
       int height = int(pixmap->height()*zoomFactor_);
-      out = new QPixmap(pixmap->scaled(width, height, Qt::KeepAspectRatio));
+      out = new QPixmap(pixmap->scaled(width, height, Qt::KeepAspectRatio, Qt::SmoothTransformation));
     }
   }
   else {

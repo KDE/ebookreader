@@ -304,6 +304,7 @@ void Window::showGotoPage()
       if(NULL != pDisp) {
         connect(pDisp, SIGNAL(setPage(QString)), this, SLOT(closeGotoPage(QString)));
         pDisp->setProperty("nbPages", document_->numPages());
+        pDisp->setProperty("text", document_->currentPage()+1);
         gotoPage_->show();
       }
       else {
