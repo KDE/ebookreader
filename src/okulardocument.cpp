@@ -96,10 +96,11 @@ bool OkularDocument::load(const QString &fileName)
 
 void OkularDocument::adjustSize(int &width, int &height)
 {
-  if((long)width*(long)height > 20000000L) {
+  //adjust size in order to stay below this threshold (used by okular core library)
+  const qint64 area = qint64(width)*qint64(height);
+  if(area > 20000000L) {
     qDebug() << "adjust width and height in order to stay below threshold";
-    //adjust height in order to stay below this threshold (used by okular core library)
-    qreal factor2 = qreal(20000000L)/qreal((long)width*(long)height);
+    qreal factor2 = qreal(20000000L)/qreal(area);
     height = int(height*factor2);
   }
 }
@@ -139,10 +140,11 @@ void OkularDocument::onPageRequest(int page, qreal factor)
   const Okular::Page *p = doc_->page(page);
   if(NULL != p) {
     if (Window::FIT_WIDTH_ZOOM_FACTOR == factor) {
-      factor = winWidth_/p->width();//adjust scale factor to occupy the entire window width
+      factor = qreal(winWidth_)/p->width();//adjust scale factor to occupy the entire window width
     }
     int width = int(factor*(p->width()));
     int height = int(factor*(p->height()));
+    qreal tmp = p->ratio();
     adjustSize(width, height);
     painter_->sendRequest(p, width, height);
   }
