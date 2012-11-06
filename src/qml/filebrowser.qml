@@ -38,7 +38,7 @@ Rectangle {
                 id: previewBox
                 width: box.width
                 height:64
-                color: ((index%2)?"#80a9a9a9":"#80696969")
+                color: ((index%2)?"#80724684":"#80321040")
                 Image {
                     id: previewImage
                     source: model.image
