@@ -67,7 +67,9 @@ private:
 
 OkularDocument::OkularDocument() :
   doc_(NULL),
-  painter_(NULL)
+  painter_(NULL),
+  winWidth_(0),
+  zoomFactor_(0)
 {
   Okular::SettingsCore::instance("");//need to call this before creating the documnent
   doc_ = new Okular::Document(NULL);
@@ -94,8 +96,20 @@ bool OkularDocument::load(const QString &fileName)
   return res;
 }
 
-void OkularDocument::adjustSize(int &width, int &height)
+void OkularDocument::preProcessPage(int &width, int &height, const Okular::Page *page)
 {
+  qreal factor = 0;
+  if (mimeType_->is("application/vnd.ms-htmlhelp")) {
+    //for chm docs request page with the true size (factor = 1)
+    factor = 1.0;
+  } else if (Window::FIT_WIDTH_ZOOM_FACTOR == zoomFactor_) {
+    //adjust scale factor to occupy the entire window width
+    factor = qreal(winWidth_)/page->width();
+  } else {
+    factor = zoomFactor_;
+  }
+  width = int(factor*(page->width()));
+  height = int(factor*(page->height()));
   //adjust size in order to stay below this threshold (used by okular core library)
   const qint64 area = qint64(width)*qint64(height);
   if(area > 20000000L) {
@@ -105,7 +119,7 @@ void OkularDocument::adjustSize(int &width, int &height)
   }
 }
 
-const QPixmap* OkularDocument::setWhiteBackground(const QPixmap *pixmap)
+const QPixmap* OkularDocument::postProcessPage(const QPixmap *pixmap)
 {
   QPixmap *out = NULL;
   if(mimeType_->is("application/epub+zip") ||
@@ -121,8 +135,19 @@ const QPixmap* OkularDocument::setWhiteBackground(const QPixmap *pixmap)
       p.end();
     }
   }
+  else if (mimeType_->is("application/vnd.ms-htmlhelp")) {
+    //apply zoom on the obtained pixmap
+    if (Window::FIT_WIDTH_ZOOM_FACTOR == zoomFactor_) {
+      out = new QPixmap(pixmap->scaledToWidth(winWidth_));
+    }
+    else {
+      int width = int(pixmap->width()*zoomFactor_);
+      int height = int(pixmap->height()*zoomFactor_);
+      out = new QPixmap(pixmap->scaled(width, height, Qt::KeepAspectRatio));
+    }
+  }
   else {
-    //already has white background
+    //just copy the pixmap
     out = new QPixmap(*pixmap);
   }
   return out;
@@ -137,15 +162,12 @@ void OkularDocument::onPageRequest(int page, qreal factor)
     return;
   }
 
+  zoomFactor_ = factor;
   const Okular::Page *p = doc_->page(page);
   if(NULL != p) {
-    if (Window::FIT_WIDTH_ZOOM_FACTOR == factor) {
-      factor = qreal(winWidth_)/p->width();//adjust scale factor to occupy the entire window width
-    }
-    int width = int(factor*(p->width()));
-    int height = int(factor*(p->height()));
-    qreal tmp = p->ratio();
-    adjustSize(width, height);
+    int width = 0;
+    int height = 0;
+    preProcessPage(width, height, p);
     painter_->sendRequest(p, width, height);
   }
 }
@@ -156,7 +178,8 @@ void OkularDocument::notifyPageChanged(int page, int flags)
     qDebug() << "DocumentObserver::Pixmap" << page;
     const QPixmap *pix = painter_->getPagePixmap(page);
     if (NULL != pix) {
-      pix = setWhiteBackground(pix);//TODO: remove unneeded duplication ?
+      pix = postProcessPage(pix);//TODO: remove unneeded duplication ?
+      //TODO: use QPixmap::scaledToWidth with Qt::SmoothTransformation
       //delete immediatelly internal pixmap
       Okular::Page *p = const_cast<Okular::Page*>(doc_->page(page));
       if (NULL != p) {

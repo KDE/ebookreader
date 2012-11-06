@@ -62,12 +62,13 @@ public:
   void notifyPageChanged(int page, int flags);
   const QStringList& supportedFilePatterns();
 private:
-  void adjustSize(int &width, int &height);
-  const QPixmap* setWhiteBackground(const QPixmap *pixmap);
+  void preProcessPage(int &width, int &height, const Okular::Page *page);
+  const QPixmap* postProcessPage(const QPixmap *pixmap);
   Okular::Document *doc_;
   PagePainter *painter_;
-  KMimeType::Ptr mimeType_;
   int winWidth_;
+  qreal zoomFactor_;
+  KMimeType::Ptr mimeType_;
   QStringList supportedFilePatterns_;
 };
 
