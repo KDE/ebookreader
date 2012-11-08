@@ -11,18 +11,16 @@
 <context>
     <name>FileBrowserModel</name>
     <message>
-        <location filename="filebrowsermodel.cpp" line="46"/>
-        <location filename="filebrowsermodel.cpp" line="196"/>
         <source>Go</source>
-        <translation>Retourner</translation>
+        <translation type="obsolete">Retourner</translation>
     </message>
     <message>
-        <location filename="filebrowsermodel.cpp" line="86"/>
+        <location filename="filebrowsermodel.cpp" line="77"/>
         <source>Go Back to &apos;%1&apos; from &apos;%2&apos;</source>
         <translation>Retouner à &apos;%1&apos; de &apos;%2&apos;</translation>
     </message>
     <message>
-        <location filename="filebrowsermodel.cpp" line="90"/>
+        <location filename="filebrowsermodel.cpp" line="81"/>
         <source>Go Back to &apos;/&apos; from &apos;%1&apos;</source>
         <translation>Retourner à &apos;/&apos; de &apos;%1&apos;</translation>
     </message>

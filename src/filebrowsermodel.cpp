@@ -43,7 +43,7 @@ void FileBrowserModel::changeCurrentDir(int index)
   if(index >= dirs_.count()) {
     return;
   }
-  if(index == 0 && dirs_[index].startsWith(tr("Go"))) {
+  if(index == 0) {
     currentDir_ += "/..";
     QDir dir = QDir(currentDir_);
     currentDir_ = dir.absolutePath();
@@ -61,16 +61,7 @@ void FileBrowserModel::searchSupportedFiles()
   files_.clear();
   dirs_.clear();
 
-  QDir directory = QDir(currentDir_, "*.*",
-                        QDir::Name | QDir::IgnoreCase | QDir::LocaleAware);
-  directory.setNameFilters(supportedFilePatterns_);
-
-  //fill file list
-  directory.setFilter(QDir::Files);
-  foreach(QString file, directory.entryList()) {
-    files_.append(directory.absoluteFilePath(file));
-  }
-  files_.append(closeFileBrowserText());
+  QDir directory = QDir(currentDir_, "*.*", QDir::Name | QDir::IgnoreCase | QDir::LocaleAware);
 
   //fill folder list
   directory.setFilter(QDir::AllDirs);
@@ -95,6 +86,14 @@ void FileBrowserModel::searchSupportedFiles()
     }
     dirs_.append(dirToAdd);
   }
+
+  //fill file list
+  directory.setFilter(QDir::Files);
+  directory.setNameFilters(supportedFilePatterns_);
+  foreach(QString file, directory.entryList()) {
+    files_.append(directory.absoluteFilePath(file));
+  }
+  files_.append(closeFileBrowserText());
 }
 
 int FileBrowserModel::rowCount(const QModelIndex&) const
@@ -193,7 +192,7 @@ QVariant FileBrowserModel::data(const QModelIndex &index, int role) const
     case TITLE:
       return dirs_[dirRow];
     case IMAGE:
-      if(dirRow == 0 && dirs_[dirRow].startsWith(tr("Go"))) {
+      if(dirRow == 0) {
         return QString(":/filebrowser/icons/Button-Upload-icon.png");
       }
       else {
