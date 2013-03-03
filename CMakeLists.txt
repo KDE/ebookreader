@@ -1,6 +1,6 @@
 project(tabletReader)
 
-cmake_minimum_required ( VERSION 2.8.6 )
+cmake_minimum_required ( VERSION 2.8.10 )
 
 IF ( NOT CMAKE_BUILD_TYPE )
 	set ( CMAKE_BUILD_TYPE Release )
@@ -25,6 +25,7 @@ elseif (${CMAKE_BUILD_TYPE} MATCHES "^[Dd]ebug")
   #	add_subdirectory ( test )
   message(STATUS "Add unit tests")
 endif()
+option(DESKTOP_APP "Enable desktop application" on)
 set ( MSG ${CMAKE_BUILD_TYPE} )
 if (DESKTOP_APP)
   set ( MSG "${MSG} for desktop" )
