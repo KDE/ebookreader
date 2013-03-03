@@ -32,7 +32,7 @@ namespace Okular
 }
 class PagePainter;
 
-class OkularDocument : public QObject, private Okular::DocumentObserver
+class OkularDocument : public QObject, public Okular::DocumentObserver
 {
   Q_OBJECT
 
@@ -55,10 +55,6 @@ public:
     winWidth_ = width;
   }
   ~OkularDocument();
-  enum {OKULAR_OBSERVER_ID = 6};
-  uint observerId() const {
-    return OKULAR_OBSERVER_ID;
-  }
   void notifyPageChanged(int page, int flags);
   const QStringList& supportedFilePatterns();
 private:
