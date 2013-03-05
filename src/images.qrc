@@ -21,6 +21,19 @@
         <file>icons/Chm-document-icon.png</file>
         <file>icons/Epub-document-icon.png</file>
         <file>icons/Document-icon.png</file>
+        <file>icons/fb2-icon.png</file>
+        <file>icons/cbr-icon.png</file>
+        <file>icons/bmp-icon.png</file>
+        <file>icons/dvi-icon.png</file>
+        <file>icons/eps-icon.png</file>
+        <file>icons/jpg-icon.png</file>
+        <file>icons/png-icon.png</file>
+        <file>icons/odt-icon.png</file>
+        <file>icons/gif-icon.png</file>
+        <file>icons/ico-icon.png</file>
+        <file>icons/tif-icon.png</file>
+        <file>icons/ps-icon.png</file>
+        <file>icons/psd-icon.png</file>
     </qresource>
     <qresource prefix="/qml">
         <file>qml/main.qml</file>

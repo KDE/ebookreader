@@ -39,6 +39,11 @@ public:
 
   QPixmap requestPixmap(const QString &id, QSize *size, const QSize &requestedSize);
 
+public:
+  explicit DocumentWidget(Window *parent = 0);
+  ~DocumentWidget();
+  bool setDocument(const QString &filePath);
+  void setPage(int page = -1);
   void setScale(qreal scale) {
     scaleFactor_ = scale;
   }
@@ -49,12 +54,19 @@ public:
     return (NULL != doc_) ? doc_->numPages() : 0;
   }
 
+    if(0 > page || maxNumPages_ <= page) {
+      qDebug() << "DocumentWidget::invalidatePageCache: nothing to do";
+      return false;//operation failed
+    }
+    doc_->deletePixmap(pageCache_[page % CACHE_SIZE]->pPixmap);
+    pageCache_[page % CACHE_SIZE]->pPixmap = NULL;
+    pageCache_[page % CACHE_SIZE]->status = PAGE_CACHE_INVALID;
+    return true;//operation successful
+  }
   void sendPageRequest(int page) {
-    qDebug() << "PageProvider::sendPageRequest";
-
-    if ((true == invalidatePageCache(page)) && (NULL != doc_)) {
-      doc_->pageRequest(page, scaleFactor_);
+    if (true == invalidatePageCache(page)) {
       pageCache_[page % CACHE_SIZE]->status = PAGE_CACHE_PENDING;
+      emit pageRequest(page, scaleFactor_);
     }
   }
   void pixmapReady(int page, const QPixmap *pix);
@@ -68,11 +80,8 @@ public:
       doc_->setWinWidth(width);
     }
   }
-  bool isLoaded() const {
-    return (NULL != doc_);
-  }
-  int currentPage() const {
-    return currentPage_;
+  const QStringList& supportedFilePatterns() const {
+    return doc_->supportedFilePatterns();
   }
 
   enum {CACHE_SIZE = 3};

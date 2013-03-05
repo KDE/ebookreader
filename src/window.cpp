@@ -24,7 +24,7 @@
 #endif
 #include "window.h"
 #include "filebrowsermodel.h"
-#include "screen_size.h"
+#include "flickable.h"
 
 #define ORGANIZATION "Bogdan Cristea"
 #define APPLICATION "tabletReader"
@@ -32,45 +32,128 @@
 #define KEY_FILE_PATH "current_file_path"
 #define KEY_ZOOM_LEVEL "current_zoom_level"
 #define HELP_FILE "/../share/doc/tabletReaderHelp.pdf"
-
 #ifndef NO_QTMOBILITY
 QTM_USE_NAMESPACE
 #endif
 
-Window::Window()
-  : QDeclarativeView(),
-    provider_(NULL),
-    fileBrowserModel_(new FileBrowserModel(this)),
+Window::Window(QWidget *parent)
+  : QMainWindow(parent),
+    slidingStacked_(NULL),
+    document_(NULL),
+    animationFinished_(true),
+    toolBar_(NULL),
+    fileBrowser_(NULL),
+    gotoPage_(NULL),
+    zoomPage_(NULL),
+    commandPopupMenu_(NULL),
+    aboutDialog_(NULL),
+    waitDialog_(NULL),
+    flickable_(NULL),
+    fileBrowserModel_(NULL),
     waitTimer_(NULL),
 #ifndef NO_QTMOBILITY
     batteryInfo_(NULL),
 #endif
     helpFile_(QCoreApplication::applicationDirPath()+QString(HELP_FILE)),
-    currentPage_(-1)
+    fullScreen_(false)
 {
   prev_.fileName = "";
   prev_.page = 0;
 
   eTime_.start();//used to measure the elapsed time since the app is started
+  QApplication::setOverrideCursor(Qt::WaitCursor);
+
+  //main window
+  QWidget *centralWidget = new QWidget(this);
+  QGridLayout *gridLayout = new QGridLayout(centralWidget);
+  setCentralWidget(centralWidget);
+  setWindowTitle(tr(APPLICATION));
+  setStyleSheet("background-color: black");
 
   //zoom scale factors
   //-1 used for fit width scaling factor
   scaleFactors_ << -1 << 0.25 << 0.5 << 0.75 << 1.
                 << 1.25 << 1.5 << 2. << 3. << 4.;
 
+  //create main document
+  document_ = new DocumentWidget(this);
+  //create file browser (uses supported file types given by OkularDocument)
+  fileBrowserModel_ = new FileBrowserModel(this, document_->supportedFilePatterns());
+
+  //create sliding animation
+  slidingStacked_ = new SlidingStackedWidget(this);
+
+  //create flickable object
+  flickable_ = new Flickable(this);
+
+  //init document pages and the sliding animation
+  QScrollArea *scroll = NULL;
+  QLabel *label = NULL;
+  register int n = 0;
+  for(n = 0; n < DocumentWidget::CACHE_SIZE; ++n) {
+    //scroll areas (one for each page)
+    scroll = new QScrollArea(centralWidget);
+    scroll->setFrameShape(QFrame::NoFrame);
+    scroll->setWidgetResizable(true);
+    scroll->setAlignment(Qt::AlignCenter);
+    label = new QLabel();//QLabel is used to display a page
+    label->setAlignment(Qt::AlignCenter);
+    label->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
+    scroll->setWidget(label);
+    scroll->installEventFilter(this);
+    slidingStacked_->addWidget(scroll);//scroll areas are switched by the stacked widget
+    flickable_->activateOn(scroll);
+  }
+  document_->setStackedWidget(slidingStacked_);
+  slidingStacked_->setSpeed(HORIZONTAL_SLIDE_SPEED_MS);
+  slidingStacked_->setWrap(true);
+  slidingStacked_->setVerticalMode(false);
+  slidingStacked_->setStyleSheet("background:black");
+  slidingStacked_->setAttribute(Qt::WA_DeleteOnClose);
+  gridLayout->addWidget(slidingStacked_, 1, 0, 1, 1);
+
+  connect(slidingStacked_, SIGNAL(animationFinished()),
+          this, SLOT(onAnimationFinished()));
+
+  statusBar()->hide();
+
   //wait timer initialisation (used to handle long actions: document openings, page changes)
   waitTimer_ = new QTimer(this);
   waitTimer_->setInterval(WAIT_TIMER_INTERVAL_MS);
-  connect(waitTimer_, SIGNAL(timeout()), this, SLOT(showWaitDialog()));
+  connect(waitTimer_, SIGNAL(timeout()), this, SLOT(showWaitPage()));
+
+  normalScreen();
+
+  //main toolbar
+  if(NULL != (toolBar_ = new QDeclarativeView(this))) {
+    toolBar_->setSource(QUrl("qrc:/qml/qml/maintoolbar.qml"));
+    toolBar_->setFocusPolicy(Qt::NoFocus);
+    QObject *pDisp = toolBar_->rootObject();
+    if(NULL != pDisp) {
+      pDisp->setProperty("width", width());
+      QObject *pToolbar = pDisp->findChild<QObject*>("toolbar");
+      if(NULL != pToolbar) {
+        connect(pToolbar, SIGNAL(sendCommand(QString)), this, SLOT(onSendCommand(QString)));
+      }
+      else {
+        qDebug() << "cannot find toolbar object";
+      }
+    }
+    gridLayout->addWidget(toolBar_, 0, 0, 1, 1);
+  }
+
+  addShortcutKeys();
 
 #ifndef NO_QTMOBILITY
   //battery status
   batteryInfo_ = new QSystemBatteryInfo(this);
 #endif
 
+  Qt::WindowFlags winFlags = Qt::WindowMinimizeButtonHint;
 #ifndef DESKTOP_APP
-  setWindowFlags(Qt::X11BypassWindowManagerHint);
+  winFlags |= Qt::X11BypassWindowManagerHint;
 #endif
+  setWindowFlags(winFlags);
 
   showDocument();
 }
@@ -87,24 +170,20 @@ void Window::showDocument()
   QSettings settings(ORGANIZATION, APPLICATION);
   QString filePath;
   waitTimer_->start();
-  if(NULL != (filePath = settings.value(KEY_FILE_PATH).toString())) {
-    filePath = "/home/bogdan/Documents/CV-simple/CV-en-simple_detail.pdf";//TODO: remove this
-    qDebug() << "Found document " << filePath;
-    if(provider_->setDocument(filePath)) {
-      setScale(settings.value(KEY_ZOOM_LEVEL, 1.0).toFloat());
-      currentPage_ = settings.value(KEY_PAGE, 0).toInt();
-      //configure file browser
+  if ((NULL != (filePath = settings.value(KEY_FILE_PATH).toString())) &&
+    (true == document_->setDocument(filePath))) {
+      qDebug() << "Found document " << filePath;
+      setupDocDisplay(settings.value(KEY_PAGE, 0).toInt() + 1, 
+          settings.value(KEY_ZOOM_LEVEL, 1.0).toFloat());
       fileBrowserModel_->setCurrentDir(filePath);
-    }
   }
   else {
     qDebug() << "no document found";
-    showHelp();
+    setScale(FIT_WIDTH_ZOOM_FACTOR);//use default fit width scale factor
+    showHelp(false);
   }
-  rootContext()->setContextProperty("windowMgr", this);
-  qDebug() << "start loading main.qml";
-  setSource(QUrl("qrc:/qml/qml/main.qml"));
-  qDebug() << "finish loading main.qml";
+  onAnimationFinished();//simulate an onAnimationFinished
+  QApplication::restoreOverrideCursor();
 }
 
 Window::~Window()
@@ -129,16 +208,19 @@ void Window::onSendCommand(const QString &cmd)
     showZoomPage();
   }
   else if(tr("Properties") == cmd) {
-    showPropertiesDialog();
+    showPropertiesPage();
   }
   else if((tr("Help") == cmd) || (tr("Back") == cmd)) {
+    if ((tr("Help") == cmd) && (helpFile_ == document_->filePath())) {
+      return;//nothing to do
+    }
     showHelp();
   }
   else if(tr("About") == cmd) {
-    showAboutDialog();
+    showAboutPage();
   }
-  else if(tr("Exit") == cmd) {
-    //close();
+  else if(tr("Quit") == cmd) {
+    close();
   }
   else {
     qDebug() << "unknown command" << cmd;
@@ -159,13 +241,14 @@ void Window::showFileBrowser()
       showWarningMessage(tr("fileBrowserObject is NULL"));
       return;
     }
-    fileBrowserModel_->searchPdfFiles();
+    fileBrowserModel_->searchSupportedFiles();
     fileBrowser_->engine()->rootContext()->setContextProperty("pdfPreviewModel", fileBrowserModel_);
     fileBrowser_->setSource(QUrl("qrc:/qml/qml/filebrowser.qml"));
     fileBrowser_->setStyleSheet("background:transparent");
     fileBrowser_->setAttribute(Qt::WA_TranslucentBackground);
     fileBrowser_->setAttribute(Qt::WA_DeleteOnClose);
     fileBrowser_->setWindowFlags(Qt::FramelessWindowHint);
+	fileBrowser_->setFocusPolicy(Qt::NoFocus);
     fileBrowser_->move(0, 0);
     QObject *pDisp = fileBrowser_->rootObject();
     if(NULL != pDisp) {
@@ -210,6 +293,7 @@ void Window::showGotoPage()
     gotoPage_->setAttribute(Qt::WA_TranslucentBackground);
     gotoPage_->setAttribute(Qt::WA_DeleteOnClose);
     gotoPage_->setWindowFlags(Qt::FramelessWindowHint);
+    gotoPage_->setFocusPolicy(Qt::NoFocus);
     QObject *pRoot = gotoPage_->rootObject();
     if(NULL != pRoot) {
       pRoot->setProperty("width", width());
@@ -218,6 +302,8 @@ void Window::showGotoPage()
       QObject *pDisp = pRoot->findChild<QObject*>("disp");
       if(NULL != pDisp) {
         connect(pDisp, SIGNAL(setPage(QString)), this, SLOT(closeGotoPage(QString)));
+        pDisp->setProperty("nbPages", document_->numPages());
+        pDisp->setProperty("text", document_->currentPage()+1);
         gotoPage_->show();
       }
       else {
@@ -276,6 +362,7 @@ void Window::showZoomPage()
     zoomPage_->setAttribute(Qt::WA_TranslucentBackground);
     zoomPage_->setAttribute(Qt::WA_DeleteOnClose);
     zoomPage_->setWindowFlags(Qt::FramelessWindowHint);
+    zoomPage_->setFocusPolicy(Qt::NoFocus);
     connect(zoomPage_->engine(), SIGNAL(quit()), this, SLOT(closeZoomPage()));
     QObject *pRoot = zoomPage_->rootObject();
     if(NULL != pRoot) {
@@ -365,12 +452,12 @@ void Window::closeCommandPopupMenu(const QString &cmd)
       showGotoPage();
     }
     else if(tr("Properties") == cmd) {
-      showPropertiesDialog();
+      showPropertiesPage();
     }
     else if(tr("Zoom") == cmd) {
       showZoomPage();
     }
-    else if(tr("Exit") == cmd) {
+    else if(tr("Quit") == cmd) {
       close();
     }
     else if(tr("Normal Screen") == cmd) {
@@ -394,7 +481,7 @@ void Window::openFile(const QString &filePath)
     setHelpIcon(true, false);
   }
   else {
-    closeWaitDialog();
+    closeWaitPage();
     showWarningMessage(QString(APPLICATION " - ") + tr("Failed to open file"),
                        tr("%1 cannot be opened").arg(filePath));
   }
@@ -403,22 +490,35 @@ void Window::openFile(const QString &filePath)
 void Window::fullScreen()
 {
   qDebug() << "Window::fullScreen";
-  //toolBar_->hide();
-  //showFullScreen();
+
+  if (true == fullScreen_) {
+    return;
+  }
+  normScrGeometry_ = geometry();//store current geometry
+
+  toolBar_->hide();
+  showFullScreen();
   if(true == hasTouchScreen()) {
     QApplication::setOverrideCursor(QCursor(Qt::BlankCursor));
   }
+  //update page width if needed
+  updateViewForFitWidth();
+  fullScreen_ = true;
 }
 
 void Window::normalScreen()
 {
   qDebug() << "Window::normalScreen";
 
-  QDesktopWidget *pDesktop = QApplication::desktop();
-  if(NULL != pDesktop) {
-    int width = pDesktop->width();
-    int height = pDesktop->height();
-    if((FULL_SCREEN_WIDTH >= width) || (FULL_SCREEN_HEIGHT >= height)) {
+  fullScreen_ = false;
+  if (NULL != toolBar_) {
+    toolBar_->show();
+  }
+
+  if (false == normScrGeometry_.isValid()) {
+    int width = QApplication::desktop()->width();
+    int height = QApplication::desktop()->height();
+    if((MIN_SCREEN_WIDTH >= width) && (MIN_SCREEN_HEIGHT >= height)) {
       qDebug() << "using full screen mode with toolbar";
       //resize(width, height);
       //showFullScreen();
@@ -428,22 +528,208 @@ void Window::normalScreen()
     }
     else {
       qDebug() << "using normal mode";
-      //showNormal();
       width = (MIN_SCREEN_WIDTH < width) ? MIN_SCREEN_WIDTH : width;
       height = (MIN_SCREEN_HEIGHT < height) ? MIN_SCREEN_HEIGHT : height;
-      //resize(width, height);
+      resize(width, height);
+      showNormal();
       if(true == hasTouchScreen()) {
         QApplication::restoreOverrideCursor();
       }
     }
   }
+  else {
+    setGeometry(normScrGeometry_);
+  }
+  //update page width if needed
+  updateViewForFitWidth();
 }
 
-void Window::closeEvent(QCloseEvent* /*evt*/)
+bool Window::eventFilter(QObject *, QEvent *event)
+{
+  bool out = false;
+
+  if(QEvent::Wheel == event->type()) {
+    if (false == isBackground()) {
+      // * handle mouse wheel events
+      QWheelEvent *wheelEvent = static_cast<QWheelEvent*>(event);
+      if(0 > wheelEvent->delta()) {
+        showNextPage();
+        return true;//stop further processing
+      }
+      if(0 < wheelEvent->delta()) {
+        showPrevPage();
+        return true;
+      }
+    }
+  }
+  else if(QEvent::MouseButtonPress == event->type()) {
+    // * handle mouse events
+    QMouseEvent* mouseEvent = static_cast<QMouseEvent*>(event);
+    startPoint_ = mouseEvent->pos();
+  }
+  else if(QEvent::MouseButtonRelease == event->type()) {
+    // * handle mouse events - cont
+    QMouseEvent* mouseEvent = static_cast<QMouseEvent*>(event);
+    endPoint_ = mouseEvent->pos();
+
+    //process distance and direction
+    int xDiff = qAbs(startPoint_.x() - endPoint_.x());
+    int yDiff = qAbs(startPoint_.y() - endPoint_.y());
+    if((xDiff > 2 * SWIPE_THRESHOLD) && (xDiff > yDiff)) {
+      // horizontal swipe detected, now find direction
+      if(startPoint_.x() > endPoint_.x()) {
+        //left swipe
+        showNextPage();
+      }
+      else if(startPoint_.x() < endPoint_.x()) {
+        //right swipe
+        showPrevPage();
+      }
+    }
+    // vertical swipe is handled by Flickable class
+  }
+  else if (QEvent::ContextMenu == event->type()) {
+    // * handle right click event
+    showCommandPopupMenu();
+  }
+  else if(QEvent::KeyPress == event->type()) {
+    // * handle key events
+    QKeyEvent *keyEvent = static_cast<QKeyEvent*>(event);
+    switch(keyEvent->key()) {
+      case Qt::Key_Escape:
+        if (isFullScreen() && (false == isBackground())) {
+          //must be the first check
+          normalScreen();
+        }
+        if (NULL != fileBrowser_) {
+          fileBrowser_->close();
+          fileBrowser_ = NULL;
+        }
+        if (NULL != gotoPage_) {
+          gotoPage_->close();
+          gotoPage_ = NULL;
+        }
+        if (NULL != zoomPage_) {
+          zoomPage_->close();
+          zoomPage_ = NULL;
+        }
+        if (NULL != commandPopupMenu_) {
+          commandPopupMenu_->close();
+          commandPopupMenu_ = NULL;
+        }
+        if (NULL != aboutDialog_) {
+          aboutDialog_->close();
+          aboutDialog_ = NULL;
+        }
+        break;
+      case Qt::Key_Right:
+        if (false == isBackground()) {
+          showNextPage();
+        }
+        out = true;//don't propagate this event
+        break;
+      case Qt::Key_Left:
+        if (false == isBackground()) {
+          showPrevPage();
+        }
+        out = true;//don't propagate this event
+        break;
+      case Qt::Key_Up:
+      case Qt::Key_Down:
+        out = isBackground();
+        break;
+      case Qt::Key_Home:
+        if((0 != document_->currentPage()) && (true == animationFinished_) &&
+            (false == isBackground())) {
+          //not at the beginning of the document
+          animationFinished_ = false;
+          gotoPage(1, document_->numPages());
+          slidingStacked_->slideInPrev();
+        }
+        break;
+      case Qt::Key_End:
+        {
+          int numPages = document_->numPages();
+          if(((numPages - 1) != document_->currentPage()) && (true == animationFinished_) &&
+              (false == isBackground())) {
+            //not at the end of the document
+            animationFinished_ = false;
+            gotoPage(numPages, numPages);
+            slidingStacked_->slideInNext();
+          }
+        }
+        break;
+    }
+  }
+  return out;
+}
+
+bool Window::showNextPage()
+{
+  qDebug() << "Window::showNextPage";
+
+  bool out = false;
+
+  if(true == document_->isLoaded() && true == animationFinished_) {
+    currentPage_ = document_->currentPage() + 2;
+    if(currentPage_ <= document_->numPages()) {
+      //start timer
+      waitTimer_->start();
+      //load a new page
+      animationFinished_ = false;
+      document_->setPage(currentPage_);
+      document_->showCurrentPageUpper();
+      //update the cache after the page has been displayed
+      document_->sendPageRequest(currentPage_);
+      //make sure that the next page is ready
+      slidingStacked_->slideInNext();
+      out = true;
+    }
+  }
+
+  return out;
+}
+
+bool Window::showPrevPage()
+{
+  qDebug() << "Window::showPrevPage";
+
+  bool out = false;
+
+  if(true == document_->isLoaded() && true == animationFinished_) {
+    currentPage_ = document_->currentPage();
+    if(0 < currentPage_) {
+      //start timer
+      waitTimer_->start();
+      //load a new page
+      animationFinished_ = false;
+      document_->setPage(currentPage_);
+      document_->showCurrentPageLower();
+      //update the cache after the page has been displayed
+      document_->sendPageRequest(currentPage_ - 2);
+      //make sure that the prev page is ready
+      slidingStacked_->slideInPrev();
+      out = true;
+    }
+  }
+
+  return out;
+}
+
+void Window::closeEvent(QCloseEvent *evt)
 {
   qDebug() << "Window::closeEvent";
 
   saveSettings();
+
+  QWidget::closeEvent(evt);
+}
+
+void Window::onAnimationFinished()
+{
+  qDebug() << "Window::onAnimationFinished";
+  closeWaitPage();
+  animationFinished_ = true;//must be the last statement
 }
 
 //TODO: remove this method
@@ -476,16 +762,17 @@ void Window::gotoPage(int pageNb, int count)
   }
 }
 
-//TODO: remove
-void Window::updateView(qreal factor)
+void Window::updateView(qreal factor, bool force)
 {
   qDebug() << "Window::updateView";
 
   //set zoom factor
-  if (provider_->scale() == factor) {
-    return;//nothing to do
+  if (false == force) {
+    if (document_->scale() == factor) {
+      return;
+    }
+    setScale(factor);
   }
-  setScale(factor);
 
   //update all pages from circular buffer
   //gotoPage(provider_->currentPage(), provider_->count());
@@ -510,9 +797,16 @@ void Window::showHelp()
     prev_.page = -1;
   }
 
-  if(provider_->setDocument(*curFileName)) {
-    setupDocDisplay(curPage, provider_->scale());
-    //setHelpIcon(helpFile_ != *curFileName);
+  if(document_->setDocument(*curFileName)) {
+    animationFinished_ = false;
+    waitTimer_->start();
+    setupDocDisplay(curPage, document_->scale());
+    document_->showCurrentPageUpper();
+    if(true == slideNext) {
+      slidingStacked_->slideInNext();
+    }
+    bool showHelp = (helpFile_ != *curFileName) || (0 == prev_.page);
+    setHelpIcon(showHelp);
   }
   else {
     qDebug() << "cannot open help file";
@@ -521,17 +815,17 @@ void Window::showHelp()
   }
 }
 
-void Window::showAboutDialog()
+void Window::showAboutPage()
 {
-  qDebug() << "Window::showAboutDialog";
-  /*if(NULL == aboutDialog_) {
+  qDebug() << "Window::showAboutPage";
+  if(NULL == aboutDialog_) {
     aboutDialog_ = new QDeclarativeView(this);
     aboutDialog_->setSource(QUrl("qrc:/qml/qml/aboutdialog.qml"));
     aboutDialog_->setStyleSheet("background:transparent");
     aboutDialog_->setAttribute(Qt::WA_TranslucentBackground);
     aboutDialog_->setAttribute(Qt::WA_DeleteOnClose);
     aboutDialog_->setWindowFlags(Qt::FramelessWindowHint);
-    connect(aboutDialog_->engine(), SIGNAL(quit()), this, SLOT(closeAboutDialog()));
+    connect(aboutDialog_->engine(), SIGNAL(quit()), this, SLOT(closeAboutPage()));
     QObject *pAbout = aboutDialog_->rootObject();
     if(NULL != pAbout) {
       pAbout->setProperty("height", height());
@@ -540,14 +834,15 @@ void Window::showAboutDialog()
       if(NULL != pAboutDlg) {
         pAboutDlg->setProperty("text", tr("<H2>tabletReader v%1</H2>"
                                           "<H3>e-book reader for touch-enabled devices</H3>"
-                                          "<H4>Supported formats: all Okular supported formats.</H4>"
-                                          "<H4>(e.g. PDF, CHM, DJVU, EPUB, etc)</H4><br>"
-                                          "Copyright (C) 2012, Bogdan Cristea. All rights reserved.<br>"
+                                          "<H4>Supported formats:</H4>"
+                                          "<H4>%2</H4>"
+                                          "<br>Copyright (C) 2012, Bogdan Cristea. All rights reserved.<br>"
                                           "<i>e-mail: cristeab@gmail.com</i><br><br>"
                                           "This program is distributed in the hope that it will be useful, "
                                           "but WITHOUT ANY WARRANTY; without even the implied warranty of "
                                           "MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the "
-                                          "GNU General Public License for more details.<br><br>").arg(TR_VERSION));
+                                          "GNU General Public License for more details.<br><br>").arg(TR_VERSION).
+            arg(document_->supportedFilePatterns().join(", ")));
       }
       else {
         qDebug() << "cannot get aboutDialog object";
@@ -562,10 +857,10 @@ void Window::showAboutDialog()
   }*/
 }
 
-void Window::closeAboutDialog()
+void Window::closeAboutPage()
 {
-  qDebug() << "Window::closeAboutDialog";
-  /*if((NULL != aboutDialog_) && (true == aboutDialog_->close())) {
+  qDebug() << "Window::closeAboutPage";
+  if((NULL != aboutDialog_) && (true == aboutDialog_->close())) {
     qDebug() << "widget closed";
     aboutDialog_ = NULL;
   }*/
@@ -581,7 +876,7 @@ void Window::showWarningMessage(const QString& /*title*/, const QString& /*expla
     aboutDialog_->setAttribute(Qt::WA_TranslucentBackground);
     aboutDialog_->setAttribute(Qt::WA_DeleteOnClose);
     aboutDialog_->setWindowFlags(Qt::FramelessWindowHint);
-    connect(aboutDialog_->engine(), SIGNAL(quit()), this, SLOT(closeAboutDialog()));
+    connect(aboutDialog_->engine(), SIGNAL(quit()), this, SLOT(closeAboutPage()));
     QObject *pRoot = aboutDialog_->rootObject();
     if(NULL != pRoot) {
       if (false  == pRoot->setProperty("height", height())) {
@@ -608,9 +903,9 @@ void Window::showWarningMessage(const QString& /*title*/, const QString& /*expla
   }*/
 }
 
-void Window::showWaitDialog()
+void Window::showWaitPage()
 {
-  qDebug() << "Window::showWaitDialog";
+  qDebug() << "Window::showWaitPage";
   waitTimer_->stop();
   /*if(NULL == waitDialog_) {
     waitDialog_ = new QDeclarativeView(this);
@@ -633,9 +928,9 @@ void Window::showWaitDialog()
   }*/
 }
 
-void Window::closeWaitDialog()
+void Window::closeWaitPage()
 {
-  qDebug() << "Window::closeWaitDialog";
+  qDebug() << "Window::closeWaitPage";
   waitTimer_->stop();
   /*if((NULL != waitDialog_) && (true == waitDialog_->close())) {
     qDebug() << "widget closed";
@@ -646,17 +941,17 @@ void Window::closeWaitDialog()
   }*/
 }
 
-void Window::showPropertiesDialog()
+void Window::showPropertiesPage()
 {
-  qDebug() << "Window::showPropertiesDialog";
-  /*if(NULL == aboutDialog_) {
+  qDebug() << "Window::showPropertiesPage";
+  if(NULL == aboutDialog_) {
     aboutDialog_ = new QDeclarativeView(this);
     aboutDialog_->setSource(QUrl("qrc:/qml/qml/aboutdialog.qml"));
     aboutDialog_->setStyleSheet("background:transparent");
     aboutDialog_->setAttribute(Qt::WA_TranslucentBackground);
     aboutDialog_->setAttribute(Qt::WA_DeleteOnClose);
     aboutDialog_->setWindowFlags(Qt::FramelessWindowHint);
-    connect(aboutDialog_->engine(), SIGNAL(quit()), this, SLOT(closeAboutDialog()));
+    connect(aboutDialog_->engine(), SIGNAL(quit()), this, SLOT(closeAboutPage()));
     QObject *pAbout = aboutDialog_->rootObject();
     if(NULL != pAbout) {
       pAbout->setProperty("height", height());
@@ -670,7 +965,9 @@ void Window::showPropertiesDialog()
         //time since the application was started
         msg += tr("<H3>Elapsed time:<br>%1</H3>").arg(elapsedTime());
         //battery state
+#ifndef NO_QTMOBILITY
         msg += tr("<H3>Battery status:<br>%1</H3>").arg(batteryStatus());
+#endif
         //set message
         pAboutDlg->setProperty("text", msg);
       }
@@ -789,3 +1086,68 @@ void Window::saveSettings()
   }
 }
 
+void Window::addShortcutKeys()
+{
+  //open file
+  QAction *openAction = new QAction(this);
+  openAction->setShortcut(Qt::CTRL+Qt::Key_O);
+  addAction(openAction);
+  connect(openAction, SIGNAL(triggered()), this, SLOT(showFileBrowser()));
+
+  //full screen
+  QAction *fullScreenAction = new QAction(this);
+  fullScreenAction->setShortcut(Qt::CTRL+Qt::Key_U);
+  addAction(fullScreenAction);
+  connect(fullScreenAction, SIGNAL(triggered()), this, SLOT(fullScreen()));
+
+  //go to page
+  QAction *gotoAction = new QAction(this);
+  gotoAction->setShortcut(Qt::CTRL+Qt::Key_G);
+  addAction(gotoAction);
+  connect(gotoAction, SIGNAL(triggered()), this, SLOT(showGotoPage()));
+
+  //zoom
+  QAction *zoomAction = new QAction(this);
+  zoomAction->setShortcut(Qt::CTRL+Qt::Key_Z);
+  addAction(zoomAction);
+  connect(zoomAction, SIGNAL(triggered()), this, SLOT(showZoomPage()));
+
+  //properties
+  QAction *propertiesAction = new QAction(this);
+  propertiesAction->setShortcut(Qt::CTRL+Qt::Key_P);
+  addAction(propertiesAction);
+  connect(propertiesAction, SIGNAL(triggered()), this, SLOT(showPropertiesPage()));
+
+  //help
+  QAction *helpAction = new QAction(this);
+  helpAction->setShortcut(Qt::Key_F1);//TODO: use also Ctrl+H
+  addAction(helpAction);
+  connect(helpAction, SIGNAL(triggered()), this, SLOT(showHelp()));
+
+  //back
+  QAction *backAction = new QAction(this);
+  backAction->setShortcut(Qt::ALT+Qt::Key_Left);
+  addAction(backAction);
+  connect(backAction, SIGNAL(triggered()), this, SLOT(onBack()));
+
+  //about
+  QAction *aboutAction = new QAction(this);
+  aboutAction->setShortcut(Qt::CTRL+Qt::Key_A);
+  addAction(aboutAction);
+  connect(aboutAction, SIGNAL(triggered()), this, SLOT(showAboutPage()));
+
+  //exit
+  QAction *exitAction = new QAction(this);
+  exitAction->setShortcut(Qt::CTRL+Qt::Key_Q);
+  addAction(exitAction);
+  connect(exitAction, SIGNAL(triggered()), this, SLOT(close()));
+}
+
+void Window::onBack()
+{
+  qDebug() << "onBack";
+
+  if (0 != prev_.page) {
+    showHelp();
+  }
+}

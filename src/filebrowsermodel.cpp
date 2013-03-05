@@ -23,9 +23,10 @@
 #include "filebrowsermodel.h"
 #include "pageprovider.h"
 
-FileBrowserModel::FileBrowserModel(QObject *parent) :
+FileBrowserModel::FileBrowserModel(QObject *parent, const QStringList &list) :
   QAbstractListModel(parent),
-  _parent(parent)
+  parent_(parent),
+  supportedFilePatterns_(list)
 {
   QHash<int, QByteArray> roles;
   roles[TITLE] = "title";
@@ -34,41 +35,33 @@ FileBrowserModel::FileBrowserModel(QObject *parent) :
   roles[PATH] = "path";
   setRoleNames(roles);
 
-  _currentDir = QDir::homePath();
+  currentDir_ = QDir::homePath();
 }
 
 void FileBrowserModel::changeCurrentDir(int index)
 {
-  if(index >= _dirs.count()) {
+  if(index >= dirs_.count()) {
     return;
   }
-  if(index == 0 && _dirs[index].startsWith(tr("Go"))) {
-    _currentDir += "/..";
-    QDir dir = QDir(_currentDir);
-    _currentDir = dir.absolutePath();
+  if(index == 0) {
+    currentDir_ += "/..";
+    QDir dir = QDir(currentDir_);
+    currentDir_ = dir.absolutePath();
   }
   else {
-    _currentDir += "/" +  _dirs[index];
+    currentDir_ += "/" +  dirs_[index];
   }
-  qDebug() << _currentDir;
-  searchPdfFiles();
+  qDebug() << currentDir_;
+  searchSupportedFiles();
   reset();
 }
 
-void FileBrowserModel::searchPdfFiles()
+void FileBrowserModel::searchSupportedFiles()
 {
-  _files.clear();
-  _dirs.clear();
+  files_.clear();
+  dirs_.clear();
 
-  QDir directory = QDir(_currentDir, "*.*",
-                        QDir::Name | QDir::IgnoreCase | QDir::LocaleAware);
-
-  //fill file list
-  directory.setFilter(QDir::Files);
-  foreach(QString file, directory.entryList()) {
-    _files.append(directory.absoluteFilePath(file));
-  }
-  _files.append(closeFileBrowserText());
+  QDir directory = QDir(currentDir_, "*.*", QDir::Name | QDir::IgnoreCase | QDir::LocaleAware);
 
   //fill folder list
   directory.setFilter(QDir::AllDirs);
@@ -79,24 +72,33 @@ void FileBrowserModel::searchPdfFiles()
       continue;
     if(file == "..") {
       QDir dir = QDir(absPath);
+      QString currentDirName = QDir(currentDir_).dirName();
       if(!dir.isRoot()) {
-        dirToAdd =
-          tr("Go Back To '") + QDir(dir.canonicalPath()).dirName() + "'";
+        dirToAdd = tr("Go Back to '%1' from '%2'").arg(QDir(dir.canonicalPath()).dirName()).
+          arg(currentDirName);
       }
       else {
-        dirToAdd = tr("Go Back To /");
+        dirToAdd = tr("Go Back to '/' from '%1'").arg(currentDirName);
       }
     }
     else {
       dirToAdd = QDir(absPath).dirName();
     }
-    _dirs.append(dirToAdd);
+    dirs_.append(dirToAdd);
   }
+
+  //fill file list
+  directory.setFilter(QDir::Files);
+  directory.setNameFilters(supportedFilePatterns_);
+  foreach(QString file, directory.entryList()) {
+    files_.append(directory.absoluteFilePath(file));
+  }
+  files_.append(closeFileBrowserText());
 }
 
 int FileBrowserModel::rowCount(const QModelIndex&) const
 {
-  return (_dirs.count() + _files.count());
+  return (dirs_.count() + files_.count());
 }
 
 QVariant FileBrowserModel::data(const QModelIndex &index, int role) const
@@ -105,34 +107,74 @@ QVariant FileBrowserModel::data(const QModelIndex &index, int role) const
   int dirRow =  index.row();
 
   bool isFile = false;
-  if(dirRow >=  _dirs.count()) {
+  if(dirRow >=  dirs_.count()) {
     isFile = true;
   }
 
   if(isFile) {
-    int fileRow = index.row() - _dirs.count();
+    int fileRow = index.row() - dirs_.count();
     switch(role) {
     case TITLE:
-      return QDir(_files[fileRow]).dirName();
+      return QDir(files_[fileRow]).dirName();
     case IMAGE:
-      if(((fileRow + 1) == _files.count()) &&
-          (closeFileBrowserText() == _files[fileRow])) {
+      if(((fileRow + 1) == files_.count()) &&
+          (closeFileBrowserText() == files_[fileRow])) {
         return QString(":/filebrowser/icons/Apps-session-quit-icon.png");
       }
       else {
         QString iconFileName;
-        KMimeType::Ptr ptr = KMimeType::findByPath(_files[fileRow]);
+        KMimeType::Ptr ptr = KMimeType::findByPath(files_[fileRow]);
         if(ptr->is("application/pdf")) {
           iconFileName = QString(":/filebrowser/icons/Adobe-PDF-Document-icon.png");
         }
         else if(ptr->is("image/vnd.djvu")) {
           iconFileName = QString(":/filebrowser/icons/Djvu-document-icon.png");
         }
-        else if(ptr->is("application/vnd.ms-htmlhelp")) {
+        else if(ptr->is("application/vnd.ms-htmlhelp") ||
+          ptr->is("application/x-chm")) {
           iconFileName = QString(":/filebrowser/icons/Chm-document-icon.png");
         }
         else if(ptr->is("application/epub+zip")) {
           iconFileName = QString(":/filebrowser/icons/Epub-document-icon.png");
+        }
+        else if(ptr->is("application/x-fictionbook+xml")) {
+          iconFileName = QString(":/filebrowser/icons/fb2-icon.png");
+        }
+        else if(ptr->is("application/x-cbr")) {
+          iconFileName = QString(":/filebrowser/icons/cbr-icon.png");
+        }
+        else if(ptr->is("image/bmp")) {
+          iconFileName = QString(":/filebrowser/icons/bmp-icon.png");
+        }
+        else if(ptr->is("application/x-dvi")) {
+          iconFileName = QString(":/filebrowser/icons/dvi-icon.png");
+        }
+        else if(ptr->is("image/x-eps")) {
+          iconFileName = QString(":/filebrowser/icons/eps-icon.png");
+        }
+        else if(ptr->is("image/jpeg")) {
+          iconFileName = QString(":/filebrowser/icons/jpg-icon.png");
+        }
+        else if(ptr->is("image/png")) {
+          iconFileName = QString(":/filebrowser/icons/png-icon.png");
+        }
+        else if(ptr->is("application/vnd.oasis.opendocument.text")) {
+          iconFileName = QString(":/filebrowser/icons/odt-icon.png");
+        }
+        else if(ptr->is("image/gif")) {
+          iconFileName = QString(":/filebrowser/icons/gif-icon.png");
+        }
+        else if(ptr->is("image/vnd.microsoft.icon")) {
+          iconFileName = QString(":/filebrowser/icons/ico-icon.png");
+        }
+        else if(ptr->is("image/tiff")) {
+          iconFileName = QString(":/filebrowser/icons/tif-icon.png");
+        }
+        else if(ptr->is("application/postscript")) {
+          iconFileName = QString(":/filebrowser/icons/ps-icon.png");
+        }
+        else if(ptr->is("image/vnd.adobe.photoshop")) {
+          iconFileName = QString(":/filebrowser/icons/psd-icon.png");
         }
         else {
           iconFileName = QString(":/filebrowser/icons/Document-icon.png");
@@ -142,15 +184,15 @@ QVariant FileBrowserModel::data(const QModelIndex &index, int role) const
     case IS_FILE:
       return 1;
     case PATH:
-      return _files[fileRow];
+      return files_[fileRow];
     }
   }
   else {
     switch(role) {
     case TITLE:
-      return _dirs[dirRow];
+      return dirs_[dirRow];
     case IMAGE:
-      if(dirRow == 0 && _dirs[dirRow].startsWith(tr("Go"))) {
+      if(dirRow == 0) {
         return QString(":/filebrowser/icons/Button-Upload-icon.png");
       }
       else {
@@ -159,7 +201,7 @@ QVariant FileBrowserModel::data(const QModelIndex &index, int role) const
     case IS_FILE:
       return 0;
     case PATH:
-      return _dirs[dirRow];
+      return dirs_[dirRow];
     }
   }
 
@@ -168,6 +210,6 @@ QVariant FileBrowserModel::data(const QModelIndex &index, int role) const
 
 void FileBrowserModel::setCurrentDir(const QString &filePath)
 {
-  _currentDir = QFileInfo(filePath).dir().absolutePath();
-  qDebug() << "setting current dir to" << _currentDir;
+  currentDir_ = QFileInfo(filePath).dir().absolutePath();
+  qDebug() << "setting current dir to" << currentDir_;
 }

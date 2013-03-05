@@ -29,8 +29,12 @@
 #ifndef NO_QTMOBILITY
 #include <qmobilityglobal.h>
 #endif
-#include "pageprovider.h"
+#include "documentwidget.h"
+#include "SlidingStackedWidget.h"
 
+class QScrollArea;
+class QSpinBox;
+class QComboBox;
 class FileBrowserModel;
 class QDeclarativeView;
 class QTimer;
@@ -51,16 +55,12 @@ public:
   ~Window();
   bool hasTouchScreen();
   QString batteryStatus();
-  int getCurrentPage() const {
-    qDebug() << "Window::getCurrentPage" << currentPage_;
-    return currentPage_;
-  }
-  enum {TOOLTIP_VISIBLE_TIME_MS = 1500,
-        HORIZONTAL_SLIDE_SPEED_MS = 500,
+  enum {HORIZONTAL_SLIDE_SPEED_MS = 500,
         SWIPE_THRESHOLD = 5,
-        LONG_PRESS_TIMEOUT_MS = 1000,
-        WAIT_TIMER_INTERVAL_MS = 1000
-       };
+        WAIT_TIMER_INTERVAL_MS = 1000,
+        MIN_SCREEN_WIDTH = 1024,
+        MIN_SCREEN_HEIGHT = 768,
+        FIT_WIDTH_ZOOM_FACTOR = -1};
 
 protected:
   void closeEvent(QCloseEvent *);
@@ -80,24 +80,29 @@ private slots:
   void openFile(const QString &filePath);
   void fullScreen();
   void normalScreen();
+  void onAnimationFinished();
   void onSendCommand(const QString &cmd);
-  void showHelp();
-  void showAboutDialog();
-  void closeAboutDialog();
+  void showHelp(bool slideNext = true);
+  void showAboutPage();
+  void closeAboutPage();
   void showWarningMessage(const QString &title, const QString &explanation = "");
-  void showWaitDialog();
-  void closeWaitDialog();
-  void showPropertiesDialog();
+  void showWaitPage();
+  void closeWaitPage();
+  void onAppUpAuthCheckError();
+  void showPropertiesPage();
   void showDocument();
+  void onBack();
 
 private:
-  void showPageNumber(int currentPage, int nbPages);
-  void setupDocDisplay(int pageNumber, qreal factor);
+  bool eventFilter(QObject *, QEvent *);
+  bool showNextPage();
+  bool showPrevPage();
+  void setupDocDisplay(unsigned int pageNumber, qreal factor);
   void gotoPage(int pageNb, int numPages);
-  void updateView(qreal factor);
+  void updateView(qreal factor, bool force = false);
   void setScale(qreal factor) {
-    if (-1 == factor) { //need to set window width for fit width
-      provider_->setWinWidth(width());
+    if (FIT_WIDTH_ZOOM_FACTOR == factor) { //need to set window width for fit width
+      document_->setWinWidth(slidingStacked_->frameRect().width());
     }
     provider_->setScale(factor);
   }
@@ -123,9 +128,34 @@ private:
       qDebug() << "cannot set" << property;
     }
   }
+  void addShortcutKeys();
+  bool isBackground() {
+    return (NULL != fileBrowser_) || (NULL != gotoPage_) ||
+      (NULL != zoomPage_) || (NULL != commandPopupMenu_) ||
+      (NULL != aboutDialog_) || (NULL != waitDialog_);
+  }
+  void updateViewForFitWidth() {
+    if ((NULL != document_) && (FIT_WIDTH_ZOOM_FACTOR == document_->scale())) {
+      document_->setWinWidth(slidingStacked_->rect().width());
+      document_->setScale(FIT_WIDTH_ZOOM_FACTOR);
+      updateView(FIT_WIDTH_ZOOM_FACTOR, true);
+    }
+  }
 
   PageProvider *provider_;
   QVector<qreal> scaleFactors_;
+  QPoint startPoint_;
+  QPoint endPoint_;
+  bool animationFinished_;
+  //TODO: one declarative view
+  QDeclarativeView *toolBar_;
+  QDeclarativeView *fileBrowser_;
+  QDeclarativeView *gotoPage_;
+  QDeclarativeView *zoomPage_;
+  QDeclarativeView *commandPopupMenu_;
+  QDeclarativeView *aboutDialog_;
+  QDeclarativeView *waitDialog_;
+  Flickable *flickable_;
   FileBrowserModel* fileBrowserModel_;
   QTimer *waitTimer_;
 #ifndef NO_QTMOBILITY
@@ -133,6 +163,8 @@ private:
 #endif
   QElapsedTimer eTime_;
   const QString helpFile_;
+  bool fullScreen_;
+  QRect normScrGeometry_;
   struct {
     QString fileName;
     int page;

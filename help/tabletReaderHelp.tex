@@ -1,5 +1,7 @@
 \documentclass[journal,12pt]{IEEEtran}
+
 \usepackage[utf8x]{inputenc}
+\usepackage{url}
 
 \begin{document}
 
@@ -10,13 +12,13 @@
 
 \section{Introduction}
 
-\IEEEPARstart{T}{}abletReader has been designed to be a simple e-book reader for touch-enabled devices (e.g. tablets, notebooks with touch screen). Since okular core library is used as backend (http://okular.kde.org/), all okular supported e-book formats are available (e.g. PDF, CHM, etc.). TabletReader can be used on devices without a touch screen, but in this case a keyboard and a mouse are needed. TabletReader needs a screen large enough (at least 800x600 pixels). Devices with screens of smaller size (e.g. smartphones) may not be suitable for reading e-books using A4 or larger page sizes since the displayed text does not adapt to the screen size (as Acrobat Reader does).
+\IEEEPARstart{T}{}abletReader has been designed to be a simple e-book reader for touch-enabled devices (e.g. tablets, ultrabooks). Okular core library is used as backend (\url{http://okular.kde.org/}), so that all okular supported e-book formats are available (PDF, DJVU, etc.). TabletReader can be used on devices without a touch screen, but in this case a keyboard and a mouse are needed. TabletReader needs a screen large enough (at least 800x600 pixels). Devices with screens of smaller size (e.g. smartphones) may not be suitable for reading e-books using A4 or larger page sizes since the displayed text does not adapt to the screen size (as Acrobat Reader does).
 
-Through its interface, tabletReader enables to open e-book documents found on the local filesystem, to switch between full screen (no toolbar) and normal screen (with toolbar) modes, to go to a specific page, to zoom the displayed document, to display document properties, to show this help, to display information about this software and to exit from the application. At exit, the current e-book document path and name, the current page and the zoom factor are saved so that the next time you launch tabletReader the document is opened at the same page you previously were. 
+Through its interface, tabletReader enables to open e-books found on the local filesystem, to switch between full screen (no toolbar) and normal screen (with toolbar) modes, to go to a specific page, to zoom the displayed document, to display document properties, to show this help, to display information about this software and to exit from the application. At exit, the current e-book document path and name, the current page and the zoom factor are saved so that the next time you launch tabletReader the document is opened at the same page you previously were. 
 
 The application interface adapts to the current language of the operating system, so that English is the default language, but French and Romanian are also supported.
 
-This software has been intended to be used on Linux-based operating systems with a graphical user interface, since there seems to be a lack of e-book readers for touch-enabled devices runnning Linux. However Windows is also supported and since this software has been written using Qt application framework, it can be ported to other platforms too provided that okular core library is available (see implementation details section below).
+This software has been intended to be used on Linux-based operating systems with a graphical user interface, since there seems to be a lack of e-book readers for touch-enabled devices runnning Linux. However Windows is also supported and since this software has been written using Qt application framework, it can be ported to other platforms provided that okular core library is available (see implementation details section below).
 
 \newpage
 
@@ -33,60 +35,65 @@ This software has been intended to be used on Linux-based operating systems with
 \begin{itemize}
  \item using horizontal left and right swipes (you could try this on the current document) or
  \item using left and right arrow keys (home and end keys can be used to go to the first and the last page respectively) or
- \item using the mouse wheel (if available) while being at the bottom or at the header of the page
+ \item using the mouse wheel (if available) while being at the footer or at the header of the page
 \end{itemize}
 
 \subsection{Toolbar buttons}
 \begin{itemize}
- \item \textit{Open}: opens an e-book document found on the local filesystem using the file browser. Vertical up and down swipes (or the mouse wheel, if available) can be used to display the content of the current folder. The first item of the list allows to go up one level, while selecting a folder allows to go down one level. Only files having either *.pdf, *.djvu or *.chm extension are displayed. Please note that a file having this extension is not necessarily a supported e-book. If the file cannot be opened, an error message is displayed. The last item in the file list allows to close the file browser without selecting a file.
- \item \textit{Full Screen}: the application will occupy the entire screen and the toolbar is no longer displayed. In this mode you need to use the command popup menu available by pressing more than one second the touch screen (see below).
- \item \textit{Go To Page}: displays a numerical keypad allowing to type the desired page number. Note that by pressing OK without typing some page number or if the page number is invalid the numerical key will dissapear and the page will not be changed.
- \item \textit{Zoom}: displays a dialog allowing to select the desired zoom factor.
- \item \textit{Properties}: displays document and application properties (document path, current page and the number of pages, elapsed time, battery status).
- \item \textit{Help}: displays this help manual.
- \item \textit{About}: displays a dialog with information about this software.
- \item \textit{Exit}: exits from the application and saves into a local file the current document path and name, current page and the  zoom factor so that the next time when the application is started the saved settings will be used. Thus you could continue to read the document from the page you closed the application the last time.
+ \item \textit{Open}: opens an e-book found on the local filesystem using the file browser (shortcut key Ctrl+o). Vertical up and down swipes (or the mouse wheel, if available) can be used to display the content of the current folder. The first item of the list allows to go up one level, while selecting a folder item allows to go down one level. Only suported file types are shown, however if the file cannot be opened, an error message is displayed. The last item in the file list allows to close the file browser without selecting a file.
+ \item \textit{Full Screen}: the application will occupy the entire screen and the toolbar is no longer displayed (Ctrl+u). In this mode you need to use the command popup menu available by using the mouse right click (or using the corresponding touch screen gesture).
+ \item \textit{Go To Page}: displays a numerical keypad allowing to type the desired page number (Ctrl+g). Note that by pressing OK without typing some page number or if the page number is invalid the numerical key will dissapear and the page will not be changed.
+ \item \textit{Zoom}: displays a dialog allowing to select the desired zoom factor (Ctrl+z). The default zoom factor is fit width.
+ \item \textit{Properties}: displays document and application properties (Ctrl+p): document path, current page and the number of pages, elapsed time, battery status (if QtMobility is available).
+ \item \textit{Help}: displays this help manual (F1). If previously another document has been opened, the Help button is replaced by a Back button so that the user can go back to the previously opened document (Alt+left arrow).
+ \item \textit{About}: displays a dialog with information about this software (Ctrl+a): version number, supported e-book formats.
+ \item \textit{Quit}: quits the application (Ctrl+q) and saves into a local file the current document path and name, current page and the  zoom factor so that the next time when the application is started the saved settings will be used. Thus you could continue to read the document from the page you closed the application the last time.
 \end{itemize}
+
+\textit{Note}: the escape key can be used to cancel any of the above described actions (except Quit).
 
 \subsection{Command popup menu}
 The popup menu is available only in full screen mode and it can be displayed by either:
 \begin{itemize}
- \item pressing more than one second the touch screen or
- \item clicking and holding pressed for more than one second the right mouse button
+ \item using the mouse right click or
+ \item using the context menu key or
+ \item using the corresponding touch screen gesture
 \end{itemize}
 
 \textit{Notes}: 
 \begin{itemize}
- \item Windows users may need to press roughly 3 seconds before the command popup menu appears. This is due to Windows touch screen management software.
- \item while in full screen mode the mouse pointer is hidden if a touch screen is available, so the mouse can no longer be used. Similarly, if the screen size is below 1024x768, the mouse pointer is hidden if a touch screen is detected and the application will occupy the entire screen.
+ \item while in full screen mode the mouse pointer is hidden if a touch screen is available. Similarly, if the screen size is below 1024x768, the mouse pointer is hidden if a touch screen is detected and the application will occupy the entire screen.
+ \item all shortcut keys described in the previous subsection are available.
 \end{itemize}
 
 The following commands are available:
 \begin{itemize}
  \item \textit{Open}: same as the \textit{Open} button of the toolbar
-\item \textit{Normal Screen}: allows to return to normal screen mode. Alternatively, in order to return to the normal screen mode, one could use the escape key (if a keyboard is available).
+ \item \textit{Normal Screen}: allows to return to normal screen mode. Alternatively, in order to return to the normal screen mode, one could use the escape key.
  \item \textit{Go To Page}: same as the \textit{Go To Page} button of the toolbar
  \item \textit{Zoom}: same as the \textit{Zoom} button of the toolbar
  \item \textit{Properties}: same as the \textit{Properties} button of the toolbar
- \item \textit{Exit}: same as the \textit{Exit} button of the toolbar
+ \item \textit{Quit}: same as the \textit{Quit} button of the toolbar
 \end{itemize}
 Thus, the command popup menu allows to handle an e-book in a so called ``advanced user mode" by providing only the essential commands.
 
 \section{Implementation details}
-TabletReader has been written in C++ using Qt application framework, QML for the graphical user interface and okular core library for handling e-book document formats. Note that okular core library depends on other 3rd party libraries (e.g. poppler library, libchm, etc.) which need to be available too (see for further details http://okular.kde.org/).
+TabletReader has been written in C++ using Qt application framework, QML for the graphical user interface and okular core library for handling e-book formats. Note that okular core library depends on other 3rd party libraries (e.g. poppler library) which need to be available too (see for further details \url{http://okular.kde.org/}).
 
 The application is build around a circular buffer holding three pages which allows to display the e-book pages using the \textrm{ListView} QML class. In general, the circular buffer will hold the currently displayed page, the previous page and the next one so that when the user switches between adjacent pages this is done as fast as possible. 
 
 When loading a new document, only the current page is synchronously loaded, while the previous and the next pages are loaded asynchronously in the background. Similarly, when changing between adjacent pages, the page from the circular buffer is displayed and then a new page is loaded asynchronously so that, with respect to the currently displayed page, the previous and the next page are always ready to be displayed in the circular buffer.
 
-The current application settings (current document, current page, zoom factor) are stored using the \textrm{QSettings} class in a portable format between operating systems. However, in order to save the current settings the application must be closed using the \textit{Exit} command. If the device is powered off while using the application the current settings are not saved because there is no way to catch the termination signal. If no settings are available, when the application is started, this help document is displayed.
+The current application settings (current document, current page, zoom factor) are stored using the \textrm{QSettings} class in a portable format between operating systems. However, in order to save the current settings the application must be closed using the \textit{Quit} command. If the device is powered off while using the application the current settings are not saved because there is no way to catch the termination signal. If no settings are available, when the application is started, this help document is displayed.
 
 The Qt internationalization support is used to adapt the interface language to the language of the operating system. English is the default language and currently translations exist for French and Romanian.
+
+TabletReader is part of the KDE project and its sources can be found at: \url{https://projects.kde.org/projects/playground/edu/ebookreader}.
 
 \section{License}
  Copyright \copyright 2012, Bogdan Cristea. All rights reserved.
  
- This program is free software; you can redistribute it and/or modify  it under the terms of the GNU General Public License as published by  the Free Software Foundation; either version 2, or (at your option)  any later version.
+ This program is free software; you can redistribute it and/or modify  it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option)  any later version.
  
  This program is distributed in the hope that it will be useful,  but WITHOUT ANY WARRANTY; without even the implied warranty of
  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the  GNU General Public License for more details.

@@ -33,7 +33,7 @@ namespace Okular
 class PagePainter;
 class PageProvider;
 
-class OkularDocument : private Okular::DocumentObserver
+class OkularDocument : public QObject, public Okular::DocumentObserver
 {
 public:
   explicit OkularDocument(PageProvider *provider);
@@ -49,19 +49,23 @@ public:
     winWidth_ = width;
   }
   ~OkularDocument();
-  enum {OKULAR_OBSERVER_ID = 6};
-  uint observerId() const {
-    return OKULAR_OBSERVER_ID;
-  }
   void notifyPageChanged(int page, int flags);
+  const QStringList& supportedFilePatterns();
 private:
+<<<<<<< HEAD
   void adjustSize(int &width, int &height);
   const QPixmap* setWhiteBackground(const QPixmap *pixmap);
   PageProvider *provider_;
+=======
+  void preProcessPage(int &width, int &height, const Okular::Page *page);
+  const QPixmap* postProcessPage(const QPixmap *pixmap);
+>>>>>>> master
   Okular::Document *doc_;
   PagePainter *painter_;
-  KMimeType::Ptr mimeType_;
   int winWidth_;
+  qreal zoomFactor_;
+  KMimeType::Ptr mimeType_;
+  QStringList supportedFilePatterns_;
 };
 
 #endif // OKULAR_DOCUMENT_H

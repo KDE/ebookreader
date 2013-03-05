@@ -30,7 +30,7 @@ ListModel {
                 qsTr("Go To Page"),
                 qsTr("Zoom"),
                 qsTr("Properties"),
-                qsTr("Exit")
+                qsTr("Quit")
             ]
         }
         return title.text[index]
