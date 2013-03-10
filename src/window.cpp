@@ -24,7 +24,6 @@
 #endif
 #include "window.h"
 #include "filebrowsermodel.h"
-#include "flickable.h"
 
 #define ORGANIZATION "Bogdan Cristea"
 #define APPLICATION "tabletReader"
@@ -36,10 +35,9 @@
 QTM_USE_NAMESPACE
 #endif
 
-Window::Window(QWidget *parent)
-  : QMainWindow(parent),
-    slidingStacked_(NULL),
-    document_(NULL),
+Window::Window()
+  : QDeclarativeView(NULL),
+    //document_(NULL),
     animationFinished_(true),
     toolBar_(NULL),
     fileBrowser_(NULL),
@@ -48,7 +46,6 @@ Window::Window(QWidget *parent)
     commandPopupMenu_(NULL),
     aboutDialog_(NULL),
     waitDialog_(NULL),
-    flickable_(NULL),
     fileBrowserModel_(NULL),
     waitTimer_(NULL),
 #ifndef NO_QTMOBILITY
@@ -63,59 +60,14 @@ Window::Window(QWidget *parent)
   eTime_.start();//used to measure the elapsed time since the app is started
   QApplication::setOverrideCursor(Qt::WaitCursor);
 
-  //main window
-  QWidget *centralWidget = new QWidget(this);
-  QGridLayout *gridLayout = new QGridLayout(centralWidget);
-  setCentralWidget(centralWidget);
-  setWindowTitle(tr(APPLICATION));
-  setStyleSheet("background-color: black");
-
   //zoom scale factors
   //-1 used for fit width scaling factor
   scaleFactors_ << -1 << 0.25 << 0.5 << 0.75 << 1.
                 << 1.25 << 1.5 << 2. << 3. << 4.;
 
   //create main document
-  document_ = new DocumentWidget(this);
   //create file browser (uses supported file types given by OkularDocument)
-  fileBrowserModel_ = new FileBrowserModel(this, document_->supportedFilePatterns());
-
-  //create sliding animation
-  slidingStacked_ = new SlidingStackedWidget(this);
-
-  //create flickable object
-  flickable_ = new Flickable(this);
-
-  //init document pages and the sliding animation
-  QScrollArea *scroll = NULL;
-  QLabel *label = NULL;
-  register int n = 0;
-  for(n = 0; n < DocumentWidget::CACHE_SIZE; ++n) {
-    //scroll areas (one for each page)
-    scroll = new QScrollArea(centralWidget);
-    scroll->setFrameShape(QFrame::NoFrame);
-    scroll->setWidgetResizable(true);
-    scroll->setAlignment(Qt::AlignCenter);
-    label = new QLabel();//QLabel is used to display a page
-    label->setAlignment(Qt::AlignCenter);
-    label->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
-    scroll->setWidget(label);
-    scroll->installEventFilter(this);
-    slidingStacked_->addWidget(scroll);//scroll areas are switched by the stacked widget
-    flickable_->activateOn(scroll);
-  }
-  document_->setStackedWidget(slidingStacked_);
-  slidingStacked_->setSpeed(HORIZONTAL_SLIDE_SPEED_MS);
-  slidingStacked_->setWrap(true);
-  slidingStacked_->setVerticalMode(false);
-  slidingStacked_->setStyleSheet("background:black");
-  slidingStacked_->setAttribute(Qt::WA_DeleteOnClose);
-  gridLayout->addWidget(slidingStacked_, 1, 0, 1, 1);
-
-  connect(slidingStacked_, SIGNAL(animationFinished()),
-          this, SLOT(onAnimationFinished()));
-
-  statusBar()->hide();
+  //fileBrowserModel_ = new FileBrowserModel(this, document_->supportedFilePatterns());
 
   //wait timer initialisation (used to handle long actions: document openings, page changes)
   waitTimer_ = new QTimer(this);
@@ -139,7 +91,6 @@ Window::Window(QWidget *parent)
         qDebug() << "cannot find toolbar object";
       }
     }
-    gridLayout->addWidget(toolBar_, 0, 0, 1, 1);
   }
 
   addShortcutKeys();
@@ -163,15 +114,15 @@ void Window::showDocument()
   qDebug() << "Window::showDocument";
 
   //create page provider
-  provider_ = new PageProvider(rootContext());
-  engine()->addImageProvider(QLatin1String("pages"), provider_);
+  //provider_ = new PageProvider(rootContext());
+  //engine()->addImageProvider(QLatin1String("pages"), provider_);
 
   //set document if one has been previously open
   QSettings settings(ORGANIZATION, APPLICATION);
   QString filePath;
   waitTimer_->start();
-  if ((NULL != (filePath = settings.value(KEY_FILE_PATH).toString())) &&
-    (true == document_->setDocument(filePath))) {
+  if ((NULL != (filePath = settings.value(KEY_FILE_PATH).toString()))) {
+    //(true == document_->setDocument(filePath))) {
       qDebug() << "Found document " << filePath;
       setupDocDisplay(settings.value(KEY_PAGE, 0).toInt() + 1, 
           settings.value(KEY_ZOOM_LEVEL, 1.0).toFloat());
@@ -211,9 +162,9 @@ void Window::onSendCommand(const QString &cmd)
     showPropertiesPage();
   }
   else if((tr("Help") == cmd) || (tr("Back") == cmd)) {
-    if ((tr("Help") == cmd) && (helpFile_ == document_->filePath())) {
+    /*if ((tr("Help") == cmd) && (helpFile_ == document_->filePath())) {
       return;//nothing to do
-    }
+    }*/
     showHelp();
   }
   else if(tr("About") == cmd) {
@@ -475,7 +426,7 @@ void Window::openFile(const QString &filePath)
 
   //open document
   waitTimer_->start();
-  if(provider_->setDocument(filePath)) {
+  /*if(provider_->setDocument(filePath)) {
     //load document
     setupDocDisplay(1, provider_->scale());
     setHelpIcon(true, false);
@@ -484,7 +435,7 @@ void Window::openFile(const QString &filePath)
     closeWaitPage();
     showWarningMessage(QString(APPLICATION " - ") + tr("Failed to open file"),
                        tr("%1 cannot be opened").arg(filePath));
-  }
+                     }*/
 }
 
 void Window::fullScreen()
@@ -639,24 +590,23 @@ bool Window::eventFilter(QObject *, QEvent *event)
         out = isBackground();
         break;
       case Qt::Key_Home:
-        if((0 != document_->currentPage()) && (true == animationFinished_) &&
-            (false == isBackground())) {
+        /*if((0 != document_->currentPage()) && (true == animationFinished_) &&
+            (false == isBackground())) {*/
           //not at the beginning of the document
           animationFinished_ = false;
-          gotoPage(1, document_->numPages());
-          slidingStacked_->slideInPrev();
-        }
+          //gotoPage(1, document_->numPages());
+        //}
         break;
       case Qt::Key_End:
         {
-          int numPages = document_->numPages();
+          /*int numPages = document_->numPages();
           if(((numPages - 1) != document_->currentPage()) && (true == animationFinished_) &&
-              (false == isBackground())) {
+          (false == isBackground())) {*/
             //not at the end of the document
             animationFinished_ = false;
-            gotoPage(numPages, numPages);
-            slidingStacked_->slideInNext();
-          }
+            //gotoPage(numPages, numPages);
+            //slidingStacked_->slideInNext();
+          //}
         }
         break;
     }
@@ -670,22 +620,22 @@ bool Window::showNextPage()
 
   bool out = false;
 
-  if(true == document_->isLoaded() && true == animationFinished_) {
-    currentPage_ = document_->currentPage() + 2;
-    if(currentPage_ <= document_->numPages()) {
+  //if(true == document_->isLoaded() && true == animationFinished_) {
+    //currentPage_ = document_->currentPage() + 2;
+    //if(currentPage_ <= document_->numPages()) {
       //start timer
       waitTimer_->start();
       //load a new page
       animationFinished_ = false;
-      document_->setPage(currentPage_);
-      document_->showCurrentPageUpper();
+      //document_->setPage(currentPage_);
+      //document_->showCurrentPageUpper();
       //update the cache after the page has been displayed
-      document_->sendPageRequest(currentPage_);
+      //document_->sendPageRequest(currentPage_);
       //make sure that the next page is ready
-      slidingStacked_->slideInNext();
+      //slidingStacked_->slideInNext();
       out = true;
-    }
-  }
+    //}
+  //}
 
   return out;
 }
@@ -696,22 +646,22 @@ bool Window::showPrevPage()
 
   bool out = false;
 
-  if(true == document_->isLoaded() && true == animationFinished_) {
-    currentPage_ = document_->currentPage();
+  //if(true == document_->isLoaded() && true == animationFinished_) {
+    //currentPage_ = document_->currentPage();
     if(0 < currentPage_) {
       //start timer
       waitTimer_->start();
       //load a new page
       animationFinished_ = false;
-      document_->setPage(currentPage_);
-      document_->showCurrentPageLower();
+      //document_->setPage(currentPage_);
+      //document_->showCurrentPageLower();
       //update the cache after the page has been displayed
-      document_->sendPageRequest(currentPage_ - 2);
+      //document_->sendPageRequest(currentPage_ - 2);
       //make sure that the prev page is ready
-      slidingStacked_->slideInPrev();
+      //slidingStacked_->slideInPrev();
       out = true;
     }
-  }
+  //}
 
   return out;
 }
@@ -733,7 +683,7 @@ void Window::onAnimationFinished()
 }
 
 //TODO: remove this method
-void Window::setupDocDisplay(int pageNumber, qreal factor)
+/*void Window::setupDocDisplay(int pageNumber, qreal factor)
 {
   qDebug() << "Window::setupDocDisplay" << pageNumber;
 
@@ -741,7 +691,7 @@ void Window::setupDocDisplay(int pageNumber, qreal factor)
   setScale(factor);
   //set current page
   //provider_->setPage(pageNumber, true);
-}
+}*/
 
 //TODO: remove this method ?
 void Window::gotoPage(int pageNb, int count)
@@ -768,9 +718,9 @@ void Window::updateView(qreal factor, bool force)
 
   //set zoom factor
   if (false == force) {
-    if (document_->scale() == factor) {
-      return;
-    }
+    //if (document_->scale() == factor) {
+    //  return;
+    //}
     setScale(factor);
   }
 
@@ -778,7 +728,7 @@ void Window::updateView(qreal factor, bool force)
   //gotoPage(provider_->currentPage(), provider_->count());
 }
 
-void Window::showHelp()
+void Window::showHelp(bool slideNext)
 {
   qDebug() << "Window::showHelp";
 
@@ -787,7 +737,7 @@ void Window::showHelp()
 
   if (-1 == prev_.page) {
     //store the current file name and page number
-    prev_.fileName = provider_->filePath();
+    //prev_.fileName = provider_->filePath();
     //prev_.page = provider_->currentPage();TODO: use a different approach
   }
   else {
@@ -797,7 +747,7 @@ void Window::showHelp()
     prev_.page = -1;
   }
 
-  if(document_->setDocument(*curFileName)) {
+  /*if(document_->setDocument(*curFileName)) {
     animationFinished_ = false;
     waitTimer_->start();
     setupDocDisplay(curPage, document_->scale());
@@ -812,55 +762,18 @@ void Window::showHelp()
     qDebug() << "cannot open help file";
     prev_.page = -1;
     showWarningMessage(tr("Cannot open help file"));
-  }
+  }*/
 }
 
 void Window::showAboutPage()
 {
   qDebug() << "Window::showAboutPage";
-  if(NULL == aboutDialog_) {
-    aboutDialog_ = new QDeclarativeView(this);
-    aboutDialog_->setSource(QUrl("qrc:/qml/qml/aboutdialog.qml"));
-    aboutDialog_->setStyleSheet("background:transparent");
-    aboutDialog_->setAttribute(Qt::WA_TranslucentBackground);
-    aboutDialog_->setAttribute(Qt::WA_DeleteOnClose);
-    aboutDialog_->setWindowFlags(Qt::FramelessWindowHint);
-    connect(aboutDialog_->engine(), SIGNAL(quit()), this, SLOT(closeAboutPage()));
-    QObject *pAbout = aboutDialog_->rootObject();
-    if(NULL != pAbout) {
-      pAbout->setProperty("height", height());
-      pAbout->setProperty("width", width());
-      QObject *pAboutDlg = pAbout->findChild<QObject*>("aboutDialog");
-      if(NULL != pAboutDlg) {
-        pAboutDlg->setProperty("text", tr("<H2>tabletReader v%1</H2>"
-                                          "<H3>e-book reader for touch-enabled devices</H3>"
-                                          "<H4>Supported formats:</H4>"
-                                          "<H4>%2</H4>"
-                                          "<br>Copyright (C) 2012, Bogdan Cristea. All rights reserved.<br>"
-                                          "<i>e-mail: cristeab@gmail.com</i><br><br>"
-                                          "This program is distributed in the hope that it will be useful, "
-                                          "but WITHOUT ANY WARRANTY; without even the implied warranty of "
-                                          "MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the "
-                                          "GNU General Public License for more details.<br><br>").arg(TR_VERSION).
-            arg(document_->supportedFilePatterns().join(", ")));
-      }
-      else {
-        qDebug() << "cannot get aboutDialog object";
-      }
-      aboutDialog_->show();
-    }
-    else {
-      qDebug() << "cannot get aboutDialog object";
-      delete aboutDialog_;
-      aboutDialog_ = NULL;
-    }
-  }*/
 }
 
 void Window::closeAboutPage()
 {
   qDebug() << "Window::closeAboutPage";
-  if((NULL != aboutDialog_) && (true == aboutDialog_->close())) {
+  /*if((NULL != aboutDialog_) && (true == aboutDialog_->close())) {
     qDebug() << "widget closed";
     aboutDialog_ = NULL;
   }*/
@@ -959,9 +872,9 @@ void Window::showPropertiesPage()
       QObject *pAboutDlg = pAbout->findChild<QObject*>("aboutDialog");
       if(NULL != pAboutDlg) {
         //document path
-        QString msg = tr("<H3>Document path:<br><i>%1</i></H3>").arg(provider_->filePath());
+        QString msg = "";//tr("<H3>Document path:<br><i>%1</i></H3>").arg(provider_->filePath());
         //current page / page number
-        msg += tr("<H3>Current page / Number of pages:<br><b>%1 / %2</b></H3>").arg(provider_->currentPage() + 1).arg(provider_->count());
+        //msg += tr("<H3>Current page / Number of pages:<br><b>%1 / %2</b></H3>").arg(provider_->currentPage() + 1).arg(provider_->count());
         //time since the application was started
         msg += tr("<H3>Elapsed time:<br>%1</H3>").arg(elapsedTime());
         //battery state
@@ -981,7 +894,7 @@ void Window::showPropertiesPage()
       delete aboutDialog_;
       aboutDialog_ = NULL;
     }
-  }*/
+  }
 }
 
 bool Window::hasTouchScreen()
@@ -1072,7 +985,7 @@ void Window::saveSettings()
 {
   qDebug() << "Window::saveSettings";
 
-  if((NULL != provider_) && (true == provider_->isLoaded())) {
+  /*if((NULL != provider_) && (true == provider_->isLoaded())) {
     const QString &fileName = provider_->filePath();
     if (fileName != helpFile_) {
       QSettings settings(ORGANIZATION, APPLICATION);
@@ -1083,7 +996,7 @@ void Window::saveSettings()
       settings.setValue(KEY_ZOOM_LEVEL, provider_->scale());
       qDebug() << "zoom factor" << provider_->scale();
     }
-  }
+  }*/
 }
 
 void Window::addShortcutKeys()

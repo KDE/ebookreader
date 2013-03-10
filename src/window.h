@@ -29,8 +29,6 @@
 #ifndef NO_QTMOBILITY
 #include <qmobilityglobal.h>
 #endif
-#include "documentwidget.h"
-#include "SlidingStackedWidget.h"
 
 class QScrollArea;
 class QSpinBox;
@@ -102,9 +100,9 @@ private:
   void updateView(qreal factor, bool force = false);
   void setScale(qreal factor) {
     if (FIT_WIDTH_ZOOM_FACTOR == factor) { //need to set window width for fit width
-      document_->setWinWidth(slidingStacked_->frameRect().width());
+      //document_->setWinWidth(slidingStacked_->frameRect().width());
     }
-    provider_->setScale(factor);
+    //provider_->setScale(factor);
   }
   QString elapsedTime();
   void saveSettings();
@@ -135,14 +133,13 @@ private:
       (NULL != aboutDialog_) || (NULL != waitDialog_);
   }
   void updateViewForFitWidth() {
-    if ((NULL != document_) && (FIT_WIDTH_ZOOM_FACTOR == document_->scale())) {
+    /*if ((NULL != document_) && (FIT_WIDTH_ZOOM_FACTOR == document_->scale())) {
       document_->setWinWidth(slidingStacked_->rect().width());
       document_->setScale(FIT_WIDTH_ZOOM_FACTOR);
       updateView(FIT_WIDTH_ZOOM_FACTOR, true);
-    }
+    }*/
   }
 
-  PageProvider *provider_;
   QVector<qreal> scaleFactors_;
   QPoint startPoint_;
   QPoint endPoint_;
@@ -155,7 +152,6 @@ private:
   QDeclarativeView *commandPopupMenu_;
   QDeclarativeView *aboutDialog_;
   QDeclarativeView *waitDialog_;
-  Flickable *flickable_;
   FileBrowserModel* fileBrowserModel_;
   QTimer *waitTimer_;
 #ifndef NO_QTMOBILITY

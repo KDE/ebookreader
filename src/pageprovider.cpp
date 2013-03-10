@@ -24,13 +24,13 @@
 
 PageProvider::PageProvider(QDeclarativeContext *context)
   : QDeclarativeImageProvider(QDeclarativeImageProvider::Pixmap),
-    context_(context),
-    doc_(new OkularDocument(this)),
-    currentPage_(-1),
-    numPages_(0),
-    scaleFactor_(1.0),
-    currentScrollArea_(NULL),
-    evtPage_(-1)
+    //context_(context),
+    //doc_(new OkularDocument(this)),
+    //currentPage_(-1),
+    //numPages_(0),
+    //scaleFactor_(1.0),
+    //currentScrollArea_(NULL),
+    //evtPage_(-1)
 {
   for(int n = 0; n < CACHE_SIZE; ++n) {
     pageCache_.append(new PageCache);

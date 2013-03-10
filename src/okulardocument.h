@@ -52,14 +52,8 @@ public:
   void notifyPageChanged(int page, int flags);
   const QStringList& supportedFilePatterns();
 private:
-<<<<<<< HEAD
-  void adjustSize(int &width, int &height);
-  const QPixmap* setWhiteBackground(const QPixmap *pixmap);
-  PageProvider *provider_;
-=======
   void preProcessPage(int &width, int &height, const Okular::Page *page);
   const QPixmap* postProcessPage(const QPixmap *pixmap);
->>>>>>> master
   Okular::Document *doc_;
   PagePainter *painter_;
   int winWidth_;

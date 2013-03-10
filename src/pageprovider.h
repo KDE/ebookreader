@@ -38,7 +38,12 @@ public:
   ~PageProvider();
 
   QPixmap requestPixmap(const QString &id, QSize *size, const QSize &requestedSize);
+};
 
+class Window;
+
+class DocumentWidget
+{
 public:
   explicit DocumentWidget(Window *parent = 0);
   ~DocumentWidget();
@@ -54,7 +59,7 @@ public:
     return (NULL != doc_) ? doc_->numPages() : 0;
   }
 
-    if(0 > page || maxNumPages_ <= page) {
+    /*if(0 > page || maxNumPages_ <= page) {
       qDebug() << "DocumentWidget::invalidatePageCache: nothing to do";
       return false;//operation failed
     }
@@ -62,16 +67,15 @@ public:
     pageCache_[page % CACHE_SIZE]->pPixmap = NULL;
     pageCache_[page % CACHE_SIZE]->status = PAGE_CACHE_INVALID;
     return true;//operation successful
-  }
+  }*/
   void sendPageRequest(int page) {
     if (true == invalidatePageCache(page)) {
       pageCache_[page % CACHE_SIZE]->status = PAGE_CACHE_PENDING;
-      emit pageRequest(page, scaleFactor_);
+      //emit pageRequest(page, scaleFactor_);
     }
   }
   void pixmapReady(int page, const QPixmap *pix);
 
-  bool setDocument(const QString &filePath);
   const QString& filePath() const {
     return filePath_;
   }
