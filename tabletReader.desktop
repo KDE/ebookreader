@@ -16,6 +16,7 @@ Name[pt]=Leitor da Tablete
 Name[pt_BR]=tabletReader
 Name[sk]=tabletReader
 Name[sv]=Läsprogram för läsplatta
+Name[tr]=tabletReader
 Name[uk]=tabletReader
 Name[x-test]=xxtabletReaderxx
 Exec=tabletReader
