@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2012, Bogdan Cristea. All rights reserved.
+** Copyright (C) 2013, Bogdan Cristea. All rights reserved.
 **
 ** This program is free software; you can redistribute it and/or modify it under
 ** the terms of the GNU General Public License as published by the Free Software
@@ -19,146 +19,123 @@
 #ifndef WINDOW_H
 #define WINDOW_H
 
-#include <QMainWindow>
-#include <QPoint>
 #include <QElapsedTimer>
-#include <QQueue>
 #include <QtDeclarative>
-
+#include <QDeclarativeView>
 #include "config.h"
 
 #ifndef NO_QTMOBILITY
 #include <qmobilityglobal.h>
 #endif
-#include "documentwidget.h"
-#include "SlidingStackedWidget.h"
+#include "pageprovider.h"
 
-class QScrollArea;
-class QSpinBox;
-class QComboBox;
 class FileBrowserModel;
-class QDeclarativeView;
-class Flickable;
-class QTimer;
+class QmlCppMediator;
 #ifndef NO_QTMOBILITY
 QTM_BEGIN_NAMESPACE
 class QSystemBatteryInfo;
 QTM_END_NAMESPACE
 #endif
 
-class Window : public QMainWindow
+class Window : public QDeclarativeView
 {
   Q_OBJECT
 
 public:
-  Window(QWidget *parent = NULL);
+  Window();
   ~Window();
-  bool hasTouchScreen();
-  QString batteryStatus();
-  enum {HORIZONTAL_SLIDE_SPEED_MS = 500,
-        SWIPE_THRESHOLD = 5,
-        WAIT_TIMER_INTERVAL_MS = 1000,
-        MIN_SCREEN_WIDTH = 1024,
+  enum {
+        MIN_SCREEN_WIDTH = 1366,
         MIN_SCREEN_HEIGHT = 768,
-        FIT_WIDTH_ZOOM_FACTOR = -1};
+        FIT_WIDTH_ZOOM_FACTOR = -1,
+        FIT_WIDTH_ZOOM_INDEX = 7 //this value needs to be set manually
+      };
 
 protected:
   void closeEvent(QCloseEvent *);
 
+signals:
+  void wait();
+  void warning(QVariant msg);
+
 private slots:
-  void showFileBrowser();
-  void closeFileBrowser(const QString &doc);
-  void showGotoPage();
-  void closeGotoPage(const QString &pageNb = "");
-  void showZoomPage();
-  void closeZoomPage(int index = -1);
-  void showCommandPopupMenu();
-  void closeCommandPopupMenu(const QString &cmd = "");
-  void openFile(const QString &filePath);
-  void fullScreen();
-  void normalScreen();
-  void onAnimationFinished();
-  void onSendCommand(const QString &cmd);
-  void showHelp(bool slideNext = true);
-  void showAboutPage();
-  void closeAboutPage();
-  void showWarningMessage(const QString &title, const QString &explanation = "");
-  void showWaitPage();
-  void closeWaitPage();
-  void onAppUpAuthCheckError();
-  void showPropertiesPage();
-  void showDocument();
-  void onBack();
+  void onGotoPage(int page);
+  void onShowDocument(const QString &doc);
+  void onSetZoomFactor(int value, int index);
+  void onSetProperties();
+  void onFullScreen();
+  void onNormalScreen();
+  void onShowHelp(bool show);
+  void onQuit();
+  void onQuitApp();
 
 private:
-  bool eventFilter(QObject *, QEvent *);
-  bool showNextPage();
-  bool showPrevPage();
-  void setupDocDisplay(unsigned int pageNumber, qreal factor);
+  void openFile(const QString &filePath);
+  void showNextPage();
+  void showPrevPage();
   void gotoPage(int pageNb, int numPages);
-  void updateView(qreal factor, bool force = false);
-  void setScale(qreal factor) {
-    if (FIT_WIDTH_ZOOM_FACTOR == factor) { //need to set window width for fit width
-      document_->setWinWidth(slidingStacked_->frameRect().width());
-    }
-    document_->setScale(factor);
-  }
   QString elapsedTime();
+  QString batteryStatus();
+  bool hasTouchScreen();
+  void normalScreen();
+  void updateViewForFitWidth() {
+    if ((NULL != document_) && (FIT_WIDTH_ZOOM_FACTOR == document_->scaleFactor())) {
+      document_->setScale(FIT_WIDTH_ZOOM_FACTOR, FIT_WIDTH_ZOOM_INDEX);
+      gotoPage(document_->currentPage(), document_->numPages());
+      showNextPage();
+    }
+  }
+  void loadSettings(QString &filePath, int &page, qreal &scale, int &index);
   void saveSettings();
-  void setHelpIcon(bool flag, bool flipFlop = true) {
-    if (true == flipFlop || (0 != prev_.page)) {
-      QObject *pDisp = toolBar_->rootObject();
-      if (NULL != pDisp) {
-        pDisp->setProperty("hlpBck", flag);
+  void setCurrentPage(int page, int numPages) {
+    qDebug() << "Window::setCurrentPage" << page << "/" << numPages;
+    if (page >= numPages) {
+      qDebug() << "resetting the number of pages";
+      page = 0;
+    }
+    if (NULL != rootObj_) {
+      if (false == rootObj_->setProperty("index", page)) {
+        qDebug() << "cannot set index";
       }
-      if (false == flipFlop) {
-        prev_.page = 0;
+      if (false == rootObj_->setProperty("pages", numPages)) {
+        qDebug() << "cannot set the number of pages";
       }
     }
   }
-  void addShortcutKeys();
-  bool isBackground() {
-    return (NULL != fileBrowser_) || (NULL != gotoPage_) ||
-      (NULL != zoomPage_) || (NULL != commandPopupMenu_) ||
-      (NULL != aboutDialog_) || (NULL != waitDialog_);
+  void setWindowSize(int width, int height) {
+    qDebug() << "Window::setWindowSize: width" << width << ", height" << height;
+    if (NULL != rootObj_) {
+      if (false == rootObj_->setProperty("width", width)) {
+        qDebug() << "cannot set width";
+      }
+      if (false == rootObj_->setProperty("height", height)) {
+        qDebug() << "cannot set height";
+      }
+    }
   }
-  void updateViewForFitWidth() {
-    if ((NULL != document_) && (FIT_WIDTH_ZOOM_FACTOR == document_->scale())) {
-      document_->setWinWidth(slidingStacked_->rect().width());
-      document_->setScale(FIT_WIDTH_ZOOM_FACTOR);
-      updateView(FIT_WIDTH_ZOOM_FACTOR, true);
+  void setZoomIndex(int index) {
+    if (NULL != rootObj_) {
+      if (false == rootObj_->setProperty("zoomIndex", index)) {
+        qDebug() << "cannot set width";
+      }
     }
   }
 
-  SlidingStackedWidget *slidingStacked_;
-  DocumentWidget *document_;
-  QVector<qreal> scaleFactors_;
-  QPoint startPoint_;
-  QPoint endPoint_;
-  bool animationFinished_;
-  //TODO: one declarative view
-  QDeclarativeView *toolBar_;
-  QDeclarativeView *fileBrowser_;
-  QDeclarativeView *gotoPage_;
-  QDeclarativeView *zoomPage_;
-  QDeclarativeView *commandPopupMenu_;
-  QDeclarativeView *aboutDialog_;
-  QDeclarativeView *waitDialog_;
-  Flickable *flickable_;
-  FileBrowserModel* fileBrowserModel_;
-  QTimer *waitTimer_;
+  PageProvider *document_;
+  FileBrowserModel *fileBrowserModel_;
 #ifndef NO_QTMOBILITY
   QTM_NAMESPACE::QSystemBatteryInfo *batteryInfo_;
 #endif
-  int currentPage_;
   QElapsedTimer eTime_;
-  const QString helpFile_;
   bool fullScreen_;
   QRect normScrGeometry_;
   struct {
     QString fileName;
     int page;
   } prev_;//used by showHelp to restore the previous document
+  QString helpFile_;
+  QGraphicsObject *rootObj_;
+  QmlCppMediator *mediator_;
 };
 
 #endif

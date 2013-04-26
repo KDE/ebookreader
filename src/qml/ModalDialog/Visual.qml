@@ -1,5 +1,5 @@
 // Application visual style definition file. Used to define Button component LaF.
-import QtQuick 1.0
+import QtQuick 1.1
 
 Item {
     property string defaultFontFamily: "Tahoma"

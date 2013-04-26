@@ -1,4 +1,4 @@
-import QtQuick 1.0
+import QtQuick 1.1
 
 // Dialog Item consists of Fader and one item, two states and animations between them.
 // - Fader: Dimms the background & captures mouse events.

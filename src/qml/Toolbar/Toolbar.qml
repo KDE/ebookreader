@@ -1,4 +1,5 @@
-import Qt 4.7
+import QtQuick 1.1
+
 import "toolbar.js" as ToolbarJS
 
 Item {
@@ -23,7 +24,7 @@ Item {
 
     BorderImage {
         id: toolbarImage
-        source: ":/toolbar/qml/Toolbar/pics/toolbaritem.png"
+        source: ":/toolbar/qml/Toolbar/pics/toolbaritem_gray.png"
         width: parent.width
 
         height: toolbar.height
@@ -59,7 +60,7 @@ Item {
                     width: toolbarItems.itemWidth
                     height: toolbar.minimumItemHeight
                     onDoAction: {
-                        sendCommand(btnText)
+                      sendCommand(btnText)
                     }
                 }
             }

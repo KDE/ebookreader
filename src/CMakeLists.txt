@@ -18,18 +18,16 @@ QT4_ADD_RESOURCES(RSCS ${tabletReader_RSCS})
 
 set ( tabletReader_MOCS
   okulardocument.h
-	documentwidget.h
+	pageprovider.h
 	window.h
-	SlidingStackedWidget.h
-	flickable.h
-	filebrowsermodel.h
+  filebrowsermodel.h
+  qmlcppmediator.h
 	)
 QT4_WRAP_CPP(MOCS ${tabletReader_MOCS})
 
 if (NOT WIN32)
   #don't generate translations on Windows (use the existing ones)
   set ( tabletReader_QML
-    qml/PopupMenu/PopupListModel.qml
     qml/zoompage.qml
     qml/ModalDialog/ModalDialog.qml
     qml/gotopage.qml
@@ -51,6 +49,8 @@ if (WIN32)
 endif()
 
 install ( TARGETS tabletReader RUNTIME DESTINATION bin )
+install ( FILES ${CMAKE_SOURCE_DIR}/tabletReader.desktop DESTINATION share/applications/kde4 )
+install ( DIRECTORY ${CMAKE_SOURCE_DIR}/src/hicolor DESTINATION share/icons )
 
 if (EXISTS ${CMAKE_BINARY_DIR}/src/tabletReader_ro.qm)
   configure_file(${CMAKE_BINARY_DIR}/src/tabletReader_ro.qm ${CMAKE_SOURCE_DIR}/src/tabletReader_ro.qm COPYONLY)

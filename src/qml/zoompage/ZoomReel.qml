@@ -1,4 +1,4 @@
-import QtQuick 1.0
+import QtQuick 1.1
 
 Item {
     id: container
@@ -12,8 +12,10 @@ Item {
     property color fontColor: "#666666"
     // Spacing between items
     property int spacing: 8
-    //zoom index
+    // zoom index
     property int zoomIndex: 0
+    //model for the reel element
+    property alias zoomModel: zoom.model
 
     signal setZoomFactor(int index)
 
@@ -34,47 +36,34 @@ Item {
     height: 60
 
     Component {
-        id: zoomDelegate
-        Button {
-            width: container.zoomWidth
-            height: container.zoomHeight
-            text: number
-            fontColor: container.fontColor
-            fontName: container.fontName
-            fontSize: container.fontSize
-            bg: itemBackground
-            bgPressed: itemBackgroundPressed
-            onClicked: {
-                zoom.index = index
-                zoom.toggle()
-                if (true == zoom.clip) {
-                    setZoomFactor(index)
-                }
-            }
-        }
+      id: zoomDelegate
+      Button {
+          width: container.zoomWidth
+          height: container.zoomHeight
+          text: number
+          fontColor: container.fontColor
+          fontName: container.fontName
+          fontSize: container.fontSize
+          bg: itemBackground
+          bgPressed: itemBackgroundPressed
+          onClicked: {
+              zoom.index = index
+              zoom.toggle()
+              if (true == zoom.clip) {
+                setZoomFactor(index)
+              }
+          }
+      }
     }
 
     Reel {
         id: zoom
         width: container.zoomWidth
         height: container.zoomHeight
-        model: zoomfactors
+        //model: zoomfactors
         delegate: zoomDelegate
         autoClose: false
         index:  zoomIndex
     }
-
-    ListModel{
-        id: zoomfactors
-        ListElement { number: "Fit Width" }
-        ListElement { number: "25%" }
-        ListElement { number: "50%" }
-        ListElement { number: "75%" }
-        ListElement { number: "100%" }
-        ListElement { number: "125%" }
-        ListElement { number: "150%" }
-        ListElement { number: "200%" }
-        ListElement { number: "300%" }
-        ListElement { number: "400%" }
-    }
 }
+

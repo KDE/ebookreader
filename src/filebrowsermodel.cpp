@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2012, Bogdan Cristea. All rights reserved.
+** Copyright (C) 2013, Bogdan Cristea. All rights reserved.
 **
 ** This program is free software; you can redistribute it and/or modify it under
 ** the terms of the GNU General Public License as published by the Free Software
@@ -21,7 +21,7 @@
 #include <QDebug>
 #include <kmimetype.h>
 #include "filebrowsermodel.h"
-#include "documentwidget.h"
+#include "pageprovider.h"
 
 FileBrowserModel::FileBrowserModel(QObject *parent, const QStringList &list) :
   QAbstractListModel(parent),
@@ -36,6 +36,7 @@ FileBrowserModel::FileBrowserModel(QObject *parent, const QStringList &list) :
   setRoleNames(roles);
 
   currentDir_ = QDir::homePath();
+  searchSupportedFiles();
 }
 
 void FileBrowserModel::changeCurrentDir(int index)
@@ -103,7 +104,6 @@ int FileBrowserModel::rowCount(const QModelIndex&) const
 
 QVariant FileBrowserModel::data(const QModelIndex &index, int role) const
 {
-
   int dirRow =  index.row();
 
   bool isFile = false;
@@ -211,5 +211,4 @@ QVariant FileBrowserModel::data(const QModelIndex &index, int role) const
 void FileBrowserModel::setCurrentDir(const QString &filePath)
 {
   currentDir_ = QFileInfo(filePath).dir().absolutePath();
-  qDebug() << "setting current dir to" << currentDir_;
 }

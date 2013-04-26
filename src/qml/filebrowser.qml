@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2012, Bogdan Cristea. All rights reserved.
+** Copyright (C) 2013, Bogdan Cristea. All rights reserved.
 **
 ** This program is free software; you can redistribute it and/or modify it under
 ** the terms of the GNU General Public License as published by the Free Software
@@ -16,7 +16,7 @@
 **
 ****************************************************************************/
 
-import Qt 4.7
+import QtQuick 1.1
 
 Rectangle {
     id: box
@@ -38,7 +38,7 @@ Rectangle {
                 id: previewBox
                 width: box.width
                 height:64
-                color: ((index%2)?"#80724684":"#80321040")
+                color: ((index%2)?"#f794969a":"#f766676a")
                 Image {
                     id: previewImage
                     source: model.image

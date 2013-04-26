@@ -1,4 +1,4 @@
-import Qt 4.7
+import QtQuick 1.1
 
 Rectangle {
     // Text and icon for the Toolbar item

@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2012, Bogdan Cristea. All rights reserved.
+** Copyright (C) 2013, Bogdan Cristea. All rights reserved.
 **
 ** This program is free software; you can redistribute it and/or modify it under
 ** the terms of the GNU General Public License as published by the Free Software
@@ -16,7 +16,7 @@
 **
 ****************************************************************************/
 
-import QtQuick 1.0
+import QtQuick 1.1
 import "zoompage" as Comp
 import "ModalDialog" as Modal
 
@@ -26,6 +26,10 @@ Rectangle
     width: 800
     height: 600
     color: "transparent"
+
+    property alias zoomIndex: zoomReel.zoomIndex
+    signal setZoomFactor(int index)
+    property alias zoomModel: zoomReel.zoomModel
 
     Modal.Fader {
         id: fadeRect
@@ -65,10 +69,13 @@ Rectangle
         }
 
         Comp.ZoomReel {
-            id: dateReel
+            id: zoomReel
             objectName: "zoomreel"
             width: parent.width
             anchors.verticalCenter: parent.verticalCenter
+            onSetZoomFactor: {
+              mainframe.setZoomFactor(index)
+            }
         }
     }
 }

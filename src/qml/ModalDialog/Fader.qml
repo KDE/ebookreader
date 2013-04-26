@@ -1,4 +1,4 @@
-import QtQuick 1.0
+import QtQuick 1.1
 
 // This rectangle acts as a dimming rect. It also captures key presses.
 Rectangle {

@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2012, Bogdan Cristea. All rights reserved.
+** Copyright (C) 2013, Bogdan Cristea. All rights reserved.
 **
 ** This program is free software; you can redistribute it and/or modify it under
 ** the terms of the GNU General Public License as published by the Free Software
@@ -16,7 +16,7 @@
 **
 ****************************************************************************/
 
-import QtQuick 1.0
+import QtQuick 1.1
 import "Core"
 import "Core/calculator.js" as CalcEngine
 import "ModalDialog" as Comp
@@ -27,6 +27,10 @@ Rectangle
     width: 800
     height: 600
     color: "transparent"
+
+    property alias pages: display.nbPages
+    property int currentPage: 0
+    signal setPage(int val)
 
     Comp.Fader {
         id: fadeRect
@@ -76,11 +80,14 @@ Rectangle
 
                 Display {
                     id: display
+                    property int nbPages: 0
                     objectName: "disp"
                     width: box.width-3
                     height: 56
-                    text: ""
-                    property int nbPages: 0
+                    text: currentPage
+                    onSetPage: {
+                      mainframe.setPage(parseInt(value)-1)
+                    }
                 }
 
                 Column {

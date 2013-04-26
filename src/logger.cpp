@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2012, Bogdan Cristea. All rights reserved.
+** Copyright (C) 2013, Bogdan Cristea. All rights reserved.
 **
 ** This program is free software; you can redistribute it and/or modify it under
 ** the terms of the GNU General Public License as published by the Free Software
@@ -80,7 +80,7 @@ void Logger::debugMessageHandler(QtMsgType type, const char *msg)
     abort();
   }
   ts_ << QDateTime::currentDateTime().toString("hh:mm:ss.zzz")
-      << "\tTID:" << QThread::currentThreadId()
+      << "\tTID: 0x" << QString::number(QThread::currentThreadId(), 16)
       << "\t" << txt << endl;
   loggerMutex_->unlock();
 }

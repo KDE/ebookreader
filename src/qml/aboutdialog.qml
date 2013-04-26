@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2012, Bogdan Cristea. All rights reserved.
+** Copyright (C) 2013, Bogdan Cristea. All rights reserved.
 **
 ** This program is free software; you can redistribute it and/or modify it under
 ** the terms of the GNU General Public License as published by the Free Software
@@ -16,7 +16,7 @@
 **
 ****************************************************************************/
 
-import QtQuick 1.0
+import QtQuick 1.1
 import "ModalDialog" as Modal
 
 Rectangle {
@@ -25,6 +25,7 @@ Rectangle {
     width: 360
     height: 640
     color: "transparent"
+    property alias abouttext: dialog.text
 
     // Visual is an item that defines some constants for the application
     // look and feel, e.g. the font sizes & colors etc.

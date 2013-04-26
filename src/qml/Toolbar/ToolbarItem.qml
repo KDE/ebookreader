@@ -1,4 +1,4 @@
-import Qt 4.7
+import QtQuick 1.1
 
 Rectangle {
     property int margin: 20
@@ -12,7 +12,7 @@ Rectangle {
     // Toolbar item background
     BorderImage {
         id: toolbarItemImage
-        source: ":/toolbar/qml/Toolbar/pics/toolbaritem.png"
+        source: ":/toolbar/qml/Toolbar/pics/toolbaritem_gray.png"
         width: parent.width
         height: parent.height
         border.left: 10; border.top: 10

@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2012, Bogdan Cristea. All rights reserved.
+** Copyright (C) 2013, Bogdan Cristea. All rights reserved.
 **
 ** This program is free software; you can redistribute it and/or modify it under
 ** the terms of the GNU General Public License as published by the Free Software
@@ -16,66 +16,72 @@
 **
 ****************************************************************************/
 
-import Qt 4.7
+import QtQuick 1.1
 
 import "Toolbar"
 
 Rectangle {
-    width: 800
-    height: 64
-    property bool hlpBck: true
+  id: mainframe
 
-    Toolbar {
-        id: toolbar
-        objectName: "toolbar"
-        anchors.centerIn: parent
+  width: 800
+  height: 64
+  focus: true
+  signal sendBtnCommand(string cmd)
 
-        ToolbarView {
-            toolbarItemTitle: qsTr("Open")
-            toolbarItemIcon: ":/toolbar/qml/Toolbar/pics/Actions-document-open-folder-icon.png"
-            clip: true
-        }
+  Toolbar {
+      id: toolbar
+      objectName: "toolbar"
+      anchors.centerIn: parent
+      onSendCommand: {
+        sendBtnCommand(cmd)
+      }
 
-        ToolbarView {
-            toolbarItemTitle: qsTr("Full Screen")
-            toolbarItemIcon: ":/toolbar/qml/Toolbar/pics/Actions-view-fullscreen-icon.png"
-            clip: true
-        }
+      ToolbarView {
+          toolbarItemTitle: qsTr("Open")
+          toolbarItemIcon: ":/toolbar/qml/Toolbar/pics/Actions-document-open-folder-icon.png"
+          clip: true
+      }
 
-        ToolbarView {
-            toolbarItemTitle: qsTr("Go To Page")
-            toolbarItemIcon: ":/toolbar/qml/Toolbar/pics/Actions-go-jump-locationbar-icon.png"
-            clip: true
-        }
+      ToolbarView {
+        toolbarItemTitle: (true == mediator.fullScr)?qsTr("Full Screen"):qsTr("Normal Screen")
+        toolbarItemIcon: (true == mediator.fullScr)?":/toolbar/qml/Toolbar/pics/Actions-view-fullscreen-icon.png":":/toolbar/qml/Toolbar/pics/Actions-view-close-icon.png"
+          clip: true
+      }
 
-        ToolbarView {
-            toolbarItemTitle: qsTr("Zoom")
-            toolbarItemIcon: ":/toolbar/qml/Toolbar/pics/Actions-page-zoom-icon.png"
-            clip: true
-        }
+      ToolbarView {
+          toolbarItemTitle: qsTr("Go To Page")
+          toolbarItemIcon: ":/toolbar/qml/Toolbar/pics/Actions-go-jump-locationbar-icon.png"
+          clip: true
+      }
 
-        ToolbarView {
-            toolbarItemTitle: qsTr("Properties")
-            toolbarItemIcon: ":/toolbar/qml/Toolbar/pics/Actions-document-properties-icon.png"
-            clip: true
-        }
+      ToolbarView {
+          toolbarItemTitle: qsTr("Zoom")
+          toolbarItemIcon: ":/toolbar/qml/Toolbar/pics/Actions-page-zoom-icon.png"
+          clip: true
+      }
 
-        ToolbarView {
-            toolbarItemTitle: (true == hlpBck)?qsTr("Help"):qsTr("Back")
-            toolbarItemIcon: (true == hlpBck)?":/toolbar/qml/Toolbar/pics/help-icon.png":":/toolbar/qml/Toolbar/pics/back.png"
-            clip: true
-        }
+      ToolbarView {
+          toolbarItemTitle: qsTr("Properties")
+          toolbarItemIcon: ":/toolbar/qml/Toolbar/pics/Actions-document-properties-icon.png"
+          clip: true
+      }
 
-        ToolbarView {
-            toolbarItemTitle: qsTr("About")
-            toolbarItemIcon: ":/toolbar/qml/Toolbar/pics/Actions-help-about-icon.png"
-            clip: true
-        }
+      ToolbarView {
+          toolbarItemTitle: (true == mediator.hlpBck)?qsTr("Help"):qsTr("Back")
+          toolbarItemIcon: (true == mediator.hlpBck)?":/toolbar/qml/Toolbar/pics/help-icon.png":":/toolbar/qml/Toolbar/pics/back.png"
+          clip: true
+      }
 
-        ToolbarView {
-            toolbarItemTitle: qsTr("Quit")
-            toolbarItemIcon: ":/toolbar/qml/Toolbar/pics/Actions-application-exit-icon.png"
-            clip: true
-        }
-    }
+      ToolbarView {
+          toolbarItemTitle: qsTr("About")
+          toolbarItemIcon: ":/toolbar/qml/Toolbar/pics/Actions-help-about-icon.png"
+          clip: true
+      }
+
+      ToolbarView {
+          toolbarItemTitle: qsTr("Quit")
+          toolbarItemIcon: ":/toolbar/qml/Toolbar/pics/Actions-application-exit-icon.png"
+          clip: true
+      }
+  }
 }

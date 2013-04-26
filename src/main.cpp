@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2012, Bogdan Cristea. All rights reserved.
+** Copyright (C) 2013, Bogdan Cristea. All rights reserved.
 **
 ** This program is free software; you can redistribute it and/or modify it under
 ** the terms of the GNU General Public License as published by the Free Software
@@ -36,6 +36,7 @@ int main(int argc, char *argv[])
 #ifdef QT_DEBUG_ENABLE_LOG
   //in release mode the log file is not created
   Logger::instance("tabletReader.log");
+  //TODO: should reinstall log and provide an option to use either the file or the default logger
 #endif
   //translation object
   QTranslator translator;
