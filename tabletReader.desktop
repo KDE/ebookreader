@@ -1,6 +1,12 @@
 [Desktop Entry]
 Terminal=false
 Name=TabletReader
+Name[cs]=TabletReader
+Name[de]=TabletReader
+Name[pt]=Leitor da Tablete
+Name[sv]=Läsprogram för läsplatta
+Name[uk]=TabletReader
+Name[x-test]=xxTabletReaderxx
 Exec=tabletReader
 Icon=tabletReader
 Type=Application
