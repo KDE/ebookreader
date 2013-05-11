@@ -36,6 +36,7 @@ endif()
 
 #generate an automatic build/release number if available
 #release numbers are generated from latest tag of the form [a-zA-Z_.]M.m
+option(TIMESTAMP "Append timestamp to the version number" off)
 if( EXISTS "${CMAKE_SOURCE_DIR}/.git" )
   find_package(Git)
   if(GIT_FOUND)
@@ -46,6 +47,14 @@ if( EXISTS "${CMAKE_SOURCE_DIR}/.git" )
     STRING(REGEX REPLACE "-" "." TR_VERSION ${TR_VERSION})
     #remove leading alphanumeric characters
     string(REGEX REPLACE "^[a-zA-Z_.]+(.*)" "\\1" TR_VERSION ${TR_VERSION})
+    if(TIMESTAMP)
+      #get commit date
+      execute_process(COMMAND ${GIT_EXECUTABLE} show -s --format=\"%ci\" HEAD
+        OUTPUT_VARIABLE TR_DATE
+        OUTPUT_STRIP_TRAILING_WHITESPACE)
+      STRING(REGEX REPLACE "\"" "" TR_DATE ${TR_DATE})
+      set(TR_VERSION "${TR_VERSION} @ ${TR_DATE}")
+    endif()
   endif()
 endif()
 if(NOT TR_VERSION)

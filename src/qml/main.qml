@@ -22,11 +22,15 @@ import "content"
 Rectangle {
   id: book
 
-  width: 1024
-  height: 768
+  width: mediator.winWidth
+  height: mediator.winHeight
+  color: "black"
 
   property alias pages: spinner.nbPages
   property alias index: spinner.currentIndex
+
+  property int viewWidth: book.width
+  property int viewHeight: book.height
 
   //about properties
   property string version: "0.0"
@@ -34,7 +38,7 @@ Rectangle {
 
   //file browser signals
   signal chDir(int idx)
-  signal showDoc(string doc)
+  signal showDoc(string doc, int page)
 
   //full screen
   signal fullScreen()
@@ -60,6 +64,7 @@ Rectangle {
     ListElement { number: "300%" }
     ListElement { number: "400%" }
   }
+  property bool refreshImg: false
 
   //properties page
   property string filePath: ""
@@ -76,20 +81,17 @@ Rectangle {
   Component {
     id: pageDelegate
 
-      Rectangle {
+      Item {
         id: page
-        color: "black"
-        height: book.height
-
-        Component.onCompleted: page.width = book.width
+        height: book.viewHeight
+        Component.onCompleted: page.width = book.viewWidth
 
         Flickable {
           id: flick
-          y: anchors.margins
-          width: book.width
-          height: parent.height-2*anchors.margins
+          width: book.viewWidth
+          height: book.viewHeight
+          anchors.top: parent.top
           anchors.horizontalCenter: parent.horizontalCenter
-          anchors.margins: 0
           clip: true
           contentWidth: image.width
           contentHeight: image.height
@@ -100,9 +102,15 @@ Rectangle {
             anchors.centerIn: parent
             cache: false //should not keep in internal cache the pages
             asynchronous: true
-            source: "image://pageprovider/"+spinner.currentIndex
+            source: refreshImg?"":"image://pageprovider/"+spinner.currentIndex
+            onWidthChanged: {
+              book.viewWidth = (image.width>mediator.winWidth)?mediator.winWidth:image.width
+            }
+            onHeightChanged: {
+              book.viewHeight = (image.height>mediator.winHeight)?mediator.winHeight:image.height
+            }
           }
-          //add zoom handling through pinch
+          //add zoom handling
           PinchArea {
             property int oldZoomIndex: -1
             anchors.fill: parent
@@ -116,8 +124,8 @@ Rectangle {
               }
               if (1 < pinch.scale) {
                 book.zoomIndex = book.zoomIndex+1
-                if (9 < book.zoomIndex) {
-                  book.zoomIndex = 9
+                if ((zoomFactors.count-1) < book.zoomIndex) {
+                  book.zoomIndex = zoomFactors.count-1
                 }
               }
               else if (1 > pinch.scale) {
@@ -135,17 +143,20 @@ Rectangle {
         Text {
           id: pagenumber
           z: 1 //stay on top
-          anchors.bottom: page.bottom
+          anchors.bottom: parent.bottom
           anchors.horizontalCenter: parent.horizontalCenter
           color: "grey"
           text: spinner.currentIndex+1 + "/" + book.pages
         }
-      }
-    }
+     }
+  }
 
   Spinner {
     id: spinner
-    anchors.fill: parent
+    anchors.centerIn: parent
+    width: book.width
+    height: book.height
+    clip: false
     focus: true
     model: 2 //buffer with book pages
     itemWidth: book.width
@@ -196,7 +207,8 @@ Rectangle {
     mainLoader.width = book.width
     mainLoader.height = book.height
     }
-    else if (qsTr("Open") == cmd) {
+    else if ((qsTr("Open") == cmd) || (qsTr("Favorites") == cmd)) {
+      mediator.setFavorites(qsTr("Favorites") == cmd);
       mainLoader.source = "filebrowser.qml"
       mainLoader.width = book.width
       mainLoader.height = book.height
@@ -270,13 +282,38 @@ Rectangle {
     }
   }
 
-  //handlers for left and right
+  //timer object to display left/right arrows when left/right actions cannot be completed
+  Timer {
+    id: arrow_timer
+    interval: 500
+    running: false
+    repeat: false
+    onTriggered: {
+      left_arrow.visible = false
+      right_arrow.visible = false
+    }
+  }
+
+  //handlers for left/right arrows
   MouseArea {
     anchors.left: parent.left
     width: 64
     height: parent.height
     onClicked: {
-      spinner.prevPage()
+      if (!spinner.prevPage()) {
+        left_arrow.visible = true
+        right_arrow.visible = false
+        arrow_timer.running = true
+      }
+    }
+    Image {
+      id: left_arrow
+      anchors.fill: parent
+      z: 1
+      smooth: true
+      fillMode: Image.PreserveAspectFit
+      source: ":/icons/icons/arrow_left.png"
+      visible: false
     }
   }
   MouseArea {
@@ -284,7 +321,21 @@ Rectangle {
     width: 64
     height: parent.height
     onClicked: {
-      spinner.nextPage()
+      if (!spinner.nextPage()) {
+        left_arrow.visible = false
+        right_arrow.visible = true
+        arrow_timer.running = true
+      }
+    }
+    Image {
+      id: right_arrow
+      anchors.fill: parent
+      z: 1
+      smooth: true
+      fillMode: Image.PreserveAspectFit
+      rotation: 180
+      source: ":/icons/icons/arrow_left.png"
+      visible: false
     }
   }
 

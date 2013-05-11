@@ -22,32 +22,39 @@
 #include <QAbstractListModel>
 #include <QVector>
 
+class PageProvider;
+
 class FileBrowserModel : public QAbstractListModel
 {
   Q_OBJECT
 public:
-  FileBrowserModel(QObject *parent, const QStringList &list);
+  FileBrowserModel(QObject *parent, const PageProvider *doc, const QStringList &list);
   QVariant data(const QModelIndex &index, int role) const;
   int rowCount(const QModelIndex &parent) const;
-  void addDirToSearch(QString& dir);
-  void removeDirToSearch(QString& dir);
-  void searchSupportedFiles();
   void setCurrentDir(const QString &filePath);
-  static QString closeFileBrowserText() {
-    return tr("Close File Browser");
+  void setFavorites(bool f);
+  const QString closeFileBrowserText() const {
+    return favorites_?tr("Close Favorites Browser"):tr("Close File Browser");
   }
 
 public slots:
   void changeCurrentDir(int index);
 
 private:
+  void searchSupportedFiles();
+  void saveFavorites();
+  void loadFavorites();
   Q_DISABLE_COPY(FileBrowserModel);
-  enum PdfPreviewRoles { TITLE, PAGES, IMAGE, IS_FILE, PATH };
+  enum PdfPreviewRoles { TITLE, PAGE, IMAGE, IS_FILE, PATH };
+  enum {FAVORITES_LIST_SIZE = 10};
   QString currentDir_;
   QVector<QString> files_;
+  QVector<uint> filesPage_;//used only in favorites mode
   QVector<QString> dirs_;
   QObject *parent_;
   const QStringList &supportedFilePatterns_;
+  bool favorites_;
+  const PageProvider *doc_;
 };
 
 #endif // FileBrowserModel_H

@@ -28,9 +28,9 @@
 #include <qmobilityglobal.h>
 #endif
 #include "pageprovider.h"
+#include "qmlcppmediator.h"
 
 class FileBrowserModel;
-class QmlCppMediator;
 #ifndef NO_QTMOBILITY
 QTM_BEGIN_NAMESPACE
 class QSystemBatteryInfo;
@@ -60,7 +60,7 @@ signals:
 
 private slots:
   void onGotoPage(int page);
-  void onShowDocument(const QString &doc);
+  void onShowDocument(const QString &doc, int page);
   void onSetZoomFactor(int value, int index);
   void onSetProperties();
   void onFullScreen();
@@ -70,7 +70,7 @@ private slots:
   void onQuitApp();
 
 private:
-  void openFile(const QString &filePath);
+  void openFile(const QString &filePath, int page = 0);
   void showNextPage();
   void showPrevPage();
   void gotoPage(int pageNb, int numPages);
@@ -104,19 +104,28 @@ private:
   }
   void setWindowSize(int width, int height) {
     qDebug() << "Window::setWindowSize: width" << width << ", height" << height;
-    if (NULL != rootObj_) {
-      if (false == rootObj_->setProperty("width", width)) {
-        qDebug() << "cannot set width";
-      }
-      if (false == rootObj_->setProperty("height", height)) {
-        qDebug() << "cannot set height";
-      }
+    if (NULL != mediator_) {
+      mediator_->setWinWidth(width);
+      mediator_->setWinHeight(height);
+    }
+    else {
+      qDebug() << "cannot set win size";
     }
   }
   void setZoomIndex(int index) {
     if (NULL != rootObj_) {
       if (false == rootObj_->setProperty("zoomIndex", index)) {
         qDebug() << "cannot set width";
+      }
+    }
+  }
+  void refreshPage() {
+    if (NULL != rootObj_) {
+      if (false == rootObj_->setProperty("refreshImg", true)) {
+        qDebug() << "cannot set formats";
+      }
+      if (false == rootObj_->setProperty("refreshImg", false)) {
+        qDebug() << "cannot set formats";
       }
     }
   }

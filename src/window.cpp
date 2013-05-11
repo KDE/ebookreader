@@ -24,13 +24,8 @@
 #include "window.h"
 #include "filebrowsermodel.h"
 #include "qmlcppmediator.h"
+#include "settings_keys.h"
 
-#define ORGANIZATION "Bogdan Cristea"
-#define APPLICATION "tabletReader"
-#define KEY_PAGE "page"
-#define KEY_FILE_PATH "file_path"
-#define KEY_ZOOM_LEVEL "zoom_level"
-#define KEY_ZOOM_INDEX "zoom_index"
 #define HELP_FILE "/../share/doc/tabletReaderHelp.pdf"
 
 #ifndef NO_QTMOBILITY
@@ -62,7 +57,7 @@ Window::Window()
 #endif
 
 #ifndef DESKTOP_APP
-  Qt::WindowFlags winFlags = Qt::X11BypassWindowManagerHint;//TODO: check if this flag is needed
+  Qt::WindowFlags winFlags = Qt::X11BypassWindowManagerHint;
   setWindowFlags(winFlags);
 #endif
 
@@ -72,8 +67,10 @@ Window::Window()
   qreal scaleFactor = 0;
   int scaleIndex = 0;
   loadSettings(filePath, page, scaleFactor, scaleIndex);
+  bool foundDoc = true;
   if (NULL == filePath) {
     filePath = helpFile_;
+    foundDoc = false;
   }
 
   //load previous document if any or the help
@@ -85,7 +82,10 @@ Window::Window()
 
   //create file browser (uses supported file types given by OkularDocument)
   const QStringList &formats = document_->supportedFilePatterns();
-  fileBrowserModel_ = new FileBrowserModel(this, formats);
+  fileBrowserModel_ = new FileBrowserModel(this, document_, formats);
+  if (foundDoc) {
+    fileBrowserModel_->setCurrentDir(filePath);
+  }
 
   //add page provider before setting the source
   QDeclarativeEngine *eng = engine();
@@ -94,12 +94,16 @@ Window::Window()
     eng->rootContext()->setContextProperty("pdfPreviewModel", fileBrowserModel_);
     connect(eng, SIGNAL(quit()), this, SLOT(onQuit()));
   }
+  //set context property
+  mediator_ = new QmlCppMediator(document_, fileBrowserModel_);
+  setWindowSize(normScrGeometry_.width(), normScrGeometry_.height());
+  rootContext()->setContextProperty("mediator", mediator_);
+
   setSource(QUrl("qrc:/qml/qml/main.qml"));
   rootObj_ = rootObject();
 
   if (NULL != rootObj_) {
     //setup GUI
-    setWindowSize(normScrGeometry_.width(), normScrGeometry_.height());
     setZoomIndex(scaleIndex);
     //set about props
     if (false == rootObj_->setProperty("version", TR_VERSION)) {
@@ -110,7 +114,7 @@ Window::Window()
     }
     //set filebrowser handlers
     connect(rootObj_, SIGNAL(chDir(int)), fileBrowserModel_, SLOT(changeCurrentDir(int)));
-    connect(rootObj_, SIGNAL(showDoc(QString)), this, SLOT(onShowDocument(QString)));
+    connect(rootObj_, SIGNAL(showDoc(QString,int)), this, SLOT(onShowDocument(QString,int)));
     //set full screen button handlers
     connect(rootObj_, SIGNAL(fullScreen()), this, SLOT(onFullScreen()));
     connect(rootObj_, SIGNAL(normalScreen()), this, SLOT(onNormalScreen()));
@@ -129,14 +133,11 @@ Window::Window()
     //set warning handler
     connect(this, SIGNAL(warning(QVariant)), rootObj_, SLOT(onWarning(QVariant)));
   }
-  //set context property
-  mediator_ = new QmlCppMediator(document_);
-  rootContext()->setContextProperty("mediator", mediator_);
 
   if (true == loadRes) {
     gotoPage(page, document_->numPages());
     onQuit();
-    showNextPage();
+    refreshPage();
   }
   else {
     //no document has been found, just show a warning
@@ -152,12 +153,12 @@ Window::~Window()
   delete mediator_;
 }
 
-void Window::onShowDocument(const QString &doc)
+void Window::onShowDocument(const QString &doc, int page)
 {
-  qDebug() << "Window::closeFileBrowser" << doc;
+  qDebug() << "Window::onShowDocument" << doc << ", page" << page;
 
-  if(FileBrowserModel::closeFileBrowserText() != doc) {
-    openFile(doc);
+  if(fileBrowserModel_->closeFileBrowserText() != doc) {
+    openFile(doc, page);
   }
   else {
     onQuit();
@@ -194,19 +195,19 @@ void Window::onSetZoomFactor(int value, int index)
     document_->setScale(scale, index);
     setZoomIndex(index);
     gotoPage(document_->currentPage(), document_->numPages());
-    showNextPage();
+    refreshPage();
   }
   onQuit();
 }
 
-void Window::openFile(const QString &filePath)
+void Window::openFile(const QString &filePath, int page)
 {
   qDebug() << "Window::openFile";
 
   //open document
   if(document_->setDocument(filePath)) {
     //load document
-    gotoPage(0, document_->numPages());
+    gotoPage(page, document_->numPages());
     //remove wait page if any
     onQuit();
     //setHelpIcon(true, false);
@@ -477,7 +478,6 @@ void Window::loadSettings(QString &filePath, int &page, qreal &scaleFactor, int 
   }
   scaleFactor = settings.value(KEY_ZOOM_LEVEL, FIT_WIDTH_ZOOM_FACTOR).toFloat();
   scaleIndex = settings.value(KEY_ZOOM_INDEX, FIT_WIDTH_ZOOM_INDEX).toInt();
-  qDebug() << "scaleFactor" << scaleFactor << ", index" << scaleIndex;
 }
 
 void Window::saveSettings()

@@ -25,7 +25,7 @@ Rectangle {
     color:  "transparent"
 
     signal changeDirectory(int index)
-    signal showDocument(string document)
+    signal showDocument(string document, int page)
 
     ListView {
         id: pdfPreviewListView
@@ -71,7 +71,7 @@ Rectangle {
                     anchors.fill: parent
                     onClicked:  {
                         if (model.file) {
-                            showDocument(model.path)
+                            showDocument(model.path, model.page)
                         } else {
                             // Change dir
                             changeDirectory(index);

@@ -28,6 +28,7 @@ QT4_WRAP_CPP(MOCS ${tabletReader_MOCS})
 if (NOT WIN32)
   #don't generate translations on Windows (use the existing ones)
   set ( tabletReader_QML
+    qml/main.qml
     qml/zoompage.qml
     qml/ModalDialog/ModalDialog.qml
     qml/gotopage.qml
@@ -60,7 +61,7 @@ if (EXISTS ${CMAKE_BINARY_DIR}/src/tabletReader_fr.qm)
 endif()
 
 #setup installers
-set(CPACK_PACKAGE_NAME "tabletReader")
+set(CPACK_PACKAGE_NAME "TabletReader")
 set(CPACK_PACKAGE_VENDOR "Bogdan Cristea")
 set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "e-book reader for touch enabled devices")
 set(CPACK_PACKAGE_VERSION ${TR_VERSION})
@@ -100,5 +101,9 @@ if (WIN32)
   CreateShortCut \\\"$SMPROGRAMS\\\\tabletReader.lnk\\\" \\\"$INSTDIR\\\\bin\\\\tabletReader.exe\\\" \\\"\\\" \\\"$INSTDIR\\\\bin\\\\tabletReader.ico\\\"")
   set(CPACK_NSIS_EXTRA_UNINSTALL_COMMANDS "Delete \\\"$DESKTOP\\\\tabletReader.lnk\\\"
   Delete \\\"$SMPROGRAMS\\\\tabletReader.lnk\\\"")
+
+elseif (UNIX)
+  set(CPACK_GENERATOR RPM)
 endif()
+
 include(CPack)

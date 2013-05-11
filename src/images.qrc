@@ -12,10 +12,12 @@
         <file>qml/Toolbar/pics/Actions-help-about-icon.png</file>
         <file>qml/Toolbar/pics/Actions-application-exit-icon.png</file>
         <file>qml/Toolbar/pics/Actions-document-properties-icon.png</file>
+        <file>qml/Toolbar/pics/Actions-favorites-icon.png</file>
     </qresource>
     <qresource prefix="/filebrowser">
         <file>icons/Adobe-PDF-Document-icon.png</file>
         <file>icons/Button-Upload-icon.png</file>
+        <file>icons/Actions-list-add-icon.png</file>
         <file>icons/My-Ebooks-icon.png</file>
         <file>icons/Apps-session-quit-icon.png</file>
         <file>icons/Djvu-document-icon.png</file>
@@ -75,5 +77,8 @@
     <qresource prefix="/translations">
         <file>tabletReader_fr.qm</file>
         <file>tabletReader_ro.qm</file>
+    </qresource>
+    <qresource prefix="/icons">
+        <file>icons/arrow_left.png</file>
     </qresource>
 </RCC>

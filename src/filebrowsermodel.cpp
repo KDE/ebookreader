@@ -20,16 +20,21 @@
 #include <QDir>
 #include <QDebug>
 #include <kmimetype.h>
+#include <QSettings>
 #include "filebrowsermodel.h"
 #include "pageprovider.h"
+#include "settings_keys.h"
 
-FileBrowserModel::FileBrowserModel(QObject *parent, const QStringList &list) :
+FileBrowserModel::FileBrowserModel(QObject *parent, const PageProvider *doc, const QStringList &list) :
   QAbstractListModel(parent),
   parent_(parent),
-  supportedFilePatterns_(list)
+  supportedFilePatterns_(list),
+  favorites_(false),
+  doc_(doc)
 {
   QHash<int, QByteArray> roles;
   roles[TITLE] = "title";
+  roles[PAGE] = "page";
   roles[IMAGE] = "image";
   roles[IS_FILE] = "file";
   roles[PATH] = "path";
@@ -41,20 +46,28 @@ FileBrowserModel::FileBrowserModel(QObject *parent, const QStringList &list) :
 
 void FileBrowserModel::changeCurrentDir(int index)
 {
-  if(index >= dirs_.count()) {
-    return;
-  }
-  if(index == 0) {
-    currentDir_ += "/..";
-    QDir dir = QDir(currentDir_);
-    currentDir_ = dir.absolutePath();
+  if (favorites_) {
+    //save the current file into favorites list
+    saveFavorites();
+    //and refresh the view
+    loadFavorites();
+    reset();
   }
   else {
-    currentDir_ += "/" +  dirs_[index];
+    if(index >= dirs_.count()) {
+      return;
+    }
+    if(index == 0) {
+      currentDir_ += "/..";
+      QDir dir = QDir(currentDir_);
+      currentDir_ = dir.absolutePath();
+    }
+    else {
+      currentDir_ += "/" +  dirs_[index];
+    }
+    searchSupportedFiles();
+    reset();
   }
-  qDebug() << currentDir_;
-  searchSupportedFiles();
-  reset();
 }
 
 void FileBrowserModel::searchSupportedFiles()
@@ -115,7 +128,15 @@ QVariant FileBrowserModel::data(const QModelIndex &index, int role) const
     int fileRow = index.row() - dirs_.count();
     switch(role) {
     case TITLE:
-      return QDir(files_[fileRow]).dirName();
+    {
+      QString title = QDir(files_[fileRow]).dirName();
+      if (favorites_) {
+        title += tr(" at page %1").arg(filesPage_[fileRow]+1);
+      }
+      return title;
+    }
+    case PAGE:
+      return favorites_?filesPage_[fileRow]:0;
     case IMAGE:
       if(((fileRow + 1) == files_.count()) &&
           (closeFileBrowserText() == files_[fileRow])) {
@@ -193,7 +214,7 @@ QVariant FileBrowserModel::data(const QModelIndex &index, int role) const
       return dirs_[dirRow];
     case IMAGE:
       if(dirRow == 0) {
-        return QString(":/filebrowser/icons/Button-Upload-icon.png");
+        return favorites_?QString(":/filebrowser/icons/Actions-list-add-icon.png"):QString(":/filebrowser/icons/Button-Upload-icon.png");
       }
       else {
         return QString(":/filebrowser/icons/My-Ebooks-icon.png");
@@ -211,4 +232,60 @@ QVariant FileBrowserModel::data(const QModelIndex &index, int role) const
 void FileBrowserModel::setCurrentDir(const QString &filePath)
 {
   currentDir_ = QFileInfo(filePath).dir().absolutePath();
+  searchSupportedFiles();
 }
+
+void FileBrowserModel::setFavorites(bool f)
+{
+  favorites_ = f;
+  if (favorites_) {
+    loadFavorites();
+  }
+  else {
+    //reload previous folder and file list
+    searchSupportedFiles();
+  }
+}
+
+void FileBrowserModel::loadFavorites()
+{
+  //load the list of favorite docs
+  files_.clear();
+  filesPage_.clear();
+  dirs_.clear();
+  dirs_.append(tr("Bookmark \"%1\" at page %2").arg(QDir(doc_->filePath()).dirName()).arg(doc_->currentPage()+1));
+  QSettings settings(ORGANIZATION, APPLICATION);
+  QStringList fav = settings.value(KEY_FAVORITES_LIST).toStringList();
+  foreach (QString path, fav) {
+    QStringList list = path.split(":");
+    if (2 != list.size()) {
+      continue;//unlinkely
+    }
+    files_.append(list.at(0));
+    filesPage_.append(list.at(1).toInt());
+  }
+  files_.append(closeFileBrowserText());
+}
+
+void FileBrowserModel::saveFavorites()
+{
+  if (NULL == doc_) {
+    return;
+  }
+  QSettings settings(ORGANIZATION, APPLICATION);
+  QStringList fav = settings.value(KEY_FAVORITES_LIST).toStringList();
+  //check for the same file and remove old entries
+  QString filePath = doc_->filePath();
+  QStringList entries = fav.filter(filePath);
+  foreach(QString entry, entries) {
+    int i = fav.indexOf(entry);
+    fav.removeAt(i);
+  }
+  //remove oldest entry if the list is full
+  if (FAVORITES_LIST_SIZE < fav.size()) {
+    fav.pop_back();
+  }
+  fav.push_front(filePath+":"+QString::number(doc_->currentPage()));
+  settings.setValue(KEY_FAVORITES_LIST, fav);
+}
+

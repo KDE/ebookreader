@@ -43,6 +43,12 @@ Rectangle {
       }
 
       ToolbarView {
+          toolbarItemTitle: qsTr("Favorites")
+          toolbarItemIcon: ":/toolbar/qml/Toolbar/pics/Actions-favorites-icon.png"
+          clip: true
+      }
+
+      ToolbarView {
         toolbarItemTitle: (true == mediator.fullScr)?qsTr("Full Screen"):qsTr("Normal Screen")
         toolbarItemIcon: (true == mediator.fullScr)?":/toolbar/qml/Toolbar/pics/Actions-view-fullscreen-icon.png":":/toolbar/qml/Toolbar/pics/Actions-view-close-icon.png"
           clip: true
