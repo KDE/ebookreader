@@ -130,7 +130,7 @@ QVariant FileBrowserModel::data(const QModelIndex &index, int role) const
     case TITLE:
     {
       QString title = QDir(files_[fileRow]).dirName();
-      if (favorites_) {
+      if (favorites_ && (fileRow < (files_.size()-1))) {
         title += tr(" at page %1").arg(filesPage_[fileRow]+1);
       }
       return title;

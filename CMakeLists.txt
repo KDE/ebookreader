@@ -8,10 +8,14 @@ ENDIF()
 
 set ( CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake/Modules/ ${CMAKE_MODULE_PATH} )
 find_package ( Qt4 4.7.0 REQUIRED )
-find_package ( KDE4 REQUIRED 4.7.0 )
+find_package ( KDE4 4.7.0 REQUIRED )
 find_package ( Okular REQUIRED )
-find_package ( LibChm REQUIRED )
 find_package ( QtMobility 1.2.0 )
+
+#work around for mer build
+if (NOT QT_QTWEBKIT_INCLUDE_DIR)
+  set (QT_QTWEBKIT_INCLUDE_DIR "/usr/include")
+endif()
 
 if (NOT QT_MOBILITY_FOUND)
   message(WARNING "Cannot find QtMobility.")

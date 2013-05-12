@@ -15,50 +15,56 @@
 # Please submit bugfixes or comments via http://bugs.opensuse.org/
 #
 
-Name:           tabletReader
-Version:        2.0.0
+Name:           TabletReader
+Version:        3.0.0
 Release:        1
 License:        GPLv2+
 Summary:        Document Viewer
-Url:            http://www.kde.org
+Url:            https://projects.kde.org/projects/playground/edu/ebookreader
 Group:          Productivity/Office/Other
 Source0:        %{name}-%{version}.tar.gz
-BuildRequires:  qt-mobility-devel >= 1.2
-BuildRequires:  chmlib-devel
-BuildRequires:  libdjvulibre-devel
-BuildRequires:  libkde4-devel
-BuildRequires:  libpoppler-qt4-devel
-Obsoletes:      kdegraphics4 < 4.7.0
-Provides:       kdegraphics4 = 4.7.0
-BuildRoot:      %{_tmppath}/%{name}-%{version}-build
-%requires_ge    libpoppler-qt4-3
-%kde4_runtime_requires
+Requires:       %{kde_runtime_requires}
+BuildRequires:  pkgconfig(exiv2)
+BuildRequires:  pkgconfig(shared-mime-info)
+BuildRequires:  pkgconfig(lcms)
+BuildRequires:  pkgconfig(poppler-qt4)
+BuildRequires:  pkgconfig(qca2)
+BuildRequires:  pkgconfig(xext)
+BuildRequires:  pkgconfig(xdamage)
+BuildRequires:  pkgconfig(xrandr)
+BuildRequires:  pkgconfig(xrender)
+BuildRequires:  pkgconfig(xcursor)
+BuildRequires:  pkgconfig(sm)
+BuildRequires:  pkgconfig(x11)
+BuildRequires:  pkgconfig(zlib)
+BuildRequires:  pkgconfig(freetype2)
+BuildRequires:  pkgconfig(soprano)
+BuildRequires:  pkgconfig(qimageblitz)
+BuildRequires:  pkgconfig(shared-desktop-ontologies)
+BuildRequires:  pkgconfig(libkactivities)
+BuildRequires:  plasma-mobile-devel
+BuildRequires:  kdelibs-devel
+BuildRequires:  oxygen-icon-theme-large
+BuildRequires:  libjpeg-devel
+BuildRequires:  strigiclient-devel
+BuildRequires:  strigidaemon-devel
+BuildRequires:  libtiff-devel
+BuildRequires:  libepub-devel
+BuildRequires:  okular-devel
+BuildRequires:  cmake
 
 %description
-E-book reader for touch-enabled devices; supports documents in PDF, DJVU and
-CHM.
+E-book reader for touch-enabled devices; uses as backend okular core library.
 
 %prep
-%setup -q
+%setup -q -n %{name}-%{version}
 
 %build
-  qmake
-  make
+  cmake . %{cmake_kde_options}
+  make %{?jobs:-j%jobs}
 
 %install
-  make install INSTALL_ROOT=%{buildroot}
-  mkdir -p %{buildroot}%{_kde4_applicationsdir}
-  cp tabletReader.desktop %{buildroot}%{_kde4_applicationsdir}
-  mkdir -p %{buildroot}%{_kde4_appsdir}/tabletReader/
-  mkdir -p %{buildroot}%{_kde4_bindir}
-  mv %{buildroot}/tabletReader %{buildroot}%{_kde4_bindir}
-  mkdir -p %{buildroot}%{_kde4_iconsdir}/hicolor/{16x16,22x22,32x32,48x48,64x64,128x128}/apps
-  cp src/icons/128x128/tabletReader.png %{buildroot}%{_kde4_iconsdir}/hicolor/128x128/apps/
-  cp src/icons/64x64/tabletReader.png %{buildroot}%{_kde4_iconsdir}/hicolor/64x64/apps/
-  cp src/icons/48x48/tabletReader.png %{buildroot}%{_kde4_iconsdir}/hicolor/48x48/apps/
-  cp src/icons/32x32/tabletReader.png %{buildroot}%{_kde4_iconsdir}/hicolor/32x32/apps/
-  cp src/icons/22x22/tabletReader.png %{buildroot}%{_kde4_iconsdir}/hicolor/22x22/apps/
-  cp src/icons/16x16/tabletReader.png %{buildroot}%{_kde4_iconsdir}/hicolor/16x16/apps/
+  %make_install
   %suse_update_desktop_file -r tabletReader   Office Viewer
   %kde_post_install
 
