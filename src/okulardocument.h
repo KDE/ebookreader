@@ -22,7 +22,7 @@
 #include <QPixmap>
 #include <kmimetype.h>
 #include <core/document.h>
-#include <core/observer.h>
+#include "observer.h"
 
 namespace Okular
 {
@@ -55,6 +55,10 @@ public:
     winWidth_ = width;
   }
   ~OkularDocument();
+  enum {OKULAR_OBSERVER_ID = 6};
+  uint observerId() const {
+    return OKULAR_OBSERVER_ID;
+  }
   void notifyPageChanged(int page, int flags);
   const QStringList& supportedFilePatterns();
 private:

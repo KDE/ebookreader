@@ -65,17 +65,15 @@ E-book reader for touch-enabled devices; uses as backend okular core library.
 
 %install
   %make_install
-  %suse_update_desktop_file -r tabletReader   Office Viewer
-  %kde_post_install
 
 %clean
   rm -rf %{buildroot}
 
 %files
 %defattr(-,root,root)
-%{_kde4_applicationsdir}/tabletReader*.desktop
-%{_kde4_appsdir}/tabletReader/
-%{_kde4_bindir}/tabletReader
-%{_kde4_iconsdir}/hicolor/*/apps/tabletReader.*
+/usr/share/applications/kde4//tabletReader*.desktop
+/usr/share/doc/tabletReaderHelp.pdf
+/usr/bin/tabletReader/
+/usr/share/icons/hicolor/*/apps/tabletReader.*  
 
 %changelog

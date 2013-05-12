@@ -39,9 +39,9 @@ public:
   void sendRequest(const Okular::Page *page, int width, int height)
   {
     qDebug() << "PagePainter::sendRequest";
-    if(false == page->hasPixmap(obs_)) {
+    if(false == page->hasPixmap(OkularDocument::OKULAR_OBSERVER_ID)) {
       qDebug() << "making pixmap request";
-    Okular::PixmapRequest *pixmapRequest = new Okular::PixmapRequest(obs_, page->number(), width, height, 0, Okular::PixmapRequest::Asynchronous);//the request is deleted by okular core library
+    Okular::PixmapRequest *pixmapRequest = new Okular::PixmapRequest(OkularDocument::OKULAR_OBSERVER_ID, page->number(), width, height, 0, true);//asynchronous request (the request is deleted by okular core library)
       req_.clear();
       req_.push_back(pixmapRequest);
       doc_->requestPixmaps(req_);
@@ -55,7 +55,7 @@ public:
     if (NULL != doc_) {
       const Okular::Page *p = doc_->page(page);
       if (NULL != p) {
-        pix = p->_o_nearestPixmap(obs_, -1, -1);
+        pix = p->_o_nearestPixmap(OkularDocument::OKULAR_OBSERVER_ID, -1, -1);
       }
     }
     return pix;
@@ -186,7 +186,7 @@ void OkularDocument::notifyPageChanged(int page, int flags)
       //delete immediatelly internal pixmap
       Okular::Page *p = const_cast<Okular::Page*>(doc_->page(page));
       if (NULL != p) {
-        p->deletePixmap(this);
+        p->deletePixmap(OKULAR_OBSERVER_ID);
       }
       emit pixmapReady(page, pix);
     }
