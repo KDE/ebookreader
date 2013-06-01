@@ -50,82 +50,82 @@
 <context>
     <name>Window</name>
     <message>
-        <location filename="window.cpp" line="144"/>
+        <location filename="window.cpp" line="139"/>
         <source>No document found</source>
         <translation>Aucun document trouvé</translation>
     </message>
     <message>
-        <location filename="window.cpp" line="217"/>
+        <location filename="window.cpp" line="218"/>
         <source>Failed to open file</source>
         <translation>Impossible d&apos;ouvrir le fichier</translation>
     </message>
     <message>
-        <location filename="window.cpp" line="217"/>
+        <location filename="window.cpp" line="218"/>
         <source>&lt;br&gt;%1 cannot be opened</source>
         <translation>&lt;br&gt;%1 ne peut pas être ouvert</translation>
     </message>
     <message>
-        <location filename="window.cpp" line="381"/>
+        <location filename="window.cpp" line="395"/>
         <source>Cannot open help file</source>
         <translation>Impossible d&apos;ouvrir le fichier d&apos;aide</translation>
     </message>
     <message>
-        <location filename="window.cpp" line="403"/>
+        <location filename="window.cpp" line="417"/>
         <source>no charger</source>
         <translation>pas de chargeur</translation>
     </message>
     <message>
-        <location filename="window.cpp" line="406"/>
+        <location filename="window.cpp" line="420"/>
         <source>wall charger</source>
         <translation>chargeur de secteur</translation>
     </message>
     <message>
-        <location filename="window.cpp" line="412"/>
+        <location filename="window.cpp" line="426"/>
         <source>charging</source>
         <translation>chargement</translation>
     </message>
     <message>
-        <location filename="window.cpp" line="416"/>
+        <location filename="window.cpp" line="430"/>
         <source>unknown</source>
         <translation>inconnu</translation>
     </message>
     <message>
-        <location filename="window.cpp" line="420"/>
+        <location filename="window.cpp" line="434"/>
         <source>, %1% remaining capacity</source>
         <translation>, %1% capacité restante</translation>
     </message>
     <message>
-        <location filename="window.cpp" line="423"/>
+        <location filename="window.cpp" line="437"/>
         <source>, unknown remaining capacity</source>
         <translation>, capacité restante inconnue</translation>
     </message>
     <message>
-        <location filename="window.cpp" line="436"/>
+        <location filename="window.cpp" line="450"/>
         <source>1 hour</source>
         <translation>1 heure</translation>
     </message>
     <message>
-        <location filename="window.cpp" line="439"/>
+        <location filename="window.cpp" line="453"/>
         <source>%1 hours</source>
         <translation>%1 heures</translation>
     </message>
     <message>
-        <location filename="window.cpp" line="448"/>
+        <location filename="window.cpp" line="462"/>
         <source>1 minute</source>
         <translation>1 minute</translation>
     </message>
     <message>
-        <location filename="window.cpp" line="451"/>
+        <location filename="window.cpp" line="465"/>
         <source>%1 minutes</source>
         <translation>%1 minutes</translation>
     </message>
     <message>
-        <location filename="window.cpp" line="460"/>
+        <location filename="window.cpp" line="474"/>
         <source>1 second</source>
         <translation>1 seconde</translation>
     </message>
     <message>
-        <location filename="window.cpp" line="463"/>
+        <location filename="window.cpp" line="477"/>
         <source>%1 seconds</source>
         <translation>%1 secondes</translation>
     </message>

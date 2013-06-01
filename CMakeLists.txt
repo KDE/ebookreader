@@ -17,9 +17,12 @@ if (NOT QT_QTWEBKIT_INCLUDE_DIR)
   set (QT_QTWEBKIT_INCLUDE_DIR "/usr/include")
 endif()
 
-if (NOT QT_MOBILITY_FOUND)
+if (QT_MOBILITY_FOUND)
+  set(QT_MOBILITY_INCLUDE_DIR ${QT_MOBILITY_INCLUDE_DIR}/QtMobility)
+else()
   message(WARNING "Cannot find QtMobility.")
   set(NO_QTMOBILITY true)
+  set(QT_MOBILITY_INCLUDE_DIR "")
 endif()
 if (${CMAKE_BUILD_TYPE} MATCHES "^[Rr]elease")
   add_definitions(-DQT_NO_DEBUG_OUTPUT)
@@ -62,7 +65,7 @@ if( EXISTS "${CMAKE_SOURCE_DIR}/.git" )
   endif()
 endif()
 if(NOT TR_VERSION)
-  set(TR_VERSION "3.0")
+  set(TR_VERSION "3.0.1")
   message (WARNING "Cannot generate automatic build/release number. Using hard coded value.")
 endif()
 
@@ -71,7 +74,7 @@ CONFIGURE_FILE ( ${CMAKE_SOURCE_DIR}/src/config.h.in ${CMAKE_BINARY_DIR}/src/con
 include ( ${QT_USE_FILE} )
 include_directories (
 	${CMAKE_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR}
-	${QT_QTCORE_INCLUDE_DIR} ${QT_QTGUI_INCLUDE_DIR} )
+  ${QT_QTCORE_INCLUDE_DIR} ${QT_QTGUI_INCLUDE_DIR} ${QT_MOBILITY_INCLUDE_DIR} )
 
 add_subdirectory ( src )
 
