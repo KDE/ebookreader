@@ -1,119 +1,115 @@
 bin\attica.dll
+bin\axvlc.dll
 bin\bzip2.dll
+bin\capi.dll
 bin\dbus-1.dll
 bin\dbus-daemon.exe
 bin\dbusmenu-qt.dll
 bin\djvulibre.dll
+bin\epub.dll
+bin\exiv2.dll
 bin\expat.dll
 bin\freetype.dll
-<<<<<<< HEAD
-bin\gsdll32.dll
-bin\HUpnp1.dll
-bin\iconv.dll
-=======
-<<<<<<< HEAD
-bin\gsdll32.dll
-bin\HUpnp1.dll
-bin\iconv.dll
-=======
-<<<<<<< HEAD
-bin\gsdll32.dll
-bin\HUpnp1.dll
-bin\iconv.dll
-=======
 bin\giflib4.dll
+bin\gpgme++.dll
+bin\gpgme.dll
 bin\gsdll32.dll
 bin\HUpnp1.dll
 bin\iconv.dll
-bin\imageformats\qgif4.dll
-bin\imageformats\qico4.dll
-bin\imageformats\qjpeg4.dll
-bin\imageformats\qmng4.dll
-bin\imageformats\qsvg4.dll
-bin\imageformats\qtga4.dll
-bin\imageformats\qtiff4.dll
->>>>>>> 6ab029b... add dependences to support chm and all images on Win
->>>>>>> 36e563b... dep file upd
->>>>>>> 5b642f0... update dep file
 bin\jasper.dll
 bin\jpeg.dll
 bin\kbuildsycoca4.exe
+bin\kcmutils.dll
+bin\kdeclarative.dll
+bin\kdecm.dll
 bin\kdecore.dll
-<<<<<<< HEAD
-bin\kdeui.dll
-bin\kdewin.dll
-bin\kio.dll
-bin\kjs.dll
-bin\kjsapi.dll
-bin\lcms-1.dll
-bin\libeay32.dll
-bin\libintl.dll
-=======
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
->>>>>>> 36e563b... dep file upd
-bin\kdeui.dll
-bin\kdewin.dll
-bin\kio.dll
-bin\kjs.dll
-bin\kjsapi.dll
-bin\lcms-1.dll
-bin\libeay32.dll
-bin\libintl.dll
-<<<<<<< HEAD
-=======
-=======
 bin\kdeinit4.exe
 bin\kdeui.dll
+bin\kdewebkit.dll
+bin\kdewin-qt.dll
 bin\kdewin.dll
+bin\kdnssd.dll
 bin\khtml.dll
 bin\kio.dll
 bin\kioslave.exe
+bin\kio_msits.dll
 bin\kjs.dll
 bin\kjsapi.dll
+bin\kjsembed.dll
 bin\klauncher.exe
 bin\kparts.dll
 bin\ktexteditor.dll
+bin\lber.dll
 bin\lcms-1.dll
+bin\lcms2.dll
 bin\libeay32.dll
+bin\libexslt.dll
+bin\libgpg-error.dll
 bin\libintl.dll
-bin\libpng14d.dll
->>>>>>> 6ab029b... add dependences to support chm and all images on Win
->>>>>>> 36e563b... dep file upd
->>>>>>> 5b642f0... update dep file
+bin\libpng15.dll
 bin\libxml2.dll
 bin\msvcp100.dll
 bin\msvcr100.dll
 bin\nepomuk.dll
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
-=======
+bin\nepomukcommon.dll
+bin\nepomukcore.dll
+bin\nepomukextractor.dll
 bin\nepomukquery.dll
 bin\nepomukutils.dll
->>>>>>> 6ab029b... add dependences to support chm and all images on Win
->>>>>>> 36e563b... dep file upd
->>>>>>> 5b642f0... update dep file
 bin\okularcore.dll
+bin\okularGenerator_chmlib.dll
+bin\okularGenerator_comicbook.dll
+bin\okularGenerator_djvu.dll
+bin\okularGenerator_dvi.dll
+bin\okularGenerator_epub.dll
+bin\okularGenerator_fax.dll
+bin\okularGenerator_fb.dll
+bin\okularGenerator_ghostview.dll
+bin\okularGenerator_kimgio.dll
+bin\okularGenerator_ooo.dll
+bin\okularGenerator_plucker.dll
+bin\okularGenerator_poppler.dll
+bin\okularGenerator_tiff.dll
+bin\okularGenerator_txt.dll
+bin\okularGenerator_xps.dll
+bin\okularpart.dll
+bin\okularplugin.dll
 bin\openjpeg.dll
 bin\pcre.dll
+bin\pcrecpp.dll
+bin\pcreposix.dll
 bin\phonon.dll
+bin\poppler-cpp.dll
 bin\poppler-qt4.dll
+bin\pthreads.dll
 bin\qca.dll
+bin\qgpgme.dll
+bin\qimageblitz.dll
+bin\qjson.dll
+bin\Qt3Support4.dll
+bin\QtCLucene4.dll
 bin\QtCore4.dll
 bin\QtDBus4.dll
 bin\QtDeclarative4.dll
+bin\QtDesigner4.dll
+bin\QtDesignerComponents4.dll
 bin\QtGui4.dll
+bin\QtHelp4.dll
+bin\QtMultimedia4.dll
 bin\QtNetwork4.dll
+bin\QtOpenGL4.dll
 bin\QtScript4.dll
+bin\QtScriptTools4.dll
 bin\QtSolutions_SOAP-2.7.dll
 bin\QtSql4.dll
 bin\QtSvg4.dll
+bin\QtTest4.dll
+bin\QtWebKit4.dll
 bin\QtXml4.dll
 bin\QtXmlPatterns4.dll
+bin\raptor2.dll
+bin\rasqal.dll
+bin\rdf.dll
 bin\solid.dll
 bin\soprano.dll
 bin\sopranoclient.dll
@@ -125,35 +121,22 @@ bin\tabletReader.exe
 bin\tabletReader.ico
 bin\threadweaver.dll
 bin\tiff3.dll
-bin\zlib1.dll
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
-bin\imageformats\qgif4.dll
-bin\imageformats\qico4.dll
-bin\imageformats\qjpe4.dll
-=======
-<<<<<<< HEAD
+bin\yajl.dll
+bin\zip.dll
+bin\zlib.dll
 bin\imageformats\qgif4.dll
 bin\imageformats\qico4.dll
 bin\imageformats\qjpeg4.dll
->>>>>>> 36e563b... dep file upd
 bin\imageformats\qmng4.dll
 bin\imageformats\qsvg4.dll
 bin\imageformats\qtga4.dll
 bin\imageformats\qtiff4.dll
-<<<<<<< HEAD
-=======
-=======
 etc\dbus-1\session.conf
 etc\dbus-1\system.conf
 etc\dbus-1\system.d\org.kde.auth.conf
 etc\dbus-1\system.d\org.kde.kcontrol.kcmremotewidgets.conf
 lib\kde4\kio_msits.dll
 lib\kde4\okularGenerator_chmlib.dll
->>>>>>> 6ab029b... add dependences to support chm and all images on Win
->>>>>>> 36e563b... dep file upd
->>>>>>> 5b642f0... update dep file
 lib\kde4\okularGenerator_comicbook.dll
 lib\kde4\okularGenerator_djvu.dll
 lib\kde4\okularGenerator_dvi.dll
@@ -186,12 +169,6 @@ plugins\imageformats\qsvg4.dll
 plugins\imageformats\qtga4.dll
 plugins\imageformats\qtiff4.dll
 share\doc\tabletReaderHelp.pdf
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
-=======
 share\applications\kde4\okular.desktop
 share\applications\kde4\okularApplication_chm.desktop
 share\applications\kde4\okularApplication_comicbook.desktop
@@ -220,9 +197,6 @@ share\kde4\services\khtml.desktop
 share\kde4\services\khtmladaptorpart.desktop
 share\kde4\services\khtmlimage.desktop
 share\kde4\services\libokularGenerator_chmlib.desktop
->>>>>>> 6ab029b... add dependences to support chm and all images on Win
->>>>>>> 36e563b... dep file upd
->>>>>>> 5b642f0... update dep file
 share\kde4\services\libokularGenerator_comicbook.desktop
 share\kde4\services\libokularGenerator_djvu.desktop
 share\kde4\services\libokularGenerator_dvi.desktop
@@ -235,17 +209,8 @@ share\kde4\services\libokularGenerator_plucker.desktop
 share\kde4\services\libokularGenerator_poppler.desktop
 share\kde4\services\libokularGenerator_tiff.desktop
 share\kde4\services\libokularGenerator_xps.desktop
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
-=======
 share\kde4\services\msits.protocol
 share\kde4\services\okularChm.desktop
->>>>>>> 6ab029b... add dependences to support chm and all images on Win
->>>>>>> 36e563b... dep file upd
->>>>>>> 5b642f0... update dep file
 share\kde4\services\okularComicbook.desktop
 share\kde4\services\okularDjvu.desktop
 share\kde4\services\okularDvi.desktop
@@ -259,18 +224,8 @@ share\kde4\services\okularPoppler.desktop
 share\kde4\services\okularTiff.desktop
 share\kde4\services\okularXps.desktop
 share\kde4\services\okular_part.desktop
-<<<<<<< HEAD
 share\kde4\servicetypes\krop.desktop
 share\kde4\servicetypes\okularGenerator.desktop
-=======
-<<<<<<< HEAD
-share\kde4\servicetypes\krop.desktop
-share\kde4\servicetypes\okularGenerator.desktop
-=======
-<<<<<<< HEAD
-share\kde4\servicetypes\krop.desktop
-share\kde4\servicetypes\okularGenerator.desktop
-=======
 share\kde4\services\qimageioplugins\bmp.desktop
 share\kde4\services\qimageioplugins\dds.desktop
 share\kde4\services\qimageioplugins\eps.desktop
@@ -301,9 +256,6 @@ share\kde4\services\qimageioplugins\xv.desktop
 share\kde4\servicetypes\krop.desktop
 share\kde4\servicetypes\okularGenerator.desktop
 share\kde4\servicetypes\qimageio_plugin.desktop
->>>>>>> 6ab029b... add dependences to support chm and all images on Win
->>>>>>> 36e563b... dep file upd
->>>>>>> 5b642f0... update dep file
 share\mime\aliases
 share\mime\application\andrew-inset.xml
 share\mime\application\annodex.xml

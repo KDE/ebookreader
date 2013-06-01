@@ -80,7 +80,7 @@ void Logger::debugMessageHandler(QtMsgType type, const char *msg)
     abort();
   }
   ts_ << QDateTime::currentDateTime().toString("hh:mm:ss.zzz")
-      << "\tTID: 0x" << QString::number(QThread::currentThreadId(), 16)
+      << "\tTID: 0x" << QString::number(int(QThread::currentThreadId()), 16)
       << "\t" << txt << endl;
   loggerMutex_->unlock();
 }

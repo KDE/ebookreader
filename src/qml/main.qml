@@ -277,6 +277,13 @@ Rectangle {
       mainLoader.source = "maintoolbar.qml"
       mainLoader.item.sendBtnCommand.connect(btnHnd)
     }
+    onDoubleClicked: {
+      mainLoader.anchors.top = parent.top
+      mainLoader.width = parent.width
+      mainLoader.height = 64
+      mainLoader.source = "maintoolbar.qml"
+      mainLoader.item.sendBtnCommand.connect(btnHnd)
+    }
     onClicked: {
       mainLoader.source = ""
     }

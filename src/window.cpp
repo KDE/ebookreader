@@ -56,11 +56,6 @@ Window::Window()
   batteryInfo_ = new QSystemBatteryInfo(this);
 #endif
 
-#ifndef DESKTOP_APP
-  Qt::WindowFlags winFlags = Qt::X11BypassWindowManagerHint;
-  setWindowFlags(winFlags);
-#endif
-
   //get settings if any
   QString filePath;
   int page = -1;
@@ -144,6 +139,13 @@ Window::Window()
     emit warning(tr("No document found"));
   }
 
+  Qt::WindowFlags winFlags = Qt::Window | Qt::WindowTitleHint | Qt::WindowMinimizeButtonHint | Qt::WindowCloseButtonHint;
+#ifndef DESKTOP_APP
+  winFlags |= Qt::X11BypassWindowManagerHint;
+#endif
+  setWindowFlags(winFlags);
+  setWindowTitle("TabletReader " TR_VERSION);
+
   QApplication::restoreOverrideCursor();
 }
 
@@ -210,8 +212,7 @@ void Window::openFile(const QString &filePath, int page)
     gotoPage(page, document_->numPages());
     //remove wait page if any
     onQuit();
-    //setHelpIcon(true, false);
-    showNextPage();//force image update
+    refreshPage();
   }
   else {
     emit warning(tr("Failed to open file") + tr("<br>%1 cannot be opened").arg(filePath));
@@ -227,18 +228,24 @@ void Window::onFullScreen()
   }
   normScrGeometry_ = geometry();//store current geometry
 
-  showFullScreen();//seems to work only on desktops
   if(true == hasTouchScreen()) {
     QApplication::setOverrideCursor(QCursor(Qt::BlankCursor));
   }
   int width = QApplication::desktop()->width();
   int height = QApplication::desktop()->height();
   qDebug() << "width " << width << ", height " << height;
-  setGeometry(QRect(0, 0, width, height));//TODO: remove this as this is meant only for AP
+#ifndef _MSC_VER
+  setGeometry(QRect(0, 0, width, height));//TODO: meant only for AP
+#endif
+  //set QML size
+  setWindowSize(width, height);
   //set window width for fit width
   document_->setWinWidth(width);
   //update page width if needed
   updateViewForFitWidth();
+
+  showFullScreen();//seems to work only on desktops
+
   fullScreen_ = true;
   onQuit();
 }
@@ -251,10 +258,14 @@ void Window::normalScreen()
 
   if (false == normScrGeometry_.isValid()) {
     //compute a geometry if none available
-    int width = QApplication::desktop()->width();
-    int height = QApplication::desktop()->height();
-    if((MIN_SCREEN_WIDTH >= width) && (MIN_SCREEN_HEIGHT >= height)) {
+    int desktopWidth = QApplication::desktop()->width();
+    int desktopHeight = QApplication::desktop()->height();
+	int width = 0;
+	int height = 0;
+    if((MIN_SCREEN_WIDTH >= desktopWidth) && (MIN_SCREEN_HEIGHT >= desktopHeight)) {
       qDebug() << "using full screen mode with toolbar";
+	  width = desktopWidth;
+	  height = desktopHeight;
       showFullScreen();
       if(true == hasTouchScreen()) {
         QApplication::setOverrideCursor(QCursor(Qt::BlankCursor));
@@ -262,12 +273,13 @@ void Window::normalScreen()
     }
     else {
       qDebug() << "using normal mode";
-      width = (MIN_SCREEN_WIDTH < width) ? MIN_SCREEN_WIDTH : width;
-      height = (MIN_SCREEN_HEIGHT < height) ? MIN_SCREEN_HEIGHT : height;
+      width = (MIN_SCREEN_WIDTH < desktopWidth) ? MIN_SCREEN_WIDTH : desktopWidth;
+      height = (MIN_SCREEN_HEIGHT < desktopHeight) ? MIN_SCREEN_HEIGHT : desktopHeight;
       showNormal();
       if(true == hasTouchScreen()) {
         QApplication::restoreOverrideCursor();
       }
+	  move((desktopWidth-width)/2, (desktopHeight-height)/2);
     }
     normScrGeometry_.setWidth(width);
     normScrGeometry_.setHeight(height);
@@ -286,6 +298,8 @@ void Window::onNormalScreen()
   qDebug() << "Window::onNormalScreen";
 
   normalScreen();
+  //set QML size
+  setWindowSize(normScrGeometry_.width(), normScrGeometry_.height());
   //update page width if needed
   updateViewForFitWidth();
   onQuit();

@@ -82,7 +82,7 @@ private:
     if ((NULL != document_) && (FIT_WIDTH_ZOOM_FACTOR == document_->scaleFactor())) {
       document_->setScale(FIT_WIDTH_ZOOM_FACTOR, FIT_WIDTH_ZOOM_INDEX);
       gotoPage(document_->currentPage(), document_->numPages());
-      showNextPage();
+      refreshPage();
     }
   }
   void loadSettings(QString &filePath, int &page, qreal &scale, int &index);
