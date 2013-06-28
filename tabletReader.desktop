@@ -9,6 +9,7 @@ Name[pt]=Leitor da Tablete
 Name[pt_BR]=TabletReader
 Name[sk]=TabletReader
 Name[sv]=Läsprogram för läsplatta
+Name[tr]=TabletReader
 Name[uk]=TabletReader
 Name[x-test]=xxTabletReaderxx
 Exec=tabletReader
