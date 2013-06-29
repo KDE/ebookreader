@@ -1,0 +1,23 @@
+[Desktop Entry]
+Terminal=false
+Name=TabletReader
+Name[de]=TabletReader
+Name[es]=TabletReader
+Name[et]=TabletReader
+Name[fr]=TabletReader
+Name[hu]=TabletReader
+Name[km]=TabletReader
+Name[nl]=TabletReader
+Name[pl]=TabletowyCzytnik
+Name[pt]=Leitor da Tablete
+Name[pt_BR]=TabletReader
+Name[sk]=TabletReader
+Name[sv]=Läsprogram för läsplatta
+Name[uk]=TabletReader
+Name[x-test]=xxTabletReaderxx
+Exec=tabletReader
+Icon=tabletReader
+Type=Application
+InitialPreference=7
+Categories=Office;Viewer;
+MimeType=application/vnd.kde.tabletReader-archive;
