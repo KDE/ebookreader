@@ -6,32 +6,32 @@
     <message>
         <location filename="filebrowsermodel.cpp" line="91"/>
         <source>Go Back to &apos;%1&apos; from &apos;%2&apos;</source>
-        <translation>Retour à &apos;%1&apos; de &apos;%2&apos;</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="filebrowsermodel.cpp" line="95"/>
         <source>Go Back to &apos;/&apos; from &apos;%1&apos;</source>
-        <translation>Retour à &apos;/&apos; de &apos;%1&apos;</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="filebrowsermodel.cpp" line="134"/>
         <source> at page %1</source>
-        <translation>à la page %1</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="filebrowsermodel.cpp" line="256"/>
         <source>Bookmark &quot;%1&quot; at page %2</source>
-        <translation>Signer &quot;%1&quot; à la page %2</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="filebrowsermodel.h" line="37"/>
         <source>Close Favorites Browser</source>
-        <translation>Fermer le Navigateur Favoris</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="filebrowsermodel.h" line="37"/>
         <source>Close File Browser</source>
-        <translation>Fermer le Navigateur de Fichiers</translation>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -39,12 +39,12 @@
     <message>
         <location filename="qml/ModalDialog/ModalDialog.qml" line="98"/>
         <source>OK</source>
-        <translation>OK</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="qml/ModalDialog/ModalDialog.qml" line="114"/>
         <source>Cancel</source>
-        <translation>Annuler</translation>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -52,82 +52,82 @@
     <message>
         <location filename="window.cpp" line="139"/>
         <source>No document found</source>
-        <translation>Aucun document trouvé</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="window.cpp" line="218"/>
         <source>Failed to open file</source>
-        <translation>Impossible d&apos;ouvrir le fichier</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="window.cpp" line="218"/>
         <source>&lt;br&gt;%1 cannot be opened</source>
-        <translation>&lt;br&gt;%1 ne peut pas être ouvert</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="window.cpp" line="395"/>
         <source>Cannot open help file</source>
-        <translation>Impossible d&apos;ouvrir le fichier d&apos;aide</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="window.cpp" line="417"/>
         <source>no charger</source>
-        <translation>pas de chargeur</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="window.cpp" line="420"/>
         <source>wall charger</source>
-        <translation>chargeur de secteur</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="window.cpp" line="426"/>
         <source>charging</source>
-        <translation>chargement</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="window.cpp" line="430"/>
         <source>unknown</source>
-        <translation>inconnu</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="window.cpp" line="434"/>
         <source>, %1% remaining capacity</source>
-        <translation>, %1% capacité restante</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="window.cpp" line="437"/>
         <source>, unknown remaining capacity</source>
-        <translation>, capacité restante inconnue</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="window.cpp" line="450"/>
         <source>1 hour</source>
-        <translation>1 heure</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="window.cpp" line="453"/>
         <source>%1 hours</source>
-        <translation>%1 heures</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="window.cpp" line="462"/>
         <source>1 minute</source>
-        <translation>1 minute</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="window.cpp" line="465"/>
         <source>%1 minutes</source>
-        <translation>%1 minutes</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="window.cpp" line="474"/>
         <source>1 second</source>
-        <translation>1 seconde</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="window.cpp" line="477"/>
         <source>%1 seconds</source>
-        <translation>%1 secondes</translation>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -135,17 +135,17 @@
     <message>
         <location filename="qml/Core/calculator.js" line="24"/>
         <source>First</source>
-        <translation>Premiere</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="qml/Core/calculator.js" line="27"/>
         <source>Middle</source>
-        <translation>Milieu</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="qml/Core/calculator.js" line="31"/>
         <source>Last</source>
-        <translation>Derniere</translation>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -153,136 +153,136 @@
     <message>
         <location filename="qml/gotopage.qml" line="74"/>
         <source>GoTo Page</source>
-        <translation>Aller à</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="qml/gotopage.qml" line="120"/>
         <source>First</source>
-        <translation>Premiere</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="qml/gotopage.qml" line="121"/>
         <source>Middle</source>
-        <translation>Milieu</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="qml/gotopage.qml" line="122"/>
         <source>Last</source>
-        <translation>Derniere</translation>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>main</name>
     <message>
-        <location filename="qml/main.qml" line="195"/>
+        <location filename="qml/main.qml" line="194"/>
         <source>About</source>
-        <translation>A Propos</translation>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="qml/main.qml" line="197"/>
+        <source>&lt;H3&gt;e-book reader for touch-enabled devices&lt;/H3&gt;</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="qml/main.qml" line="198"/>
-        <source>&lt;H3&gt;e-book reader for touch-enabled devices&lt;/H3&gt;</source>
-        <translation>&lt;H3&gt;lecteur des documents electroniques pour dispositifs avec écran tactile&lt;/H3&gt;</translation>
-    </message>
-    <message>
-        <location filename="qml/main.qml" line="199"/>
         <source>&lt;H4&gt;Supported formats:&lt;/H4&gt;</source>
-        <translation>&lt;H4&gt;Formats supportés:&lt;/H4&gt;</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="qml/main.qml" line="201"/>
+        <location filename="qml/main.qml" line="200"/>
         <source>&lt;br&gt;Copyright (C) 2013, Bogdan Cristea. All rights reserved.&lt;br&gt;</source>
-        <translation>&lt;br&gt;Copyright (C) 2013, Bogdan Cristea. Tous les droits réservés.&lt;br&gt;</translation>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="qml/main.qml" line="202"/>
+        <source>This program is distributed in the hope that it will be useful, </source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="qml/main.qml" line="203"/>
-        <source>This program is distributed in the hope that it will be useful, </source>
-        <translation>Ce programe est distribué dans l&apos;espoire qu&apos;il sera utile, </translation>
+        <source>but WITHOUT ANY WARRANTY; without even the implied warranty of </source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="qml/main.qml" line="204"/>
-        <source>but WITHOUT ANY WARRANTY; without even the implied warranty of </source>
-        <translation>mais SANS AUCUNE GARANTIE; sans même la garatie implicite de </translation>
+        <source>MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the </source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="qml/main.qml" line="205"/>
-        <source>MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the </source>
-        <translation>COMMERCIALISATION ou D&apos;ADEQUATION POUR UN USAGE PARTICULIER. Voir la </translation>
-    </message>
-    <message>
-        <location filename="qml/main.qml" line="206"/>
         <source>GNU General Public License for more details.&lt;br&gt;&lt;br&gt;</source>
-        <translation>license générique et publique GNU pour plus de renseignements.&lt;br&gt;&lt;br&gt;</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="qml/main.qml" line="210"/>
+        <location filename="qml/main.qml" line="209"/>
         <source>Open</source>
-        <translation>Ouvrir</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="qml/main.qml" line="209"/>
         <location filename="qml/main.qml" line="210"/>
-        <location filename="qml/main.qml" line="211"/>
         <source>Favorites</source>
-        <translation>Favoris</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="qml/main.qml" line="218"/>
+        <location filename="qml/main.qml" line="217"/>
         <source>Full Screen</source>
-        <translation>Plein Ecran</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="qml/main.qml" line="222"/>
+        <location filename="qml/main.qml" line="221"/>
         <source>Normal Screen</source>
-        <translation>Ecran Normal</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="qml/main.qml" line="226"/>
+        <location filename="qml/main.qml" line="225"/>
         <source>Go To Page</source>
-        <translation>Aller à</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="qml/main.qml" line="234"/>
+        <location filename="qml/main.qml" line="233"/>
         <source>Zoom</source>
-        <translation>Agrandir</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="qml/main.qml" line="242"/>
+        <location filename="qml/main.qml" line="241"/>
         <source>Properties</source>
-        <translation>Proprietés</translation>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="qml/main.qml" line="244"/>
+        <source>&lt;H3&gt;Document path:&lt;br&gt;&lt;i&gt;</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="qml/main.qml" line="245"/>
-        <source>&lt;H3&gt;Document path:&lt;br&gt;&lt;i&gt;</source>
-        <translation>&lt;H3&gt;Chemin du document:&lt;br&gt;&lt;i&gt;</translation>
+        <source>&lt;H3&gt;Current page / Number of pages:&lt;br&gt;&lt;b&gt;</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="qml/main.qml" line="246"/>
-        <source>&lt;H3&gt;Current page / Number of pages:&lt;br&gt;&lt;b&gt;</source>
-        <translation>&lt;H3&gt;Page courrante / Nombre total de pages:&lt;br&gt;&lt;b&gt;</translation>
+        <location filename="qml/main.qml" line="247"/>
+        <source>&lt;H3&gt;Elapsed time:&lt;br&gt;</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="qml/main.qml" line="248"/>
-        <source>&lt;H3&gt;Elapsed time:&lt;br&gt;</source>
-        <translation>&lt;H3&gt;Temps écoulé:&lt;br&gt;</translation>
-    </message>
-    <message>
-        <location filename="qml/main.qml" line="249"/>
         <source>&lt;H3&gt;Battery status:&lt;br&gt;</source>
-        <translation>&lt;H3&gt;L&apos;état de la batterie:&lt;br&gt;</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="qml/main.qml" line="253"/>
+        <location filename="qml/main.qml" line="252"/>
         <source>Help</source>
-        <translation>Aide</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="qml/main.qml" line="257"/>
+        <location filename="qml/main.qml" line="256"/>
         <source>Back</source>
-        <translation>Retour</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="qml/main.qml" line="261"/>
+        <location filename="qml/main.qml" line="260"/>
         <source>Quit</source>
-        <translation>Quitter</translation>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -290,57 +290,57 @@
     <message>
         <location filename="qml/maintoolbar.qml" line="40"/>
         <source>Open</source>
-        <translation>Ouvrir</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="qml/maintoolbar.qml" line="46"/>
         <source>Favorites</source>
-        <translation>Favoris</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="qml/maintoolbar.qml" line="52"/>
         <source>Full Screen</source>
-        <translation>Plein Ecran</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="qml/maintoolbar.qml" line="52"/>
         <source>Normal Screen</source>
-        <translation>Ecran Normal</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="qml/maintoolbar.qml" line="58"/>
         <source>Go To Page</source>
-        <translation>Aller à</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="qml/maintoolbar.qml" line="64"/>
         <source>Zoom</source>
-        <translation>Agrandir</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="qml/maintoolbar.qml" line="70"/>
         <source>Properties</source>
-        <translation>Proprietés</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="qml/maintoolbar.qml" line="76"/>
         <source>Help</source>
-        <translation>Aide</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="qml/maintoolbar.qml" line="76"/>
         <source>Back</source>
-        <translation>Retour</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="qml/maintoolbar.qml" line="82"/>
         <source>About</source>
-        <translation>Information</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="qml/maintoolbar.qml" line="88"/>
         <source>Quit</source>
-        <translation>Quitter</translation>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -348,7 +348,7 @@
     <message>
         <location filename="qml/zoompage.qml" line="64"/>
         <source>Zoom Factor</source>
-        <translation>Facteur d&apos;agrandissement</translation>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 </TS>

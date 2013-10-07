@@ -15,16 +15,9 @@ Item {
 
     signal sendCommand(string cmd)
 
-    // A black background for the item to prevent the white
-    // background from showing in any situation
-    Rectangle {
-        anchors.fill: parent
-        color: "black"
-    }
-
     BorderImage {
         id: toolbarImage
-        source: ":/toolbar/qml/Toolbar/pics/toolbaritem_gray.png"
+        source: ":/qml/icons/wood-table-top.svg"
         width: parent.width
 
         height: toolbar.height
@@ -75,3 +68,4 @@ Item {
         anchors.bottom: toolbarItemArea.top
     }
 }
+

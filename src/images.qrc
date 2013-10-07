@@ -1,25 +1,24 @@
 <RCC>
     <qresource prefix="/toolbar">
-        <file>qml/Toolbar/pics/back.png</file>
-        <file>qml/Toolbar/pics/Actions-document-open-folder-icon.png</file>
-        <file>qml/Toolbar/pics/Actions-go-jump-locationbar-icon.png</file>
-        <file>qml/Toolbar/pics/toolbaritem_gray.png</file>
-        <file>qml/Toolbar/pics/toolbaritem_p.png</file>
-        <file>qml/Toolbar/pics/Actions-view-fullscreen-icon.png</file>
-        <file>qml/Toolbar/pics/Actions-view-close-icon.png</file>
-        <file>qml/Toolbar/pics/Actions-page-zoom-icon.png</file>
-        <file>qml/Toolbar/pics/help-icon.png</file>
-        <file>qml/Toolbar/pics/Actions-help-about-icon.png</file>
-        <file>qml/Toolbar/pics/Actions-application-exit-icon.png</file>
-        <file>qml/Toolbar/pics/Actions-document-properties-icon.png</file>
-        <file>qml/Toolbar/pics/Actions-favorites-icon.png</file>
+        <file>qml/Toolbar/pics/Actions-go-previous-view-icon.svg</file>
+        <file>qml/Toolbar/pics/Actions-document-open-folder-icon.svg</file>
+        <file>qml/Toolbar/pics/Actions-go-jump-locationbar-icon.svg</file>
+        <file>qml/Toolbar/pics/toolbaritem_p.svg</file>
+        <file>qml/Toolbar/pics/Actions-view-fullscreen-icon.svg</file>
+        <file>qml/Toolbar/pics/Actions-view-close-icon.svg</file>
+        <file>qml/Toolbar/pics/Actions-page-zoom-icon.svg</file>
+        <file>qml/Toolbar/pics/Actions-help-contents-icon.svg</file>
+        <file>qml/Toolbar/pics/Actions-help-about-icon.svg</file>
+        <file>qml/Toolbar/pics/Actions-application-exit-icon.svg</file>
+        <file>qml/Toolbar/pics/Actions-document-properties-icon.svg</file>
+        <file>qml/Toolbar/pics/Actions-bookmark-new-list-icon.svg</file>
     </qresource>
     <qresource prefix="/filebrowser">
         <file>icons/Adobe-PDF-Document-icon.png</file>
-        <file>icons/Button-Upload-icon.png</file>
-        <file>icons/Actions-list-add-icon.png</file>
+        <file>icons/Button-Upload-icon.svg</file>
+        <file>icons/Actions-list-add-icon.svg</file>
         <file>icons/My-Ebooks-icon.png</file>
-        <file>icons/Apps-session-quit-icon.png</file>
+        <file>icons/Apps-session-quit-icon.svg</file>
         <file>icons/Djvu-document-icon.png</file>
         <file>icons/Chm-document-icon.png</file>
         <file>icons/Epub-document-icon.png</file>
@@ -37,6 +36,7 @@
         <file>icons/tif-icon.png</file>
         <file>icons/ps-icon.png</file>
         <file>icons/psd-icon.png</file>
+        <file>qml/filebrowser/img/wooden-empty-shelf.svg</file>
     </qresource>
     <qresource prefix="/qml">
         <file>qml/gotopage.qml</file>
@@ -73,6 +73,7 @@
         <file>qml/waitdialog.qml</file>
         <file>qml/main.qml</file>
         <file>qml/content/Spinner.qml</file>
+        <file>icons/wood-table-top.svg</file>
     </qresource>
     <qresource prefix="/translations">
         <file>tabletReader_fr.qm</file>

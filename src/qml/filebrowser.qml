@@ -27,63 +27,97 @@ Rectangle {
     signal changeDirectory(int index)
     signal showDocument(string document, int page)
 
-    ListView {
+    Image {
+      id: background
+      anchors.fill: parent
+      source: ":/filebrowser/qml/filebrowser/img/wooden-empty-shelf.svg"
+    }
+    property int rowsCount: 5
+    property int headerHeight: 50
+
+    GridView {
         id: pdfPreviewListView
-        anchors.fill: parent
+        snapMode: GridView.SnapToRow
+        clip: true
         model: pdfPreviewModel
+        cellWidth: 120
+
+        function cellHeight() {
+          return Math.floor((box.height-box.headerHeight)/box.rowsCount)
+        }
+        function gridYPos() {
+          return box.headerHeight+Math.floor(cellHeight()/4.0)
+        }
+        function gridXPos() {
+          var colsCount = Math.floor(box.width/pdfPreviewListView.cellWidth)
+          colsCount = (1>colsCount)?1:colsCount
+          return Math.floor((box.width-(colsCount-1)*pdfPreviewListView.cellWidth)/2)
+        }
+        cellHeight: cellHeight()
+        x: gridXPos()
+        y: gridYPos()
+        width: box.width-2*x
+        height: box.height-y
 
         delegate: Component {
             Rectangle {
-                property int margin: 7
                 id: previewBox
-                width: box.width
-                height:64
-                color: ((index%2)?"#f794969a":"#f766676a")
-                Image {
-                    id: previewImage
-                    source: model.image
-                    sourceSize {
-                        width: height
-                        height: height
-                    }                    
-                    width: 64-margin
-                    height: previewBox.height-margin
-                    anchors.left: parent.left
-                    anchors.top: parent.top
-                    anchors.leftMargin: (parent.height - width)/2
-                    anchors.topMargin: (parent.height - height)/2
-                }
-                Text {
-                    id: title
-                    elide: Text.ElideRight
-                    text: model.title
-                    color: "white"
-                    font.pointSize: 11
-                    font.bold: true
-                    anchors.top: parent.top
-                    anchors.left: previewImage.right
-                    anchors.bottom: parent.verticalCenter
-                    anchors.leftMargin: 10
-                    verticalAlignment: Text.AlignBottom
+                property int margin: 5
+                width: pdfPreviewListView.cellWidth-margin
+                height: fbitem.height
+                color: "transparent"
+                clip: true
+                BorderImage {
+                  id: itemPressedImage
+                  source: ":/toolbar/qml/Toolbar/pics/toolbaritem_p.svg"
+                  width: parent.width
+                  height: parent.height
+                  border.left: 10; border.top: 10
+                  border.right: 10; border.bottom: 10
+                  opacity: 0
                 }
                 MouseArea {
-                    id: mouseArea
-                    anchors.fill: parent
-                    onClicked:  {
-                        if (model.file) {
-                            showDocument(model.path, model.page)
-                        } else {
-                            // Change dir
-                            changeDirectory(index);
-                        }
+                  id: mouseArea
+                  anchors.fill: parent
+                  Column {
+                    id: fbitem
+                    Image {
+                      id: previewImage
+                      source: model.image
+                      anchors.horizontalCenter: parent.horizontalCenter
+                      width: 44
+                      height: 44
                     }
-                }
-                states: [
+                    Text {
+                      id: title
+                      elide: Text.ElideRight
+                      wrapMode: Text.Wrap
+                      textFormat: Text.PlainText
+                      horizontalAlignment: Text.AlignHCenter
+                      maximumLineCount: 3
+                      text: model.title
+                      color: "black"
+                      font.pointSize: 11
+                      font.bold: true
+                      clip: true
+                      width: previewBox.width
+                    }
+                  }
+                  onClicked: {
+                      if (model.file) {
+                          showDocument(model.path, model.page)
+                      } else {
+                          // Change dir
+                          changeDirectory(index);
+                      }
+                  }
+                  states: [
                     State {
                         name: 'pressed'; when: mouseArea.pressed
-                        PropertyChanges { target: previewBox; color: "lightgreen" }
+                        PropertyChanges { target: itemPressedImage; opacity: 1 }
                     }
-                ]
+                  ]
+                }
            }
         }
      }

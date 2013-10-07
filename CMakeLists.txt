@@ -68,7 +68,7 @@ if(AUTO_VERSION)
   endif()
 endif()
 if(NOT TR_VERSION)
-  set(TR_VERSION "3.0.1")
+  set(TR_VERSION "3.0.2")
   message (WARNING "Cannot generate automatic build/release number. Using hard coded value.")
 endif()
 

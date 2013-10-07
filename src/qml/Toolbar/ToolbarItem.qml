@@ -5,24 +5,14 @@ Rectangle {
     property int contentWidth: toolbarItemText.width + margin
 
     height: parent.minimumItemHeight
-    color: "black"
+    color: "transparent"
 
     signal doAction(string btnText)
-
-    // Toolbar item background
-    BorderImage {
-        id: toolbarItemImage
-        source: ":/toolbar/qml/Toolbar/pics/toolbaritem_gray.png"
-        width: parent.width
-        height: parent.height
-        border.left: 10; border.top: 10
-        border.right: 10; border.bottom: 10
-    }
 
     // Selection highlight
     BorderImage {
         id: toolbarItemPressedImage
-        source: ":/toolbar/qml/Toolbar/pics/toolbaritem_p.png"
+        source: ":/toolbar/qml/Toolbar/pics/toolbaritem_p.svg"
         width: parent.width
         height: parent.height
         border.left: 10; border.top: 10
@@ -51,15 +41,16 @@ Rectangle {
 
             anchors.horizontalCenter: parent.horizontalCenter
             text: toolbar.views[index].toolbarItemTitle
-            color: "lightgray"
-            style: "Raised"
+            color: "black"
+            style: "Normal"
+            font.bold: true
             font.pointSize: 11
         }
     }
 
     MouseArea {
         id: mouseArea
-        anchors.fill: toolbarItemImage
+        anchors.fill: toolbarItemPressedImage
         onClicked: {
             doAction(toolbarItemText.text)
         }

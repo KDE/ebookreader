@@ -140,7 +140,7 @@ QVariant FileBrowserModel::data(const QModelIndex &index, int role) const
     case IMAGE:
       if(((fileRow + 1) == files_.count()) &&
           (closeFileBrowserText() == files_[fileRow])) {
-        return QString(":/filebrowser/icons/Apps-session-quit-icon.png");
+        return QString(":/filebrowser/icons/Apps-session-quit-icon.svg");
       }
       else {
         QString iconFileName;
@@ -214,7 +214,7 @@ QVariant FileBrowserModel::data(const QModelIndex &index, int role) const
       return dirs_[dirRow];
     case IMAGE:
       if(dirRow == 0) {
-        return favorites_?QString(":/filebrowser/icons/Actions-list-add-icon.png"):QString(":/filebrowser/icons/Button-Upload-icon.png");
+        return favorites_?QString(":/filebrowser/icons/Actions-list-add-icon.svg"):QString(":/filebrowser/icons/Button-Upload-icon.svg");
       }
       else {
         return QString(":/filebrowser/icons/My-Ebooks-icon.png");

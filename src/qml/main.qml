@@ -24,7 +24,6 @@ Rectangle {
 
   width: mediator.winWidth
   height: mediator.winHeight
-  color: "black"
 
   property alias pages: spinner.nbPages
   property alias index: spinner.currentIndex
