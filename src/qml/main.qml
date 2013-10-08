@@ -63,7 +63,7 @@ Rectangle {
     ListElement { number: "300%" }
     ListElement { number: "400%" }
   }
-  property bool refreshImg: false
+  property bool refreshImg: true
 
   //properties page
   property string filePath: ""
