@@ -50,82 +50,82 @@
 <context>
     <name>Window</name>
     <message>
-        <location filename="window.cpp" line="140"/>
+        <location filename="window.cpp" line="143"/>
         <source>No document found</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="window.cpp" line="219"/>
+        <location filename="window.cpp" line="228"/>
         <source>Failed to open file</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="window.cpp" line="219"/>
+        <location filename="window.cpp" line="228"/>
         <source>&lt;br&gt;%1 cannot be opened</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="window.cpp" line="396"/>
+        <location filename="window.cpp" line="415"/>
         <source>Cannot open help file</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="window.cpp" line="418"/>
+        <location filename="window.cpp" line="437"/>
         <source>no charger</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="window.cpp" line="421"/>
+        <location filename="window.cpp" line="440"/>
         <source>wall charger</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="window.cpp" line="427"/>
+        <location filename="window.cpp" line="446"/>
         <source>charging</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="window.cpp" line="431"/>
+        <location filename="window.cpp" line="450"/>
         <source>unknown</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="window.cpp" line="435"/>
+        <location filename="window.cpp" line="454"/>
         <source>, %1% remaining capacity</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="window.cpp" line="438"/>
+        <location filename="window.cpp" line="457"/>
         <source>, unknown remaining capacity</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="window.cpp" line="451"/>
+        <location filename="window.cpp" line="470"/>
         <source>1 hour</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="window.cpp" line="454"/>
+        <location filename="window.cpp" line="473"/>
         <source>%1 hours</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="window.cpp" line="463"/>
+        <location filename="window.cpp" line="482"/>
         <source>1 minute</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="window.cpp" line="466"/>
+        <location filename="window.cpp" line="485"/>
         <source>%1 minutes</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="window.cpp" line="475"/>
+        <location filename="window.cpp" line="494"/>
         <source>1 second</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="window.cpp" line="478"/>
+        <location filename="window.cpp" line="497"/>
         <source>%1 seconds</source>
         <translation type="unfinished"></translation>
     </message>
@@ -281,64 +281,6 @@
     </message>
     <message>
         <location filename="qml/main.qml" line="260"/>
-        <source>Quit</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>maintoolbar</name>
-    <message>
-        <location filename="qml/maintoolbar.qml" line="40"/>
-        <source>Open</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="qml/maintoolbar.qml" line="46"/>
-        <source>Favorites</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="qml/maintoolbar.qml" line="52"/>
-        <source>Full Screen</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="qml/maintoolbar.qml" line="52"/>
-        <source>Normal Screen</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="qml/maintoolbar.qml" line="58"/>
-        <source>Go To Page</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="qml/maintoolbar.qml" line="64"/>
-        <source>Zoom</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="qml/maintoolbar.qml" line="70"/>
-        <source>Properties</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="qml/maintoolbar.qml" line="76"/>
-        <source>Help</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="qml/maintoolbar.qml" line="76"/>
-        <source>Back</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="qml/maintoolbar.qml" line="82"/>
-        <source>About</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="qml/maintoolbar.qml" line="88"/>
         <source>Quit</source>
         <translation type="unfinished"></translation>
     </message>
