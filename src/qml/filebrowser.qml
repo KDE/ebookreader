@@ -75,7 +75,7 @@ Rectangle {
         function gridYPos() {
           var shelfHeight = (box.height-box.headerHeight)/box.rowCount
           var elemHeight = iconSize()+box.lineCount*textPixelSize()
-          return Math.round(box.headerHeight+(shelfHeight-elemHeight)/2)
+          return box.headerHeight+(shelfHeight-elemHeight)/2
         }
         function cellHeight() {
           return Math.round((box.height-gridYPos())/box.rowCount)
@@ -86,7 +86,7 @@ Rectangle {
           return Math.round((box.width-(colsCount-1)*pdfPreviewListView.cellWidth)/2)
         }
         cellHeight: cellHeight()+correctionFactor()
-        x: gridXPos()
+        x: Math.round(gridXPos())
         y: gridYPos()
         width: box.width-2*x
         height: box.height-y
