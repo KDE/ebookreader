@@ -38,91 +38,55 @@ Rectangle {
 
       ToolbarView {
           toolbarItemTitle: qsTr("Open")
-<<<<<<< HEAD
           toolbarItemIcon: ":/toolbar/qml/Toolbar/pics/Actions-document-open-folder-icon.svg"
-=======
-          toolbarItemIcon: ":/toolbar/qml/Toolbar/pics/Actions-document-open-folder-icon.png"
->>>>>>> 3c873d57b4bda5b08cea27d7f7bd43141377be18
           clip: true
       }
 
       ToolbarView {
           toolbarItemTitle: qsTr("Favorites")
-<<<<<<< HEAD
           toolbarItemIcon: ":/toolbar/qml/Toolbar/pics/Actions-bookmark-new-list-icon.svg"
-=======
-          toolbarItemIcon: ":/toolbar/qml/Toolbar/pics/Actions-favorites-icon.png"
->>>>>>> 3c873d57b4bda5b08cea27d7f7bd43141377be18
           clip: true
       }
 
       ToolbarView {
         toolbarItemTitle: (true == mediator.fullScr)?qsTr("Full Screen"):qsTr("Normal Screen")
-<<<<<<< HEAD
         toolbarItemIcon: (true == mediator.fullScr)?":/toolbar/qml/Toolbar/pics/Actions-view-fullscreen-icon.svg":":/toolbar/qml/Toolbar/pics/Actions-view-close-icon.svg"
-=======
-        toolbarItemIcon: (true == mediator.fullScr)?":/toolbar/qml/Toolbar/pics/Actions-view-fullscreen-icon.png":":/toolbar/qml/Toolbar/pics/Actions-view-close-icon.png"
->>>>>>> 3c873d57b4bda5b08cea27d7f7bd43141377be18
           clip: true
       }
 
       ToolbarView {
           toolbarItemTitle: qsTr("Go To Page")
-<<<<<<< HEAD
           toolbarItemIcon: ":/toolbar/qml/Toolbar/pics/Actions-go-jump-locationbar-icon.svg"
-=======
-          toolbarItemIcon: ":/toolbar/qml/Toolbar/pics/Actions-go-jump-locationbar-icon.png"
->>>>>>> 3c873d57b4bda5b08cea27d7f7bd43141377be18
           clip: true
       }
 
       ToolbarView {
           toolbarItemTitle: qsTr("Zoom")
-<<<<<<< HEAD
           toolbarItemIcon: ":/toolbar/qml/Toolbar/pics/Actions-page-zoom-icon.svg"
-=======
-          toolbarItemIcon: ":/toolbar/qml/Toolbar/pics/Actions-page-zoom-icon.png"
->>>>>>> 3c873d57b4bda5b08cea27d7f7bd43141377be18
           clip: true
       }
 
       ToolbarView {
           toolbarItemTitle: qsTr("Properties")
-<<<<<<< HEAD
           toolbarItemIcon: ":/toolbar/qml/Toolbar/pics/Actions-document-properties-icon.svg"
-=======
-          toolbarItemIcon: ":/toolbar/qml/Toolbar/pics/Actions-document-properties-icon.png"
->>>>>>> 3c873d57b4bda5b08cea27d7f7bd43141377be18
           clip: true
       }
 
       ToolbarView {
           toolbarItemTitle: (true == mediator.hlpBck)?qsTr("Help"):qsTr("Back")
-<<<<<<< HEAD
           toolbarItemIcon: (true == mediator.hlpBck)?":/toolbar/qml/Toolbar/pics/Actions-help-contents-icon.svg":":/toolbar/qml/Toolbar/pics/Actions-go-previous-view-icon.svg"
-=======
-          toolbarItemIcon: (true == mediator.hlpBck)?":/toolbar/qml/Toolbar/pics/help-icon.png":":/toolbar/qml/Toolbar/pics/back.png"
->>>>>>> 3c873d57b4bda5b08cea27d7f7bd43141377be18
           clip: true
       }
 
       ToolbarView {
           toolbarItemTitle: qsTr("About")
-<<<<<<< HEAD
           toolbarItemIcon: ":/toolbar/qml/Toolbar/pics/Actions-help-about-icon.svg"
-=======
-          toolbarItemIcon: ":/toolbar/qml/Toolbar/pics/Actions-help-about-icon.png"
->>>>>>> 3c873d57b4bda5b08cea27d7f7bd43141377be18
           clip: true
       }
 
       ToolbarView {
           toolbarItemTitle: qsTr("Quit")
-<<<<<<< HEAD
           toolbarItemIcon: ":/toolbar/qml/Toolbar/pics/Actions-application-exit-icon.svg"
-=======
-          toolbarItemIcon: ":/toolbar/qml/Toolbar/pics/Actions-application-exit-icon.png"
->>>>>>> 3c873d57b4bda5b08cea27d7f7bd43141377be18
           clip: true
       }
   }
