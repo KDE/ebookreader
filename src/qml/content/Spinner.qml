@@ -18,12 +18,14 @@
 
 import QtQuick 1.1
 
-Item {
+Image {
   property alias model: view.model
   property alias delegate: view.delegate
   property real itemWidth: 30
   property int currentIndex: 0
   property int nbPages: 0
+
+  source: ":/qml/icons/wood-table-top.svg"
 
   PathView {
     id: view

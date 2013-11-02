@@ -16,13 +16,14 @@
 #
 
 Name:           TabletReader
-Version:        3.0.0
+Version:        3.0.2
 Release:        1
 License:        GPLv2+
 Summary:        Document Viewer
 Url:            https://projects.kde.org/projects/playground/edu/ebookreader
 Group:          Productivity/Office/Other
 Source0:        %{name}-%{version}.tar.gz
+Patch0:         old_okular.patch
 Requires:       %{kde_runtime_requires}
 BuildRequires:  pkgconfig(exiv2)
 BuildRequires:  pkgconfig(shared-mime-info)
@@ -59,23 +60,24 @@ E-book reader for touch-enabled devices; uses as backend okular core library.
 %prep
 %setup -q -n %{name}-%{version}
 
+# old_okular.patch
+%patch0 -p1
+
 %build
   cmake . %{cmake_kde_options}
   make %{?jobs:-j%jobs}
 
 %install
   %make_install
-  %suse_update_desktop_file -r tabletReader   Office Viewer
-  %kde_post_install
 
 %clean
   rm -rf %{buildroot}
 
 %files
 %defattr(-,root,root)
-%{_kde4_applicationsdir}/tabletReader*.desktop
-%{_kde4_appsdir}/tabletReader/
-%{_kde4_bindir}/tabletReader
-%{_kde4_iconsdir}/hicolor/*/apps/tabletReader.*
+/usr/share/applications/kde4//tabletReader*.desktop
+/usr/share/doc/tabletReaderHelp.pdf
+/usr/bin/tabletReader/
+/usr/share/icons/hicolor/*/apps/tabletReader.*
 
 %changelog

@@ -37,6 +37,8 @@ public:
     return favorites_?tr("Close Favorites Browser"):tr("Close File Browser");
   }
 
+signals:
+  void quit();
 public slots:
   void changeCurrentDir(int index);
 

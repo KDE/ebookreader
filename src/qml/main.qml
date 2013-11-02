@@ -24,7 +24,6 @@ Rectangle {
 
   width: mediator.winWidth
   height: mediator.winHeight
-  color: "black"
 
   property alias pages: spinner.nbPages
   property alias index: spinner.currentIndex
@@ -64,7 +63,7 @@ Rectangle {
     ListElement { number: "300%" }
     ListElement { number: "400%" }
   }
-  property bool refreshImg: false
+  property bool refreshImg: true
 
   //properties page
   property string filePath: ""
