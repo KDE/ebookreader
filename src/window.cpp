@@ -110,7 +110,10 @@ Window::Window()
     //set filebrowser handlers
     connect(rootObj_, SIGNAL(chDir(int)), fileBrowserModel_, SLOT(changeCurrentDir(int)));
     connect(rootObj_, SIGNAL(showDoc(QString,int)), this, SLOT(onShowDocument(QString,int)));
+<<<<<<< HEAD
     connect(fileBrowserModel_, SIGNAL(quit()), this, SLOT(onQuit()));
+=======
+>>>>>>> 3c873d57b4bda5b08cea27d7f7bd43141377be18
     //set full screen button handlers
     connect(rootObj_, SIGNAL(fullScreen()), this, SLOT(onFullScreen()));
     connect(rootObj_, SIGNAL(normalScreen()), this, SLOT(onNormalScreen()));
@@ -211,9 +214,15 @@ void Window::openFile(const QString &filePath, int page)
   if(document_->setDocument(filePath)) {
     //load document
     gotoPage(page, document_->numPages());
+<<<<<<< HEAD
     refreshPage();
     //remove wait page if any
     onQuit();
+=======
+    //remove wait page if any
+    onQuit();
+    refreshPage();
+>>>>>>> 3c873d57b4bda5b08cea27d7f7bd43141377be18
   }
   else {
     emit warning(tr("Failed to open file") + tr("<br>%1 cannot be opened").arg(filePath));
@@ -261,8 +270,13 @@ void Window::normalScreen()
     //compute a geometry if none available
     int desktopWidth = QApplication::desktop()->width();
     int desktopHeight = QApplication::desktop()->height();
+<<<<<<< HEAD
   	int width = 0;
 	  int height = 0;
+=======
+	int width = 0;
+	int height = 0;
+>>>>>>> 3c873d57b4bda5b08cea27d7f7bd43141377be18
     if((MIN_SCREEN_WIDTH >= desktopWidth) && (MIN_SCREEN_HEIGHT >= desktopHeight)) {
       qDebug() << "using full screen mode with toolbar";
 	  width = desktopWidth;
@@ -383,8 +397,13 @@ void Window::onShowHelp(bool show)
 
   if(document_->setDocument(curFileName)) {
     gotoPage(curPage, document_->numPages());
+<<<<<<< HEAD
     refreshPage();
     onQuit();
+=======
+    onQuit();
+    showNextPage();
+>>>>>>> 3c873d57b4bda5b08cea27d7f7bd43141377be18
     //display "Back" icon next time
     if (NULL != mediator_) {
       mediator_->setHlpBck(false);
