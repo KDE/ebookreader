@@ -23,6 +23,7 @@ Summary:        Document Viewer
 Url:            https://projects.kde.org/projects/playground/edu/ebookreader
 Group:          Productivity/Office/Other
 Source0:        %{name}-%{version}.tar.gz
+Patch0:         old_okular.patch
 Requires:       %{kde_runtime_requires}
 BuildRequires:  pkgconfig(exiv2)
 BuildRequires:  pkgconfig(shared-mime-info)
@@ -58,6 +59,9 @@ E-book reader for touch-enabled devices; uses as backend okular core library.
 
 %prep
 %setup -q -n %{name}-%{version}
+
+# old_okular.patch
+%patch0 -p1
 
 %build
   cmake . %{cmake_kde_options}
