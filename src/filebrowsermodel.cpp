@@ -51,7 +51,8 @@ void FileBrowserModel::changeCurrentDir(int index)
     saveFavorites();
     //and refresh the view
     loadFavorites();
-    reset();
+    //close file browser
+    emit quit();
   }
   else {
     if(index >= dirs_.count()) {

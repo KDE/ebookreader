@@ -110,6 +110,7 @@ Window::Window()
     //set filebrowser handlers
     connect(rootObj_, SIGNAL(chDir(int)), fileBrowserModel_, SLOT(changeCurrentDir(int)));
     connect(rootObj_, SIGNAL(showDoc(QString,int)), this, SLOT(onShowDocument(QString,int)));
+    connect(fileBrowserModel_, SIGNAL(quit()), this, SLOT(onQuit()));
     //set full screen button handlers
     connect(rootObj_, SIGNAL(fullScreen()), this, SLOT(onFullScreen()));
     connect(rootObj_, SIGNAL(normalScreen()), this, SLOT(onNormalScreen()));
@@ -260,8 +261,8 @@ void Window::normalScreen()
     //compute a geometry if none available
     int desktopWidth = QApplication::desktop()->width();
     int desktopHeight = QApplication::desktop()->height();
-	int width = 0;
-	int height = 0;
+  	int width = 0;
+	  int height = 0;
     if((MIN_SCREEN_WIDTH >= desktopWidth) && (MIN_SCREEN_HEIGHT >= desktopHeight)) {
       qDebug() << "using full screen mode with toolbar";
 	  width = desktopWidth;

@@ -1,6 +1,7 @@
 import QtQuick 1.1
 
 Rectangle {
+  id: toolbarButton
     property int margin: 20
     property int contentWidth: toolbarItemText.width + margin
 
@@ -24,7 +25,6 @@ Rectangle {
     // Icon and title
     Column {
         anchors.centerIn: parent
-
         Image {
             id: toolbarItemIcon
             width: 40
@@ -45,6 +45,10 @@ Rectangle {
             style: "Normal"
             font.bold: true
             font.pointSize: 11
+            width: toolbarButton.width
+            horizontalAlignment: Text.AlignHCenter
+            clip: true
+            elide: Text.ElideRight
         }
     }
 

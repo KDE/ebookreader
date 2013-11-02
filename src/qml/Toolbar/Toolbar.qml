@@ -66,6 +66,6 @@ Item {
         width: toolbar.width
         anchors.top: parent.top;
         anchors.bottom: toolbarItemArea.top
-    }
+      }
 }
 

@@ -4,22 +4,22 @@
 <context>
     <name>FileBrowserModel</name>
     <message>
-        <location filename="filebrowsermodel.cpp" line="91"/>
+        <location filename="filebrowsermodel.cpp" line="92"/>
         <source>Go Back to &apos;%1&apos; from &apos;%2&apos;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="filebrowsermodel.cpp" line="95"/>
+        <location filename="filebrowsermodel.cpp" line="96"/>
         <source>Go Back to &apos;/&apos; from &apos;%1&apos;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="filebrowsermodel.cpp" line="134"/>
+        <location filename="filebrowsermodel.cpp" line="135"/>
         <source> at page %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="filebrowsermodel.cpp" line="256"/>
+        <location filename="filebrowsermodel.cpp" line="257"/>
         <source>Bookmark &quot;%1&quot; at page %2</source>
         <translation type="unfinished"></translation>
     </message>
@@ -50,82 +50,82 @@
 <context>
     <name>Window</name>
     <message>
-        <location filename="window.cpp" line="139"/>
+        <location filename="window.cpp" line="140"/>
         <source>No document found</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="window.cpp" line="218"/>
+        <location filename="window.cpp" line="219"/>
         <source>Failed to open file</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="window.cpp" line="218"/>
+        <location filename="window.cpp" line="219"/>
         <source>&lt;br&gt;%1 cannot be opened</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="window.cpp" line="395"/>
+        <location filename="window.cpp" line="396"/>
         <source>Cannot open help file</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="window.cpp" line="417"/>
+        <location filename="window.cpp" line="418"/>
         <source>no charger</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="window.cpp" line="420"/>
+        <location filename="window.cpp" line="421"/>
         <source>wall charger</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="window.cpp" line="426"/>
+        <location filename="window.cpp" line="427"/>
         <source>charging</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="window.cpp" line="430"/>
+        <location filename="window.cpp" line="431"/>
         <source>unknown</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="window.cpp" line="434"/>
+        <location filename="window.cpp" line="435"/>
         <source>, %1% remaining capacity</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="window.cpp" line="437"/>
+        <location filename="window.cpp" line="438"/>
         <source>, unknown remaining capacity</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="window.cpp" line="450"/>
+        <location filename="window.cpp" line="451"/>
         <source>1 hour</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="window.cpp" line="453"/>
+        <location filename="window.cpp" line="454"/>
         <source>%1 hours</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="window.cpp" line="462"/>
+        <location filename="window.cpp" line="463"/>
         <source>1 minute</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="window.cpp" line="465"/>
+        <location filename="window.cpp" line="466"/>
         <source>%1 minutes</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="window.cpp" line="474"/>
+        <location filename="window.cpp" line="475"/>
         <source>1 second</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="window.cpp" line="477"/>
+        <location filename="window.cpp" line="478"/>
         <source>%1 seconds</source>
         <translation type="unfinished"></translation>
     </message>

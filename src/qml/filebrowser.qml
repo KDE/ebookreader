@@ -32,8 +32,9 @@ Rectangle {
       anchors.fill: parent
       source: ":/filebrowser/qml/filebrowser/img/wooden-empty-shelf.svg"
     }
-    property int rowsCount: 5
-    property int headerHeight: 50
+    property int rowCount: 5
+    property int lineCount: 2
+    property real headerHeight: 0.05*box.height
 
     GridView {
         id: pdfPreviewListView
@@ -41,19 +42,50 @@ Rectangle {
         clip: true
         model: pdfPreviewModel
         cellWidth: 120
-
-        function cellHeight() {
-          return Math.floor((box.height-box.headerHeight)/box.rowsCount)
+        //font size is selected according to window height
+        function textPixelSize() {
+          if (box.height <= 480) {
+            return 12 //px (800 x 480)
+          } else if (box.height <= 600) {
+            return 14 //px (800 x 600)
+          } else {
+            return 16 //px (1366 x 768)
+          }
+        }
+        //icon size is selected according to window height
+        function iconSize() {
+          if (box.height <= 480) {
+            return 36 //px
+          } else if (box.height <= 600) {
+            return 40 //px
+          } else {
+            return 44 //px
+          }
+        }
+        //correction factor (need in order to align grid rows on the background image)
+        function correctionFactor() {
+          if (box.height <= 480) {
+            return 2 //px
+          } else if (box.height <= 600) {
+            return 4 //px
+          } else {
+            return 6 //px
+          }
         }
         function gridYPos() {
-          return box.headerHeight+Math.floor(cellHeight()/4.0)
+          var shelfHeight = (box.height-box.headerHeight)/box.rowCount
+          var elemHeight = iconSize()+box.lineCount*textPixelSize()
+          return Math.round(box.headerHeight+(shelfHeight-elemHeight)/2)
+        }
+        function cellHeight() {
+          return Math.round((box.height-gridYPos())/box.rowCount)
         }
         function gridXPos() {
-          var colsCount = Math.floor(box.width/pdfPreviewListView.cellWidth)
+          var colsCount = Math.round(box.width/pdfPreviewListView.cellWidth)
           colsCount = (1>colsCount)?1:colsCount
-          return Math.floor((box.width-(colsCount-1)*pdfPreviewListView.cellWidth)/2)
+          return Math.round((box.width-(colsCount-1)*pdfPreviewListView.cellWidth)/2)
         }
-        cellHeight: cellHeight()
+        cellHeight: cellHeight()+correctionFactor()
         x: gridXPos()
         y: gridYPos()
         width: box.width-2*x
@@ -85,8 +117,8 @@ Rectangle {
                       id: previewImage
                       source: model.image
                       anchors.horizontalCenter: parent.horizontalCenter
-                      width: 44
-                      height: 44
+                      width: pdfPreviewListView.iconSize()
+                      height: pdfPreviewListView.iconSize()
                     }
                     Text {
                       id: title
@@ -94,10 +126,10 @@ Rectangle {
                       wrapMode: Text.Wrap
                       textFormat: Text.PlainText
                       horizontalAlignment: Text.AlignHCenter
-                      maximumLineCount: 3
+                      maximumLineCount: box.lineCount
                       text: model.title
                       color: "black"
-                      font.pointSize: 11
+                      font.pixelSize: pdfPreviewListView.textPixelSize()
                       font.bold: true
                       clip: true
                       width: previewBox.width

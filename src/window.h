@@ -46,7 +46,11 @@ public:
   ~Window();
   enum {
         MIN_SCREEN_WIDTH = 1366,
-        MIN_SCREEN_HEIGHT = 768,
+         MIN_SCREEN_HEIGHT = 768,
+        /*MIN_SCREEN_WIDTH = 800,
+         MIN_SCREEN_HEIGHT = 600,*/
+        /*MIN_SCREEN_WIDTH = 800,
+         MIN_SCREEN_HEIGHT = 480,*/
         FIT_WIDTH_ZOOM_FACTOR = -1,
         FIT_WIDTH_ZOOM_INDEX = 7 //this value needs to be set manually
       };
