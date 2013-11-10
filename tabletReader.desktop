@@ -1,18 +1,18 @@
 [Desktop Entry]
 Terminal=false
 Name=TabletReader
+Name[bs]=TabletReader
+Name[cs]=TabletReader
 Name[de]=TabletReader
-Name[es]=TabletReader
-Name[et]=TabletReader
 Name[fr]=TabletReader
+Name[gl]=TabletReader
 Name[hu]=TabletReader
-Name[km]=TabletReader
 Name[nl]=TabletReader
-Name[pl]=TabletowyCzytnik
 Name[pt]=Leitor da Tablete
 Name[pt_BR]=TabletReader
 Name[sk]=TabletReader
 Name[sv]=Läsprogram för läsplatta
+Name[tr]=TabletReader
 Name[uk]=TabletReader
 Name[x-test]=xxTabletReaderxx
 Exec=tabletReader
